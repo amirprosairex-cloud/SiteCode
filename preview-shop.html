@@ -1,0 +1,416 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumière — Boutique Beauty Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --navy:#123C69;--navy2:#0d2d50;--navy3:#1a4d80;
+  --rose:#AC3B61;--rose2:#8a2e4e;--rose3:#c9507a;
+  --peach:#EDC7B7;--peach2:#e0b09d;
+  --cream:#EEE2DC;--cream2:#f7f3f0;
+  --gray:#BAB2B5;--gray2:#9a9198;--gray3:#d4cfd2;
+  --dark:#1a2535;--white:#ffffff;
+}
+body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--dark);overflow-x:hidden}
+
+/* ── DEMO BANNER ── */
+.dbanner{position:fixed;top:0;left:0;right:0;z-index:9999;background:var(--navy2);color:#fff;padding:8px 24px;display:flex;align-items:center;justify-content:space-between;font-size:12px}
+.dbanner a{color:var(--peach);text-decoration:none;background:rgba(255,255,255,.1);padding:4px 12px;border-radius:5px;margin-left:8px;font-size:11px;border:1px solid rgba(255,255,255,.15);transition:background .2s}
+.dbanner a:hover{background:rgba(255,255,255,.2)}
+
+/* ── HEADER ── */
+header{position:fixed;top:36px;left:0;right:0;z-index:1000;background:var(--white);box-shadow:0 2px 20px rgba(18,60,105,.1);border-bottom:2px solid var(--peach)}
+.hdr{max-width:1280px;margin:0 auto;padding:0 4%;display:flex;align-items:center;height:64px;gap:16px}
+.logo{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--navy);text-decoration:none;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.logo-mark{width:36px;height:36px;background:linear-gradient(135deg,var(--rose),var(--navy));border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px}
+.srch{flex:1;max-width:400px;position:relative;margin:0 auto}
+.srch input{width:100%;padding:10px 16px 10px 40px;background:var(--cream);border:1.5px solid var(--gray3);border-radius:25px;color:var(--dark);font-size:13px;font-family:inherit;transition:border-color .2s,background .2s}
+.srch input:focus{outline:none;border-color:var(--rose);background:#fff}
+.srch input::placeholder{color:var(--gray2)}
+.srch-ic{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--gray2);font-size:14px}
+.hdr-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.wishlist-btn{width:40px;height:40px;border:1.5px solid var(--gray3);border-radius:50%;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--rose);transition:all .2s}
+.wishlist-btn:hover{background:var(--rose);color:#fff;border-color:var(--rose)}
+.cart-btn{background:linear-gradient(135deg,var(--rose),var(--rose2));border:none;color:#fff;padding:10px 20px;border-radius:25px;cursor:pointer;font-weight:700;font-size:13px;display:flex;align-items:center;gap:8px;font-family:inherit;transition:all .25s;box-shadow:0 4px 14px rgba(172,59,97,.3)}
+.cart-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(172,59,97,.4)}
+.cbadge{background:#fff;color:var(--rose);border-radius:50%;width:18px;height:18px;font-size:10px;font-weight:900;display:flex;align-items:center;justify-content:center}
+
+/* ── HERO ── */
+.hero-section{padding:100px 4% 0;background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);position:relative;overflow:hidden;margin-top:100px}
+.hero-section::before{content:'';position:absolute;top:-80px;right:-80px;width:500px;height:500px;background:radial-gradient(circle,rgba(237,199,183,.14) 0%,transparent 65%);pointer-events:none}
+.hero-section::after{content:'';position:absolute;bottom:-120px;left:-100px;width:450px;height:450px;background:radial-gradient(circle,rgba(172,59,97,.1) 0%,transparent 65%);pointer-events:none}
+.hero-inner{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;padding-bottom:64px}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:7px;background:rgba(237,199,183,.12);border:1px solid rgba(237,199,183,.25);color:var(--peach);padding:6px 16px;border-radius:20px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:22px}
+.hero-h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3.4rem);font-weight:700;line-height:1.2;color:#fff;margin-bottom:18px}
+.hero-h1 em{font-style:italic;color:var(--peach)}
+.hero-sub{font-size:15px;color:rgba(255,255,255,.6);line-height:1.8;margin-bottom:28px;max-width:440px}
+.countdown-wrap{display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:12px 18px;margin-bottom:28px}
+.cd-lbl{font-size:12px;color:rgba(255,255,255,.45);margin-right:2px}
+.cdp{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:8px 12px;text-align:center;min-width:48px}
+.cdp .n{font-size:21px;font-weight:900;color:var(--peach);line-height:1;display:block}
+.cdp .l{font-size:9px;color:rgba(255,255,255,.4);text-transform:uppercase;margin-top:3px}
+.cdcolon{font-size:20px;font-weight:700;color:rgba(255,255,255,.25)}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:36px}
+.btn-primary{padding:13px 28px;background:linear-gradient(135deg,var(--rose),var(--rose2));border-radius:25px;color:#fff;font-weight:700;font-size:14px;text-decoration:none;border:none;cursor:pointer;font-family:inherit;transition:all .25s;box-shadow:0 6px 20px rgba(172,59,97,.32)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(172,59,97,.45)}
+.btn-outline-w{padding:13px 28px;background:transparent;border:1.5px solid rgba(255,255,255,.25);border-radius:25px;color:#fff;font-weight:600;font-size:14px;cursor:pointer;font-family:inherit;transition:all .25s}
+.btn-outline-w:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.45)}
+.hero-stats{display:flex;gap:0;border:1px solid rgba(255,255,255,.1);border-radius:14px;overflow:hidden}
+.hstat{padding:14px 22px;text-align:center;border-right:1px solid rgba(255,255,255,.1)}
+.hstat:last-child{border-right:none}
+.hstat-n{font-size:20px;font-weight:900;color:var(--peach)}
+.hstat-l{font-size:10px;color:rgba(255,255,255,.45);margin-top:3px;text-transform:uppercase;letter-spacing:.5px}
+.hero-products{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.hp{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:18px;transition:all .3s;cursor:pointer;backdrop-filter:blur(4px)}
+.hp:hover{background:rgba(255,255,255,.09);border-color:rgba(237,199,183,.3);transform:translateY(-4px)}
+.hp-ico{font-size:32px;margin-bottom:10px}
+.hp-nm{font-size:13px;font-weight:600;color:#fff;margin-bottom:5px;line-height:1.4}
+.hp-price{font-size:15px;font-weight:900;color:var(--peach)}
+.hp-badge{display:inline-block;background:var(--rose);color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:8px;margin-left:6px;vertical-align:middle}
+
+/* ── TRUST BAR ── */
+.trust-bar{background:var(--white);border-bottom:1px solid var(--gray3);padding:14px 4%}
+.trust-inner{max-width:1280px;margin:0 auto;display:flex;justify-content:space-around;align-items:center;gap:12px;flex-wrap:wrap}
+.trust-item{display:flex;align-items:center;gap:9px;font-size:12px;color:var(--gray2);font-weight:500}
+.trust-item strong{color:var(--navy);font-weight:700}
+.trust-ico{font-size:17px}
+
+/* ── SHOP ── */
+.shop-wrap{max-width:1280px;margin:0 auto;padding:32px 4%;display:grid;grid-template-columns:250px 1fr;gap:28px}
+.sidebar{height:fit-content;position:sticky;top:116px}
+.filter-card{background:var(--white);border-radius:16px;padding:22px;border:1px solid var(--gray3);margin-bottom:16px;box-shadow:0 2px 12px rgba(18,60,105,.05)}
+.fh{font-size:10px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;display:flex;align-items:center;gap:7px}
+.fh::after{content:'';flex:1;height:1px;background:var(--gray3)}
+.cat-list{display:flex;flex-direction:column;gap:6px}
+.cat-btn{padding:9px 14px;background:transparent;border:1.5px solid var(--gray3);border-radius:10px;cursor:pointer;font-size:13px;font-weight:500;color:var(--gray2);font-family:inherit;text-align:left;transition:all .2s;display:flex;align-items:center;gap:9px}
+.cat-btn.act{background:var(--navy);color:#fff;border-color:var(--navy);box-shadow:0 4px 14px rgba(18,60,105,.2)}
+.cat-btn:hover:not(.act){border-color:var(--navy);color:var(--navy)}
+.cat-ico{font-size:15px}
+.pr-vals{display:flex;justify-content:space-between;margin-bottom:10px;font-size:12px;color:var(--gray2)}
+.pr-vals strong{color:var(--navy);font-weight:700}
+input[type=range]{width:100%;cursor:pointer;accent-color:var(--rose);height:4px;margin-top:2px}
+.filter-tags{display:flex;flex-direction:column;gap:10px}
+.ftag{display:flex;align-items:center;gap:9px;cursor:pointer;font-size:13px;color:var(--dark);user-select:none}
+.ftag input{accent-color:var(--rose);cursor:pointer;width:15px;height:15px}
+.ftag-label{font-weight:500}
+.sort-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px}
+.results-count{font-size:13px;color:var(--gray2);font-weight:500}
+.results-count strong{color:var(--navy)}
+.sort-wrap{display:flex;align-items:center;gap:10px}
+.sort-lbl{font-size:12px;color:var(--gray2)}
+select{background:var(--white);border:1.5px solid var(--gray3);color:var(--dark);padding:8px 14px;border-radius:10px;font-size:13px;font-family:inherit;cursor:pointer}
+select:focus{outline:none;border-color:var(--rose)}
+.prod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.pc{background:var(--white);border:1.5px solid var(--gray3);border-radius:16px;overflow:hidden;transition:all .3s;cursor:pointer;box-shadow:0 2px 8px rgba(18,60,105,.05)}
+.pc:hover{border-color:var(--rose);transform:translateY(-4px);box-shadow:0 14px 36px rgba(172,59,97,.14)}
+.pc-img{height:120px;display:flex;align-items:center;justify-content:center;font-size:46px;background:linear-gradient(135deg,var(--cream),var(--cream2));border-bottom:1px solid var(--gray3);position:relative}
+.new-b{position:absolute;top:8px;left:8px;background:var(--navy);color:#fff;font-size:9px;font-weight:700;padding:3px 8px;border-radius:6px;text-transform:uppercase;letter-spacing:.5px}
+.sale-b{position:absolute;top:8px;right:8px;background:var(--rose);color:#fff;font-size:9px;font-weight:700;padding:3px 8px;border-radius:6px;text-transform:uppercase}
+.pc-wishlist{position:absolute;bottom:8px;right:8px;width:28px;height:28px;background:rgba(255,255,255,.9);border:none;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;opacity:0;transition:opacity .2s;color:var(--rose)}
+.pc:hover .pc-wishlist{opacity:1}
+.pc-body{padding:14px}
+.pc-cat{font-size:10px;color:var(--rose);font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px}
+.pc-name{font-size:14px;font-weight:700;color:var(--dark);margin-bottom:5px;line-height:1.4}
+.pc-rating{display:flex;align-items:center;gap:4px;margin-bottom:10px}
+.stars{color:#c9927a;font-size:12px}
+.rating-count{font-size:11px;color:var(--gray2)}
+.pc-pr-row{display:flex;align-items:center;justify-content:space-between}
+.pc-price{font-size:16px;font-weight:900;color:var(--navy)}
+.pc-old{font-size:11px;color:var(--gray2);text-decoration:line-through;margin-top:2px}
+.add-btn{width:34px;height:34px;background:linear-gradient(135deg,var(--rose),var(--rose2));border:none;border-radius:10px;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;box-shadow:0 3px 10px rgba(172,59,97,.28)}
+.add-btn:hover{transform:scale(1.12);box-shadow:0 5px 16px rgba(172,59,97,.42)}
+
+/* ── CART ── */
+.cart-panel{position:fixed;top:0;right:-380px;width:360px;height:100vh;background:var(--white);border-left:1px solid var(--gray3);z-index:9998;transition:right .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:-8px 0 40px rgba(18,60,105,.12)}
+.cart-panel.open{right:0}
+.cart-hdr{display:flex;align-items:center;justify-content:space-between;padding:20px 22px;border-bottom:1px solid var(--gray3);background:var(--navy)}
+.cart-hdr h3{color:#fff;font-size:15px;font-weight:700;font-family:'Playfair Display',serif;display:flex;align-items:center;gap:9px}
+.cart-close{background:none;border:none;color:rgba(255,255,255,.5);font-size:22px;cursor:pointer;transition:color .2s;line-height:1}
+.cart-close:hover{color:#fff}
+.cart-items{flex:1;overflow-y:auto;padding:16px}
+.ci{display:flex;align-items:center;gap:12px;background:var(--cream2);border-radius:12px;padding:12px;margin-bottom:10px;border:1px solid var(--gray3)}
+.ci-ico{font-size:22px;width:46px;height:46px;background:var(--cream);border-radius:10px;display:flex;align-items:center;justify-content:center;border:1px solid var(--gray3);flex-shrink:0}
+.ci-nm{font-size:13px;font-weight:600;color:var(--dark);margin-bottom:4px;line-height:1.3}
+.ci-pr{font-size:12px;font-weight:700;color:var(--navy)}
+.ci-rm{margin-left:auto;background:none;border:none;color:var(--gray2);cursor:pointer;font-size:16px;transition:color .2s;flex-shrink:0}
+.ci-rm:hover{color:var(--rose)}
+.cart-footer{padding:18px;border-top:1px solid var(--gray3)}
+.cart-total{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.cart-total .lbl{font-size:13px;color:var(--gray2);font-weight:500}
+.cart-total .val{font-weight:900;color:var(--navy);font-size:20px}
+.empty-cart{text-align:center;color:var(--gray2);padding:50px 20px;font-size:14px}
+.empty-cart-ico{font-size:44px;margin-bottom:12px;display:block}
+
+/* ── OVERLAY ── */
+.ov{position:fixed;inset:0;background:rgba(18,60,105,.38);z-index:9990;display:none;backdrop-filter:blur(3px)}
+.ov.show{display:block}
+
+/* ── MODAL ── */
+.modal-qv{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.92);background:var(--white);border-radius:22px;width:90%;max-width:500px;z-index:9995;padding:32px;opacity:0;transition:all .3s;box-shadow:0 28px 70px rgba(18,60,105,.22)}
+.modal-qv.open{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.qv-close{position:absolute;top:16px;right:16px;background:var(--cream);border:none;color:var(--gray2);width:34px;height:34px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.qv-close:hover{background:var(--rose);color:#fff}
+.qv-ico{font-size:64px;text-align:center;background:linear-gradient(135deg,var(--cream),var(--cream2));border-radius:16px;padding:20px;margin-bottom:18px}
+.qv-cat{font-size:11px;color:var(--rose);font-weight:700;text-transform:uppercase;letter-spacing:1px;text-align:center;margin-bottom:8px}
+.qv-name{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--navy);text-align:center;margin-bottom:8px}
+.qv-rating{text-align:center;margin-bottom:12px;color:#c9927a;font-size:16px}
+.qv-desc{text-align:center;color:var(--gray2);font-size:14px;line-height:1.8;margin-bottom:20px}
+.qv-price{text-align:center;font-size:30px;font-weight:900;color:var(--navy);margin-bottom:24px}
+.qv-price-note{font-size:13px;color:var(--rose);font-weight:600}
+
+/* ── NOTIFICATION ── */
+.ntf{position:fixed;bottom:28px;right:28px;background:var(--white);border:1.5px solid var(--rose);border-left:4px solid var(--rose);border-radius:12px;padding:14px 20px;color:var(--dark);font-size:13px;font-weight:600;z-index:9997;transform:translateX(130%);transition:transform .35s cubic-bezier(.34,1.56,.64,1);box-shadow:0 8px 28px rgba(172,59,97,.2)}
+.ntf.show{transform:translateX(0)}
+.ntf-inner{display:flex;align-items:center;gap:9px}
+
+@media(max-width:960px){.hero-inner{grid-template-columns:1fr;padding-bottom:40px}.hero-products{display:none}.shop-wrap{grid-template-columns:1fr}.sidebar{position:relative;top:0}}
+@media(max-width:640px){.prod-grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<div class="dbanner">
+  <span>✦ Demo: <strong>Lumière Boutique</strong> — beauty store with cart, filters & quick view</span>
+  <div><a href="catalog.html">← Catalog</a><a href="index.html">Order</a></div>
+</div>
+
+<header>
+  <div class="hdr">
+    <a href="#" class="logo">
+      <div class="logo-mark">✦</div>
+      Lumière
+    </a>
+    <div class="srch">
+      <span class="srch-ic">🔍</span>
+      <input id="sv" type="text" placeholder="Search products..." oninput="filterProducts()">
+    </div>
+    <div class="hdr-right">
+      <button class="wishlist-btn" title="Wishlist">♡</button>
+      <button class="cart-btn" onclick="toggleCart()">🛒 Cart <span class="cbadge" id="cbadge">0</span></button>
+    </div>
+  </div>
+</header>
+
+<section class="hero-section">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eyebrow">✦ New Spring–Summer Collection</div>
+      <h1 class="hero-h1">Beauty is<br><em>an art form</em></h1>
+      <p class="hero-sub">Premium skincare and cosmetics. Authentic brands only. 2-hour delivery across Moscow.</p>
+      <div class="countdown-wrap">
+        <span class="cd-lbl">Sale ends in:</span>
+        <div class="cdp"><span class="n" id="cdh">07</span><span class="l">h</span></div>
+        <span class="cdcolon">:</span>
+        <div class="cdp"><span class="n" id="cdm">59</span><span class="l">min</span></div>
+        <span class="cdcolon">:</span>
+        <div class="cdp"><span class="n" id="cds">00</span><span class="l">sec</span></div>
+      </div>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="window.scrollTo({top:620,behavior:'smooth'})">Shop Collection</button>
+        <button class="btn-outline-w">Up to 40% off</button>
+      </div>
+      <div class="hero-stats">
+        <div class="hstat"><div class="hstat-n">2 400+</div><div class="hstat-l">Products</div></div>
+        <div class="hstat"><div class="hstat-n">48h</div><div class="hstat-l">Delivery</div></div>
+        <div class="hstat"><div class="hstat-n">98%</div><div class="hstat-l">Happy</div></div>
+        <div class="hstat"><div class="hstat-n">4.9★</div><div class="hstat-l">Rating</div></div>
+      </div>
+    </div>
+    <div class="hero-products">
+      <div class="hp"><div class="hp-ico">🌸</div><div class="hp-nm">Rose Élégance Parfum</div><div class="hp-price">4 890 ₸ <span class="hp-badge">-20%</span></div></div>
+      <div class="hp"><div class="hp-ico">💆</div><div class="hp-nm">Hyaluron+ Serum</div><div class="hp-price">2 190 ₸</div></div>
+      <div class="hp"><div class="hp-ico">🧴</div><div class="hp-nm">SPF 50 Day Cream</div><div class="hp-price">1 490 ₸ <span class="hp-badge">NEW</span></div></div>
+      <div class="hp"><div class="hp-ico">🕯️</div><div class="hp-nm">Peony Candle 45h</div><div class="hp-price">1 890 ₸</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="trust-bar">
+  <div class="trust-inner">
+    <div class="trust-item"><span class="trust-ico">🚚</span><span><strong>Free delivery</strong> from 3 000 ₸</span></div>
+    <div class="trust-item"><span class="trust-ico">🔄</span><span><strong>Returns</strong> within 14 days</span></div>
+    <div class="trust-item"><span class="trust-ico">✅</span><span><strong>Authentic</strong> products only</span></div>
+    <div class="trust-item"><span class="trust-ico">💳</span><span><strong>Any</strong> payment method</span></div>
+    <div class="trust-item"><span class="trust-ico">⭐</span><span><strong>4.9/5</strong> — 2 847 reviews</span></div>
+  </div>
+</div>
+
+<div class="shop-wrap">
+  <aside class="sidebar">
+    <div class="filter-card">
+      <div class="fh">Category</div>
+      <div class="cat-list">
+        <button class="cat-btn act" onclick="setCat('all',this)"><span class="cat-ico">✨</span> All Products</button>
+        <button class="cat-btn" onclick="setCat('parfum',this)"><span class="cat-ico">🌸</span> Perfumery</button>
+        <button class="cat-btn" onclick="setCat('skin',this)"><span class="cat-ico">💆</span> Skincare</button>
+        <button class="cat-btn" onclick="setCat('makeup',this)"><span class="cat-ico">💄</span> Makeup</button>
+        <button class="cat-btn" onclick="setCat('hair',this)"><span class="cat-ico">💇</span> Hair</button>
+        <button class="cat-btn" onclick="setCat('home',this)"><span class="cat-ico">🕯️</span> Home Fragrance</button>
+      </div>
+    </div>
+    <div class="filter-card">
+      <div class="fh">Price</div>
+      <div class="pr-vals"><span>0 ₸</span><strong id="prv">10 000 ₸</strong></div>
+      <input type="range" id="prs" min="0" max="10000" value="10000" oninput="document.getElementById('prv').textContent=Number(this.value).toLocaleString('ru')+' ₸';filterProducts()">
+    </div>
+    <div class="filter-card">
+      <div class="fh">Filters</div>
+      <div class="filter-tags">
+        <label class="ftag"><input type="checkbox" id="chkSale" onchange="filterProducts()"><span class="ftag-label">🏷️ On sale only</span></label>
+        <label class="ftag"><input type="checkbox" id="chkNew" onchange="filterProducts()"><span class="ftag-label">🆕 New arrivals</span></label>
+      </div>
+    </div>
+  </aside>
+
+  <div>
+    <div class="sort-bar">
+      <div class="results-count" id="pcnt">Loading...</div>
+      <div class="sort-wrap">
+        <span class="sort-lbl">Sort:</span>
+        <select id="srt" onchange="filterProducts()">
+          <option value="def">Most popular</option>
+          <option value="pa">Price: low to high</option>
+          <option value="pd">Price: high to low</option>
+          <option value="name">By name</option>
+        </select>
+      </div>
+    </div>
+    <div class="prod-grid" id="pg"></div>
+  </div>
+</div>
+
+<div class="cart-panel" id="cp">
+  <div class="cart-hdr">
+    <h3>✦ Cart</h3>
+    <button class="cart-close" onclick="toggleCart()">✕</button>
+  </div>
+  <div class="cart-items" id="ci"></div>
+  <div class="cart-footer">
+    <div class="cart-total">
+      <span class="lbl">Total:</span>
+      <span class="val" id="ctotal">0 ₸</span>
+    </div>
+    <button class="btn-primary" style="width:100%;justify-content:center;border-radius:12px;font-size:15px" onclick="alert('Order placed! Thank you for shopping at Lumière ✦')">Place Order →</button>
+  </div>
+</div>
+
+<div class="ov" id="ov" onclick="closeAll()"></div>
+
+<div class="modal-qv" id="mqv">
+  <button class="qv-close" onclick="closeAll()">✕</button>
+  <div class="qv-ico" id="qvico"></div>
+  <div class="qv-cat" id="qvcat"></div>
+  <div class="qv-name" id="qvname"></div>
+  <div class="qv-rating" id="qvrating"></div>
+  <div class="qv-desc" id="qvdesc"></div>
+  <div class="qv-price" id="qvprice"></div>
+  <button class="btn-primary" style="width:100%;justify-content:center;border-radius:12px" onclick="addToCartFromModal()">Add to Cart</button>
+</div>
+
+<div class="ntf" id="ntf"><div class="ntf-inner">✦ Added to cart</div></div>
+
+<script>
+var catNames={parfum:'Perfumery',skin:'Skincare',makeup:'Makeup',hair:'Hair',home:'Home Fragrance'};
+var prods=[
+  {id:1, name:'Rose Élégance Parfum',    cat:'parfum',price:4890,icon:'🌸',sale:true, isNew:false,rating:5,desc:'Floral-musky fragrance with notes of Damascus rose, jasmine and white musk. Longevity 12+ hours. 50 ml.'},
+  {id:2, name:'Hyaluron+ Serum',         cat:'skin',  price:2190,icon:'💆',sale:false,isNew:false,rating:5,desc:'2% hyaluronic acid concentrate with Vitamin C. 72-hour hydration. Suitable for all skin types. 30 ml.'},
+  {id:3, name:'SPF 50 Day Cream',        cat:'skin',  price:1490,icon:'🧴',sale:false,isNew:true, rating:4,desc:'Daytime cream with SPF 50+ protection. Lightweight texture, no white cast. UVA+UVB filters. 50 ml.'},
+  {id:4, name:'Peony Candle',            cat:'home',  price:1890,icon:'🕯️',sale:false,isNew:true, rating:5,desc:'Soy wax candle with peony and vanilla essential oils. Cotton wick. Burn time 45 hours. Diameter 9 cm.'},
+  {id:5, name:'Velvet Rose Lipstick',    cat:'makeup',price:890, icon:'💄',sale:true, isNew:false,rating:4,desc:'Matte lipstick with velvet finish. Non-drying formula, lasts up to 8 hours. 12 shades available.'},
+  {id:6, name:'Silk Hair Balm',          cat:'hair',  price:1190,icon:'💇',sale:false,isNew:true, rating:5,desc:'Silk proteins and argan oil. Restores damaged hair, adds shine and softness. 200 ml.'},
+  {id:7, name:'Golden Body Oil',         cat:'skin',  price:1750,icon:'✨',sale:true, isNew:false,rating:5,desc:'Blend of jojoba, rose and vitamin E oils. Nourishes, moisturises and gives skin a radiant glow. 100 ml.'},
+  {id:8, name:'White Tea Diffuser',      cat:'home',  price:2390,icon:'🌿',sale:false,isNew:false,rating:4,desc:'Reed diffuser with 8 rattan sticks. Delicate fresh white tea fragrance. 100 ml.'},
+  {id:9, name:'Noir Volume Mascara',     cat:'makeup',price:720, icon:'👁️',sale:true, isNew:false,rating:4,desc:'Volumising mascara +400% volume. Waterproof formula, no flaking. Brush wand included. 10 ml.'},
+  {id:10,name:'Cashmere Shampoo',        cat:'hair',  price:980, icon:'🧖',sale:false,isNew:true, rating:5,desc:'Sulphate-free shampoo with cashmere proteins. For coloured and damaged hair. 250 ml.'},
+  {id:11,name:'Midnight Iris Parfum',    cat:'parfum',price:5490,icon:'🌺',sale:false,isNew:true, rating:5,desc:'Oriental unisex fragrance with iris, sandalwood and patchouli notes. Eau de Parfum. 50 ml.'},
+  {id:12,name:'Premium Brush Set',       cat:'makeup',price:2890,icon:'🖌️',sale:true, isNew:false,rating:5,desc:'12 professional brushes with premium synthetic bristles. Travel case included.'},
+];
+var cart={};var curCat='all';var curProd=null;
+
+function filterProducts(){
+  var q=(document.getElementById('sv').value||'').toLowerCase();
+  var pr=+document.getElementById('prs').value;
+  var onlySale=document.getElementById('chkSale').checked;
+  var onlyNew=document.getElementById('chkNew').checked;
+  var srt=document.getElementById('srt').value;
+  var res=prods.filter(function(p){
+    return(curCat==='all'||p.cat===curCat)&&p.price<=pr&&(!onlySale||p.sale)&&(!onlyNew||p.isNew)&&(!q||p.name.toLowerCase().includes(q));
+  });
+  if(srt==='pa')res.sort(function(a,b){return a.price-b.price;});
+  if(srt==='pd')res.sort(function(a,b){return b.price-a.price;});
+  if(srt==='name')res.sort(function(a,b){return a.name.localeCompare(b.name);});
+  document.getElementById('pcnt').innerHTML='Found: <strong>'+res.length+'</strong> products';
+  document.getElementById('pg').innerHTML=res.map(function(p){
+    var stars='★'.repeat(p.rating||5)+'☆'.repeat(5-(p.rating||5));
+    var reviews=((p.id*7+13)%40+8);
+    return '<div class="pc" onclick="openQV('+p.id+')">'
+      +'<div class="pc-img"><span>'+p.icon+'</span>'
+      +(p.isNew?'<div class="new-b">NEW</div>':'')
+      +(p.sale?'<div class="sale-b">SALE</div>':'')
+      +'<button class="pc-wishlist" onclick="event.stopPropagation()">♡</button>'
+      +'</div>'
+      +'<div class="pc-body">'
+      +'<div class="pc-cat">'+(catNames[p.cat]||p.cat)+'</div>'
+      +'<div class="pc-name">'+p.name+'</div>'
+      +'<div class="pc-rating"><span class="stars">'+stars+'</span><span class="rating-count">('+reviews+')</span></div>'
+      +'<div class="pc-pr-row">'
+      +'<div><div class="pc-price">'+p.price.toLocaleString('ru')+' ₸</div>'
+      +(p.sale?'<div class="pc-old">'+Math.round(p.price*1.35).toLocaleString('ru')+' ₸</div>':'')
+      +'</div>'
+      +'<button class="add-btn" onclick="event.stopPropagation();addToCart('+p.id+')">+</button>'
+      +'</div></div></div>';
+  }).join('');
+}
+function setCat(c,btn){curCat=c;document.querySelectorAll('.cat-btn').forEach(function(b){b.classList.remove('act');});btn.classList.add('act');filterProducts();}
+function addToCart(id){cart[id]=(cart[id]||0)+1;updateCart();showNotif();}
+function removeFromCart(id){delete cart[id];updateCart();}
+function updateCart(){
+  var total=0,cnt=Object.values(cart).reduce(function(s,v){return s+v;},0);
+  document.getElementById('cbadge').textContent=cnt;
+  var html='';
+  Object.keys(cart).forEach(function(id){
+    var p=prods.find(function(x){return x.id==id;});
+    if(p){total+=p.price*cart[id];html+='<div class="ci"><div class="ci-ico">'+p.icon+'</div><div style="flex:1"><div class="ci-nm">'+p.name+'</div><div class="ci-pr">'+p.price.toLocaleString('ru')+' ₸ × '+cart[id]+'</div></div><button class="ci-rm" onclick="removeFromCart('+id+')">✕</button></div>';}
+  });
+  document.getElementById('ci').innerHTML=html||'<div class="empty-cart"><span class="empty-cart-ico">🛍️</span>Cart is empty</div>';
+  document.getElementById('ctotal').textContent=total.toLocaleString('ru')+' ₸';
+}
+function toggleCart(){
+  document.getElementById('cp').classList.toggle('open');
+  document.getElementById('ov').classList.toggle('show');
+}
+function openQV(id){
+  curProd=prods.find(function(p){return p.id===id;});
+  document.getElementById('qvico').textContent=curProd.icon;
+  document.getElementById('qvcat').textContent=catNames[curProd.cat]||curProd.cat;
+  document.getElementById('qvname').textContent=curProd.name;
+  document.getElementById('qvrating').textContent='★'.repeat(curProd.rating||5)+'☆'.repeat(5-(curProd.rating||5));
+  document.getElementById('qvdesc').textContent=curProd.desc;
+  document.getElementById('qvprice').innerHTML=curProd.price.toLocaleString('ru')+' ₸'+(curProd.sale?' <span class="qv-price-note">35% off</span>':'');
+  document.getElementById('mqv').classList.add('open');
+  document.getElementById('ov').classList.add('show');
+}
+function addToCartFromModal(){if(curProd){addToCart(curProd.id);closeAll();}}
+function closeAll(){
+  document.getElementById('mqv').classList.remove('open');
+  document.getElementById('ov').classList.remove('show');
+  document.getElementById('cp').classList.remove('open');
+}
+function showNotif(){var n=document.getElementById('ntf');n.classList.add('show');setTimeout(function(){n.classList.remove('show');},2500);}
+var cdend=new Date().getTime()+7*3600000+59*60000;
+function tick(){
+  var d=cdend-new Date().getTime();
+  if(d<0){['cdh','cdm','cds'].forEach(function(i){document.getElementById(i).textContent='00';});return;}
+  document.getElementById('cdh').textContent=String(Math.floor(d/3600000)).padStart(2,'0');
+  document.getElementById('cdm').textContent=String(Math.floor((d%3600000)/60000)).padStart(2,'0');
+  document.getElementById('cds').textContent=String(Math.floor((d%60000)/1000)).padStart(2,'0');
+}
+setInterval(tick,1000);tick();
+filterProducts();
+</script>
+</body>
+</html>

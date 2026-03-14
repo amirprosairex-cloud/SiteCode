@@ -1,0 +1,3766 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SiteCode — Разработка сайтов</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <!-- EmailJS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-deep:    #060f1e;
+      --bg-dark:    #0a1628;
+      --bg-card:    #0e1f38;
+      --bg-card2:   #112341;
+      --cyan:       #00d4ff;
+      --cyan-mid:   #00aadd;
+      --blue:       #0077b6;
+      --grad:       linear-gradient(135deg, #00d4ff 0%, #0099cc 50%, #0066aa 100%);
+      --grad-soft:  linear-gradient(135deg, #00d4ff33, #0077b620);
+      --text:       #e8f4fd;
+      --text-muted: #7ba3c0;
+      --border:     #1a3050;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+        background:
+          radial-gradient(circle at 12% 10%, rgba(0, 212, 255, 0.14), transparent 24%),
+          radial-gradient(circle at 85% 14%, rgba(0, 119, 182, 0.18), transparent 22%),
+          radial-gradient(circle at 50% 100%, rgba(0, 170, 221, 0.12), transparent 30%),
+          linear-gradient(180deg, #06111f 0%, #081526 38%, #07111d 100%);
+      color: var(--text);
+      overflow-x: hidden;
+        position: relative;
+        isolation: isolate;
+    }
+
+      body::before,
+      body::after {
+        content: '';
+        position: fixed;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: -2;
+        filter: blur(100px);
+        opacity: .28;
+      }
+      body::before {
+        width: 360px;
+        height: 360px;
+        top: 80px;
+        left: -120px;
+        background: rgba(0, 212, 255, 0.2);
+      }
+      body::after {
+        width: 420px;
+        height: 420px;
+        right: -140px;
+        bottom: 8%;
+        background: rgba(0, 119, 182, 0.2);
+      }
+
+      .ambient-grid {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: -1;
+        background-image:
+          linear-gradient(rgba(255,255,255,.028) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255,255,255,.028) 1px, transparent 1px);
+        background-size: 76px 76px;
+        mask-image: radial-gradient(circle at center, rgba(0,0,0,.95), transparent 88%);
+        opacity: .36;
+      }
+
+    /* ─── SCROLLBAR ─── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-dark); }
+    ::-webkit-scrollbar-thumb { background: var(--cyan-mid); border-radius: 3px; }
+
+    /* ─── HEADER ─── */
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 60px;
+      background: rgba(6, 15, 30, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      display: flex; align-items: center; gap: 12px;
+      text-decoration: none;
+    }
+    .logo-icon {
+      width: 44px; height: 44px;
+      background: var(--grad);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 900; color: #fff;
+      box-shadow: 0 0 20px #00d4ff55;
+    }
+    .logo-text {
+      font-size: 22px; font-weight: 800; letter-spacing: -0.5px;
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    nav { display: flex; align-items: center; gap: 36px; }
+    nav a {
+      color: var(--text-muted); text-decoration: none;
+      font-size: 14px; font-weight: 500; transition: color .25s;
+    }
+    nav a:hover { color: var(--cyan); }
+
+    .btn-nav {
+      padding: 10px 24px; border-radius: 8px;
+      background: var(--grad); color: #fff;
+      font-size: 14px; font-weight: 600; text-decoration: none;
+      transition: opacity .25s, box-shadow .25s;
+      box-shadow: 0 0 16px #00d4ff40;
+    }
+    .btn-nav:hover { opacity: .85; box-shadow: 0 0 28px #00d4ff60; }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      position: relative; overflow: hidden;
+    }
+
+    .hero-glow {
+      position: absolute; border-radius: 50%; pointer-events: none;
+      filter: blur(120px); opacity: .18;
+    }
+    .hero-glow-1 { width: 700px; height: 700px; background: #00d4ff; top: -200px; left: 50%; transform: translateX(-50%); }
+    .hero-glow-2 { width: 400px; height: 400px; background: #0066aa; bottom: 0; right: -100px; }
+    .hero-glow-3 { width: 300px; height: 300px; background: #00aadd; bottom: 100px; left: -50px; }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 18px; border-radius: 999px;
+      border: 1px solid #00d4ff44;
+      background: #00d4ff11;
+      font-size: 13px; color: var(--cyan); font-weight: 500;
+      margin-bottom: 32px; letter-spacing: .5px;
+    }
+    .hero-badge span { width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); animation: pulse 2s infinite; }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: .5; transform: scale(1.4); }
+    }
+
+    .hero h1 {
+      font-size: clamp(44px, 7vw, 86px);
+      font-weight: 900; line-height: 1.05; letter-spacing: -2px;
+      margin-bottom: 24px;
+    }
+    .hero h1 .brand {
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      max-width: 580px; font-size: 18px; line-height: 1.7;
+      color: var(--text-muted); margin-bottom: 44px;
+    }
+
+    .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+
+    .btn-primary {
+      padding: 16px 36px; border-radius: 10px;
+      background: var(--grad); color: #fff;
+      font-size: 16px; font-weight: 700; text-decoration: none;
+      box-shadow: 0 0 30px #00d4ff40;
+      transition: opacity .25s, box-shadow .25s, transform .2s;
+    }
+    .btn-primary:hover { opacity: .88; box-shadow: 0 0 50px #00d4ff60; transform: translateY(-2px); }
+
+    .btn-outline {
+      padding: 16px 36px; border-radius: 10px;
+      border: 1.5px solid #00d4ff55; color: var(--cyan);
+      font-size: 16px; font-weight: 600; text-decoration: none;
+      background: transparent;
+      transition: background .25s, border-color .25s, transform .2s;
+    }
+    .btn-outline:hover { background: #00d4ff11; border-color: var(--cyan); transform: translateY(-2px); }
+
+    .hero-stats {
+      display: flex; gap: 48px; margin-top: 72px;
+      flex-wrap: wrap; justify-content: center;
+    }
+    .stat { text-align: center; }
+    .stat-num {
+      font-size: 40px; font-weight: 900; letter-spacing: -1px;
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .stat-label { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+
+    /* ─── SECTIONS ─── */
+    section { padding: 100px 60px; }
+
+    .services,
+    .catalog,
+    #packages,
+    .process,
+    #portfolio,
+    .testimonials,
+    .calc-section,
+    .cta {
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 10% 18%, rgba(0, 212, 255, 0.08), transparent 22%),
+        radial-gradient(circle at 88% 76%, rgba(0, 119, 182, 0.1), transparent 24%),
+        linear-gradient(180deg, rgba(8, 20, 36, 0.92), rgba(6, 15, 30, 0.98));
+    }
+    .services::before,
+    .catalog::before,
+    #packages::before,
+    .process::before,
+    #portfolio::before,
+    .testimonials::before,
+    .calc-section::before,
+    .cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle at 15% 30%, rgba(255,255,255,.65) 0 1px, transparent 2px),
+        radial-gradient(circle at 72% 22%, rgba(185,233,255,.45) 0 1px, transparent 2px),
+        radial-gradient(circle at 84% 66%, rgba(255,255,255,.42) 0 1px, transparent 2px),
+        radial-gradient(circle at 32% 78%, rgba(157,213,255,.35) 0 1px, transparent 2px);
+      background-size: 320px 220px, 360px 260px, 420px 300px, 380px 260px;
+      opacity: .38;
+    }
+    .section-title {
+      text-align: center; margin-bottom: 16px;
+      font-size: clamp(30px, 4vw, 48px); font-weight: 800; letter-spacing: -1px;
+    }
+    .section-title .accent {
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .section-sub {
+      text-align: center; color: var(--text-muted);
+      font-size: 16px; max-width: 540px; margin: 0 auto 64px; line-height: 1.7;
+    }
+
+    /* ─── SERVICES ─── */
+    .services { background-color: transparent; }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px; max-width: 1200px; margin: 0 auto;
+    }
+    .service-card {
+      background:
+        linear-gradient(180deg, rgba(17, 33, 58, 0.95), rgba(10, 23, 41, 0.92));
+      border: 1px solid var(--border);
+      border-radius: 20px; padding: 36px 30px;
+      transition: border-color .3s, transform .3s, box-shadow .3s;
+      position: relative; overflow: hidden;
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.14);
+    }
+    .service-card::before {
+      content: ''; position: absolute; inset: 0;
+      background: var(--grad-soft); opacity: 0; transition: opacity .3s;
+    }
+    .service-card:hover { border-color: #00d4ff55; transform: translateY(-6px); box-shadow: 0 20px 60px #00d4ff15; }
+    .service-card:hover::before { opacity: 1; }
+
+    .service-icon {
+      width: 56px; height: 56px; border-radius: 14px;
+      background: var(--grad); display: flex; align-items: center;
+      justify-content: center; font-size: 26px; margin-bottom: 20px;
+      box-shadow: 0 0 20px #00d4ff30;
+    }
+    .service-card h3 { font-size: 20px; font-weight: 700; margin-bottom: 12px; }
+    .service-card p { color: var(--text-muted); font-size: 14px; line-height: 1.7; }
+
+    /* ─── PACKAGES ─── */
+    .packages-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 28px; max-width: 1100px; margin: 0 auto;
+    }
+    .pkg-card {
+      background: linear-gradient(180deg, rgba(16, 31, 56, 0.94), rgba(9, 21, 37, 0.96));
+      border: 1px solid var(--border);
+      border-radius: 24px; padding: 40px 36px;
+      position: relative; transition: transform .3s, box-shadow .3s;
+    }
+    .pkg-card:hover { transform: translateY(-8px); box-shadow: 0 30px 80px #00d4ff10; }
+    .pkg-card.featured {
+      border-color: #00d4ff66;
+      background: var(--bg-card2);
+      box-shadow: 0 0 40px #00d4ff20;
+    }
+
+    .pkg-badge {
+      position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+      background: var(--grad); color: #fff; font-size: 12px; font-weight: 700;
+      padding: 5px 18px; border-radius: 999px; letter-spacing: .5px;
+    }
+    .pkg-name { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+    .pkg-price {
+      font-size: 48px; font-weight: 900; letter-spacing: -2px;
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin: 20px 0 8px;
+    }
+    .pkg-price span { font-size: 20px; font-weight: 500; }
+    .pkg-desc { color: var(--text-muted); font-size: 14px; margin-bottom: 28px; }
+
+    .pkg-features { list-style: none; margin-bottom: 36px; }
+    .pkg-features li {
+      display: flex; align-items: center; gap: 12px;
+      font-size: 14px; color: var(--text-muted); padding: 9px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .pkg-features li:last-child { border-bottom: none; }
+    .pkg-features li .check {
+      width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0;
+      background: var(--grad); display: flex; align-items: center;
+      justify-content: center; font-size: 11px;
+    }
+    .pkg-features li .cross {
+      width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0;
+      background: #1a3050; display: flex; align-items: center;
+      justify-content: center; font-size: 11px; color: #445;
+    }
+    .pkg-features li.active { color: var(--text); }
+
+    .btn-pkg {
+      display: block; width: 100%; padding: 14px;
+      border-radius: 10px; text-align: center;
+      font-size: 15px; font-weight: 700; text-decoration: none;
+      transition: opacity .25s, transform .2s;
+    }
+    .btn-pkg-primary { background: var(--grad); color: #fff; box-shadow: 0 0 20px #00d4ff30; }
+    .btn-pkg-primary:hover { opacity: .88; transform: translateY(-2px); }
+    .btn-pkg-outline { border: 1.5px solid #00d4ff44; color: var(--cyan); background: transparent; }
+    .btn-pkg-outline:hover { background: #00d4ff11; border-color: var(--cyan); }
+
+    /* ─── PROCESS ─── */
+    .process { background-color: transparent; }
+    .process-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px; max-width: 1100px; margin: 0 auto;
+    }
+    .step {
+      text-align: center; padding: 36px 24px;
+      background: linear-gradient(180deg, rgba(15, 29, 52, 0.94), rgba(8, 20, 36, 0.92)); border: 1px solid var(--border);
+      border-radius: 20px; transition: border-color .3s, transform .3s;
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.14);
+    }
+    .step:hover { border-color: #00d4ff44; transform: translateY(-4px); }
+    .step-num {
+      font-size: 48px; font-weight: 900; letter-spacing: -2px;
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+    }
+    .step h4 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+    .step p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+
+    /* ─── PORTFOLIO ─── */
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px; max-width: 1200px; margin: 0 auto;
+    }
+    .portfolio-card {
+      border-radius: 20px; overflow: hidden;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(15, 29, 52, 0.95), rgba(8, 20, 36, 0.94));
+      transition: transform .3s, box-shadow .3s, border-color .3s;
+    }
+    .portfolio-card:hover { transform: translateY(-6px); box-shadow: 0 24px 60px #00d4ff15; border-color: #00d4ff55; }
+
+    .portfolio-img {
+      width: 100%; height: 200px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 60px; position: relative; overflow: hidden;
+    }
+    .portfolio-img-1 { background: linear-gradient(135deg, #0a1628, #143a5e); }
+    .portfolio-img-2 { background: linear-gradient(135deg, #0f1f3d, #0d3355); }
+    .portfolio-img-3 { background: linear-gradient(135deg, #091428, #0a2040); }
+    .portfolio-img-4 { background: linear-gradient(135deg, #0e1f38, #112a4a); }
+    .portfolio-img-5 { background: linear-gradient(135deg, #0a1830, #0d2545); }
+    .portfolio-img-6 { background: linear-gradient(135deg, #091525, #0c1e38); }
+
+    .portfolio-body { padding: 24px; }
+    .portfolio-tag {
+      display: inline-block; padding: 4px 12px; border-radius: 999px;
+      background: #00d4ff15; color: var(--cyan); font-size: 12px; font-weight: 600;
+      margin-bottom: 12px; border: 1px solid #00d4ff30;
+    }
+    .portfolio-body h4 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .portfolio-body p { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+    /* ─── TESTIMONIALS ─── */
+    .testimonials { background-color: transparent; }
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px; max-width: 1100px; margin: 0 auto;
+    }
+    .testi-card {
+      background: linear-gradient(180deg, rgba(16, 31, 56, 0.95), rgba(8, 20, 36, 0.93)); border: 1px solid var(--border);
+      border-radius: 20px; padding: 32px 28px;
+      transition: border-color .3s, transform .3s;
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.14);
+    }
+    .testi-card:hover { border-color: #00d4ff44; transform: translateY(-4px); }
+    .testi-stars { color: var(--cyan); font-size: 18px; margin-bottom: 16px; }
+    .testi-text { font-size: 14px; color: var(--text-muted); line-height: 1.7; margin-bottom: 24px; font-style: italic; }
+    .testi-author { display: flex; align-items: center; gap: 14px; }
+    .testi-avatar {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--grad); display: flex; align-items: center;
+      justify-content: center; font-size: 18px; font-weight: 700; color: #fff;
+      flex-shrink: 0;
+    }
+    .testi-name { font-size: 15px; font-weight: 700; }
+    .testi-role { font-size: 12px; color: var(--text-muted); }
+
+    /* ─── CTA ─── */
+    .cta {
+      text-align: center;
+      background: radial-gradient(ellipse 80% 60% at 50% 50%, #00d4ff0d 0%, transparent 70%), var(--bg-deep);
+    }
+    .cta h2 {
+      font-size: clamp(32px, 5vw, 60px);
+      font-weight: 900; letter-spacing: -1.5px; margin-bottom: 20px;
+    }
+    .cta h2 .accent {
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .cta p { color: var(--text-muted); font-size: 17px; max-width: 500px; margin: 0 auto 40px; line-height: 1.7; }
+    .cta-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--bg-dark);
+      border-top: 1px solid var(--border);
+      padding: 60px 60px 36px;
+    }
+    .footer-top {
+      display: grid;
+      grid-template-columns: 2fr repeat(3, 1fr);
+      gap: 48px; margin-bottom: 48px;
+    }
+    .footer-brand p { color: var(--text-muted); font-size: 14px; line-height: 1.7; margin: 16px 0 24px; max-width: 260px; }
+    .footer-socials { display: flex; gap: 12px; }
+    .social-btn {
+      width: 38px; height: 38px; border-radius: 10px;
+      border: 1px solid var(--border); color: var(--text-muted);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; text-decoration: none;
+      transition: border-color .25s, color .25s, background .25s;
+    }
+    .social-btn:hover { border-color: var(--cyan); color: var(--cyan); background: #00d4ff11; }
+
+    .footer-col h5 { font-size: 15px; font-weight: 700; margin-bottom: 20px; }
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 12px; }
+    .footer-col ul li a {
+      color: var(--text-muted); text-decoration: none; font-size: 14px;
+      transition: color .25s;
+    }
+    .footer-col ul li a:hover { color: var(--cyan); }
+
+    .footer-bottom {
+      border-top: 1px solid var(--border); padding-top: 28px;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 12px;
+    }
+    .footer-bottom p { color: var(--text-muted); font-size: 13px; }
+    .footer-bottom a { color: var(--cyan); text-decoration: none; }
+
+    /* ─── STARFIELD + COMET ─── */
+    .particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .particle {
+      position: absolute; border-radius: 50%;
+      background: #ffffff;
+      animation: twinkle ease-in-out infinite;
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.08; transform: scale(0.7); }
+      50%       { opacity: 0.9;  transform: scale(1.3); }
+    }
+
+    /* ─── COMET ─── */
+    .comet-obj {
+      position: fixed;
+      pointer-events: none;
+      z-index: 2;
+      height: 1.5px;
+      border-radius: 999px;
+      background: linear-gradient(to right, transparent, rgba(160,220,255,0.75) 30%, rgba(255,255,255,0.95));
+      filter: drop-shadow(0 0 3px rgba(0,180,255,0.9)) drop-shadow(0 0 8px rgba(255,255,255,0.5));
+    }
+    .comet-obj.right {
+      background: linear-gradient(to left, transparent, rgba(160,220,255,0.75) 30%, rgba(255,255,255,0.95));
+    }
+    .comet-obj::after {
+      content: '';
+      position: absolute;
+      right: -1px; top: 50%;
+      transform: translateY(-50%);
+      width: 5px; height: 5px; border-radius: 50%;
+      background: #ffffff;
+      box-shadow: 0 0 6px 3px rgba(0,200,255,0.9), 0 0 14px 6px rgba(255,255,255,0.4);
+    }
+    .comet-obj.right::after {
+      right: auto; left: -1px;
+    }
+    @keyframes comet-shoot {
+      0%   { opacity: 0; transform: translate(0, 0); }
+      6%   { opacity: 1; }
+      88%  { opacity: 1; }
+      100% { opacity: 0; transform: translate(110vw, var(--comet-drift-y, 38vh)); }
+    }
+    @keyframes comet-shoot-right {
+      0%   { opacity: 0; transform: translate(0, 0); }
+      6%   { opacity: 1; }
+      88%  { opacity: 1; }
+      100% { opacity: 0; transform: translate(-110vw, var(--comet-drift-y, 38vh)); }
+    }
+
+    /* ─── SCROLL PROGRESS ─── */
+    #scroll-progress {
+      position: fixed; top: 0; left: 0; height: 3px; z-index: 9999; pointer-events: none;
+      background: var(--grad); width: 0%; transition: width .08s linear;
+      box-shadow: 0 0 10px #00d4ff80;
+    }
+
+    /* ─── HAMBURGER ─── */
+    .hamburger {
+      display: none; flex-direction: column; gap: 5px; cursor: pointer;
+      background: none; border: none; padding: 4px; z-index: 110;
+    }
+    .hamburger span {
+      display: block; width: 24px; height: 2px;
+      background: var(--cyan); border-radius: 2px; transition: all .3s;
+    }
+    .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+    /* ─── MOBILE MENU ─── */
+    .mobile-menu {
+      position: fixed; top: 0; right: -100%; width: 280px; height: 100vh;
+      background: var(--bg-dark); border-left: 1px solid var(--border);
+      z-index: 108; padding: 80px 32px 40px;
+      transition: right .35s cubic-bezier(.22,.68,0,1.1);
+      display: flex; flex-direction: column; gap: 0;
+    }
+    .mobile-menu.open { right: 0; box-shadow: -20px 0 60px #00000066; }
+    .mobile-menu a {
+      color: var(--text); text-decoration: none; font-size: 17px; font-weight: 600;
+      padding: 13px 0; border-bottom: 1px solid var(--border); transition: color .2s;
+    }
+    .mobile-menu a:hover { color: var(--cyan); }
+    .mobile-menu .btn-nav { text-align: center; border-radius: 8px; margin-top: 20px; width: 100%; }
+    .menu-overlay {
+      position: fixed; inset: 0; background: #00000066; z-index: 107;
+      opacity: 0; pointer-events: none; transition: opacity .3s;
+    }
+    .menu-overlay.open { opacity: 1; pointer-events: all; }
+
+    /* ─── BACK TO TOP ─── */
+    #btt {
+      position: fixed; bottom: 32px; right: 32px; z-index: 200;
+      width: 46px; height: 46px; border-radius: 12px;
+      background: var(--grad); border: none; cursor: pointer;
+      color: #fff; font-size: 20px; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 20px #00d4ff40; opacity: 0; transform: translateY(20px);
+      transition: opacity .3s, transform .3s; pointer-events: none;
+    }
+    #btt.visible { opacity: 1; transform: translateY(0); pointer-events: all; }
+    #btt:hover { box-shadow: 0 6px 28px #00d4ff60; transform: translateY(-2px) !important; }
+
+    /* ─── TOAST ─── */
+    #toasts {
+      position: fixed; bottom: 90px; right: 32px; z-index: 300;
+      display: flex; flex-direction: column; gap: 10px; align-items: flex-end;
+    }
+    .toast {
+      background: var(--bg-card); border: 1px solid #00d4ff44;
+      border-radius: 12px; padding: 14px 18px; color: var(--text); font-size: 14px; font-weight: 500;
+      box-shadow: 0 8px 30px #00000066; display: flex; align-items: center; gap: 10px;
+      transform: translateX(120%); opacity: 0;
+      transition: transform .4s cubic-bezier(.22,.68,0,1.1), opacity .3s; max-width: 300px;
+    }
+    .toast.show { transform: translateX(0); opacity: 1; }
+    .toast-icon { font-size: 18px; }
+
+    /* ─── COOKIE ─── */
+    #cookie-bar {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 500;
+      background: var(--bg-card); border-top: 1px solid var(--border);
+      padding: 18px 40px; display: flex; align-items: center;
+      justify-content: space-between; gap: 20px; flex-wrap: wrap;
+      transform: translateY(100%); transition: transform .5s;
+    }
+    #cookie-bar.visible { transform: translateY(0); }
+    #cookie-bar p { font-size: 13px; color: var(--text-muted); max-width: 700px; line-height: 1.6; }
+    #cookie-bar a { color: var(--cyan); }
+    .cookie-btns { display: flex; gap: 12px; flex-shrink: 0; }
+    .btn-cookie { padding: 9px 22px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; transition: all .2s; }
+    .btn-cookie-ok { background: var(--grad); color: #fff; border: none; }
+    .btn-cookie-no { background: transparent; border: 1px solid var(--border); color: var(--text-muted); }
+    .btn-cookie-no:hover { border-color: var(--cyan); color: var(--cyan); }
+
+    /* ─── TYPER ─── */
+    .typer-cursor { color: var(--cyan); font-weight: 300; animation: blink 1s step-end infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* ─── CODE CARD ─── */
+    .hero-code {
+      margin-top: 48px;
+      background:
+        radial-gradient(circle at top right, rgba(0, 212, 255, 0.12), transparent 26%),
+        linear-gradient(180deg, rgba(9, 20, 36, 0.96), rgba(6, 15, 30, 0.98));
+      border: 1px solid #1a3050;
+      border-radius: 16px; overflow: hidden; max-width: 500px; width: 100%;
+      text-align: left; box-shadow: 0 24px 60px #000000bb, 0 0 40px #00d4ff12;
+    }
+    .hero-code-bar {
+      background: #0a1628; padding: 10px 16px;
+      display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #1a3050;
+    }
+    .hero-code-dots { display: flex; gap: 5px; }
+    .hero-code-dots span { width: 10px; height: 10px; border-radius: 50%; }
+    .hero-code-dots span:nth-child(1) { background: #ff5f57; }
+    .hero-code-dots span:nth-child(2) { background: #febc2e; }
+    .hero-code-dots span:nth-child(3) { background: #28c840; }
+    .hero-code-file { font-size: 11px; color: #4a7a9b; font-family: monospace; }
+    .hero-code-body {
+      padding: 20px 24px; font-family: 'Courier New', monospace;
+      font-size: 13px; line-height: 1.9; color: #a8c8e8; min-height: 120px;
+    }
+    .hero-code-body .kw { color: #d492e8; }
+    .hero-code-body .fn { color: #00d4ff; }
+    .hero-code-body .st { color: #7ec8a0; }
+    .hero-code-body .cm { color: #4a6a80; }
+    .hero-code-body .num { color: #f0a060; }
+    .hero-code-body .op { color: #888; }
+
+    /* ─── CALCULATOR ─── */
+    .calc-wrap {
+      max-width: 940px; margin: 0 auto;
+      background:
+        radial-gradient(circle at top right, rgba(0, 212, 255, 0.08), transparent 24%),
+        linear-gradient(180deg, rgba(14, 31, 56, 0.96), rgba(8, 20, 36, 0.96));
+      border: 1px solid var(--border); border-radius: 24px; overflow: hidden;
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.18);
+    }
+    .calc-body { display: grid; grid-template-columns: 1.1fr 1fr; }
+    .calc-left { padding: 40px; border-right: 1px solid var(--border); background: rgba(7, 17, 31, 0.2); }
+    .calc-right { padding: 40px; display: flex; flex-direction: column; justify-content: space-between; background: rgba(255,255,255,.02); }
+    .calc-group { margin-bottom: 28px; }
+    .calc-label { font-size: 11px; font-weight: 800; color: var(--cyan); letter-spacing: 1px; margin-bottom: 12px; text-transform: uppercase; }
+    .calc-options { display: flex; flex-direction: column; gap: 8px; }
+    .calc-option {
+      display: flex; align-items: center; gap: 10px; padding: 11px 14px; border-radius: 10px;
+      border: 1px solid var(--border); background: rgba(6, 15, 30, 0.72); cursor: pointer;
+      transition: border-color .2s, background .2s; font-size: 14px; color: var(--text-muted);
+    }
+    .calc-option:hover { border-color: #00d4ff44; }
+    .calc-option input { accent-color: var(--cyan); width: 15px; height: 15px; flex-shrink: 0; cursor: pointer; }
+    .calc-option.selected { border-color: var(--cyan); background: #00d4ff09; color: var(--text); }
+    .calc-option .opt-price { margin-left: auto; color: var(--cyan); font-weight: 700; font-size: 12px; flex-shrink: 0; }
+    .calc-slider-wrap { margin-top: 10px; }
+    .calc-slider {
+      width: 100%; -webkit-appearance: none; appearance: none;
+      height: 5px; border-radius: 3px; background: var(--border); outline: none;
+    }
+    .calc-slider::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%;
+      background: var(--grad); cursor: pointer; box-shadow: 0 0 8px #00d4ff60;
+    }
+    .calc-slider-val { text-align: right; font-size: 13px; color: var(--cyan); font-weight: 700; margin-top: 8px; }
+    .calc-total-label { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: .5px; }
+    .calc-total {
+      font-size: 46px; font-weight: 900; letter-spacing: -2px;
+      background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; margin-bottom: 6px; transition: all .3s;
+    }
+    .calc-total-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.5; }
+    .calc-breakdown { list-style: none; margin-bottom: 28px; }
+    .calc-breakdown li {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text-muted);
+    }
+    .calc-breakdown li:last-child { border: none; }
+    .calc-breakdown li .cb-val { color: var(--text); font-weight: 600; }
+
+    /* ─── FORM MODAL ─── */
+    .form-modal-overlay {
+      position: fixed; inset: 0; background: rgba(3,8,18,.92);
+      backdrop-filter: blur(10px); z-index: 1000;
+      opacity: 0; pointer-events: none; transition: opacity .3s;
+      display: flex; align-items: center; justify-content: center; padding: 20px;
+    }
+    .form-modal-overlay.open { opacity: 1; pointer-events: all; }
+    .form-modal {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 24px; padding: 44px; max-width: 520px; width: 100%;
+      transform: scale(.94) translateY(20px); opacity: 0; position: relative;
+      transition: transform .35s cubic-bezier(.22,.68,0,1.1), opacity .3s;
+      max-height: 90vh; overflow-y: auto;
+    }
+    .form-modal-overlay.open .form-modal { transform: scale(1) translateY(0); opacity: 1; }
+    .form-modal h3 { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+    .form-modal > p { color: var(--text-muted); font-size: 14px; margin-bottom: 24px; line-height: 1.6; }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; font-size: 11px; font-weight: 700; margin-bottom: 6px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .5px; }
+    .form-input {
+      width: 100%; padding: 12px 14px; border-radius: 10px;
+      border: 1px solid var(--border); background: var(--bg-dark);
+      color: var(--text); font-size: 14px; font-family: inherit;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .form-input:focus { outline: none; border-color: var(--cyan); box-shadow: 0 0 0 3px #00d4ff15; }
+    .form-input.error { border-color: #ff5555; box-shadow: 0 0 0 3px #ff555520; }
+    textarea.form-input { resize: vertical; min-height: 90px; }
+    .form-modal-close {
+      position: absolute; top: 18px; right: 18px;
+      width: 32px; height: 32px; border-radius: 8px;
+      background: #1a3050; border: 1px solid var(--border);
+      color: var(--text-muted); cursor: pointer; font-size: 14px;
+      display: flex; align-items: center; justify-content: center; transition: background .2s;
+    }
+    .form-modal-close:hover { background: #2a4060; color: #fff; }
+    .form-success { text-align: center; display: none; padding: 20px 0; }
+    .form-success .success-icon { font-size: 64px; margin-bottom: 16px; }
+    .form-success h4 { font-size: 22px; font-weight: 800; margin-bottom: 10px; }
+    .form-success p { color: var(--text-muted); }
+
+    /* ─── CATALOG ─── */
+    .catalog-filters {
+      display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
+      margin-bottom: 48px;
+    }
+    .cf-btn {
+      padding: 9px 22px; border-radius: 999px;
+      border: 1.5px solid var(--border);
+      background: transparent; color: var(--text-muted);
+      font-size: 13px; font-weight: 600; cursor: pointer;
+      transition: all .25s; font-family: inherit;
+    }
+    .cf-btn:hover, .cf-btn.active {
+      border-color: var(--cyan); color: var(--cyan);
+      background: #00d4ff11; box-shadow: 0 0 12px #00d4ff22;
+    }
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 28px; max-width: 1200px; margin: 0 auto;
+    }
+    .cat-card {
+      background:
+        radial-gradient(circle at top right, rgba(0, 212, 255, 0.08), transparent 28%),
+        linear-gradient(180deg, rgba(14, 31, 56, 0.95), rgba(8, 20, 36, 0.95));
+      border: 1px solid var(--border);
+      border-radius: 20px; overflow: hidden;
+      transition: transform .3s, box-shadow .3s, border-color .3s;
+      display: flex; flex-direction: column;
+    }
+    .cat-card:hover { transform: translateY(-8px); box-shadow: 0 28px 70px #00d4ff18; border-color: #00d4ff55; }
+
+    /* Browser frame */
+    .cat-preview {
+      flex-shrink: 0; background: linear-gradient(180deg, #07111f, #0b1930);
+      border-bottom: 1px solid var(--border);
+    }
+    .browser-bar {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 12px;
+      background: #0b1929; border-bottom: 1px solid #1a3050;
+    }
+    .b-dots { display: flex; gap: 5px; }
+    .b-dots span {
+      width: 9px; height: 9px; border-radius: 50%;
+    }
+    .b-dots span:nth-child(1){ background:#ff5f57; }
+    .b-dots span:nth-child(2){ background:#febc2e; }
+    .b-dots span:nth-child(3){ background:#28c840; }
+    .b-url {
+      flex: 1; background: #0e2038; border-radius: 4px;
+      padding: 3px 10px; font-size: 10px; color: #4a7a9b;
+      font-family: monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .site-mock {
+      width: 100%; height: 190px; overflow: hidden;
+      position: relative;
+    }
+    /* Mock internals */
+    .mock-nav {
+      height: 28px; display: flex; align-items: center;
+      padding: 0 10px; gap: 8px;
+    }
+    .mock-logo { width: 36px; height: 8px; border-radius: 3px; margin-right: 8px; }
+    .mock-nav-link { width: 22px; height: 5px; border-radius: 2px; opacity: .5; }
+    .mock-nav-btn { width: 36px; height: 14px; border-radius: 3px; margin-left: auto; }
+    .mock-hero {
+      padding: 14px 12px 10px;
+    }
+    .mock-h { height: 10px; border-radius: 3px; margin-bottom: 6px; }
+    .mock-h.sm { height: 7px; width: 65%; }
+    .mock-h.xs { height: 5px; width: 80%; opacity:.6; }
+    .mock-h.xxs { height: 5px; width: 50%; opacity:.5; }
+    .mock-btn-row { display: flex; gap: 6px; margin-top: 10px; }
+    .mock-btn { height: 14px; width: 52px; border-radius: 3px; }
+    .mock-cards {
+      display: flex; gap: 6px; padding: 6px 10px;
+    }
+    .mock-card { flex: 1; height: 42px; border-radius: 6px; opacity: .7; }
+    .mock-strip { height: 6px; border-radius: 2px; margin: 3px 10px; opacity: .4; }
+    .mock-grid2 { display: flex; gap: 6px; padding: 4px 10px; }
+    .mock-grid2 .mock-card { height: 30px; }
+    /* Color themes per template */
+    .sm-land  .mock-nav  { background: #071525; } .sm-land  .mock-logo { background: #00d4ff; }
+    .sm-land  .mock-nav-link { background:#3a7a9a; } .sm-land .mock-nav-btn { background: linear-gradient(90deg,#00d4ff,#0077b6); }
+    .sm-land  .mock-hero  { background: linear-gradient(160deg,#071525,#0a2040); }
+    .sm-land  .mock-h     { background: #e8f4fd; } .sm-land .mock-h.sm { background: #00d4ff; }
+    .sm-land  .mock-btn   { background: linear-gradient(90deg,#00d4ff,#0077b6); }
+    .sm-land  .mock-btn:last-child { background: #1a3050; }
+    .sm-land  .mock-cards { background: #0a1a2e; } .sm-land .mock-card { background: #112040; }
+
+    .sm-corp  .mock-nav  { background: #05101e; } .sm-corp .mock-logo { background: #0099cc; }
+    .sm-corp  .mock-nav-link { background:#2a5a7a; } .sm-corp .mock-nav-btn { background: #0077b6; }
+    .sm-corp  .mock-hero  { background: linear-gradient(160deg,#05101e,#091e38); }
+    .sm-corp  .mock-h     { background: #d0e8f5; } .sm-corp .mock-h.sm { background: #0099cc; }
+    .sm-corp  .mock-btn   { background: #0077b6; }
+    .sm-corp  .mock-btn:last-child { background: #112035; }
+    .sm-corp  .mock-cards { background: #071422; } .sm-corp .mock-card { background: #0d2040; }
+    .sm-corp  .mock-strip { background: #0d2040; }
+
+    .sm-shop  .mock-nav  { background: #060e1c; } .sm-shop .mock-logo { background: #00e5ff; }
+    .sm-shop  .mock-nav-link { background:#1a5070; } .sm-shop .mock-nav-btn { background: linear-gradient(90deg,#00e5ff,#0055aa); }
+    .sm-shop  .mock-hero  { background: #050d1a; }
+    .sm-shop  .mock-h     { background: #c8e8f8; } .sm-shop .mock-h.sm { background: #00e5ff; }
+    .sm-shop  .mock-btn   { background: linear-gradient(90deg,#00e5ff,#0055aa); }
+    .sm-shop  .mock-grid2 { background: #080f1e; } .sm-shop .mock-card { background: #0e1f3a; }
+    .sm-shop  .mock-strip { background: #0e1f3a; }
+
+    .sm-rest  .mock-nav  { background: #070f1e; } .sm-rest .mock-logo { background: #ff6b35; }
+    .sm-rest  .mock-nav-link { background:#2a3a50; } .sm-rest .mock-nav-btn { background: #ff6b35; }
+    .sm-rest  .mock-hero  { background: linear-gradient(160deg,#100a05,#1a1008); }
+    .sm-rest  .mock-h     { background: #ffe0c8; } .sm-rest .mock-h.sm { background: #ff6b35; }
+    .sm-rest  .mock-btn   { background: #ff6b35; }
+    .sm-rest  .mock-btn:last-child { background: #1a1208; }
+    .sm-rest  .mock-cards { background: #0d0f18; } .sm-rest .mock-card { background: #18110a; }
+
+    .sm-med   .mock-nav  { background: #040e1c; } .sm-med .mock-logo { background: #00c8aa; }
+    .sm-med   .mock-nav-link { background:#1a4060; } .sm-med .mock-nav-btn { background: #00c8aa; }
+    .sm-med   .mock-hero  { background: linear-gradient(160deg,#040e1c,#071820); }
+    .sm-med   .mock-h     { background: #c8f0e8; } .sm-med .mock-h.sm { background: #00c8aa; }
+    .sm-med   .mock-btn   { background: #00c8aa; }
+    .sm-med   .mock-btn:last-child { background: #0d2030; }
+    .sm-med   .mock-cards { background: #060f1c; } .sm-med .mock-card { background: #0d2030; }
+
+    .sm-port  .mock-nav  { background: #080810; } .sm-port .mock-logo { background: #aa55ff; }
+    .sm-port  .mock-nav-link { background:#2a1a40; } .sm-port .mock-nav-btn { background: linear-gradient(90deg,#aa55ff,#5500cc); }
+    .sm-port  .mock-hero  { background: linear-gradient(160deg,#080810,#100820); }
+    .sm-port  .mock-h     { background: #e8d8f8; } .sm-port .mock-h.sm { background: #aa55ff; }
+    .sm-port  .mock-btn   { background: linear-gradient(90deg,#aa55ff,#5500cc); }
+    .sm-port  .mock-btn:last-child { background: #1a1030; }
+    .sm-port  .mock-cards { background: #0a0a18; } .sm-port .mock-card { background: #14103a; }
+
+    /* Card body */
+    .cat-body { padding: 22px 24px 24px; display: flex; flex-direction: column; flex: 1; }
+    .cat-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+    .cat-tag {
+      display: inline-block; padding: 3px 10px; border-radius: 999px;
+      font-size: 11px; font-weight: 700; letter-spacing: .3px;
+      border: 1px solid #00d4ff30; background: #00d4ff10; color: var(--cyan);
+    }
+    .cat-tag.orange { color: #ff9944; background: #ff994410; border-color: #ff994430; }
+    .cat-tag.green  { color: #44ddaa; background: #44ddaa10; border-color: #44ddaa30; }
+    .cat-tag.purple { color: #bb77ff; background: #bb77ff10; border-color: #bb77ff30; }
+    .cat-body h4 { font-size: 18px; font-weight: 800; margin-bottom: 8px; }
+    .cat-body p { font-size: 13px; color: var(--text-muted); line-height: 1.6; flex: 1; }
+    .cat-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 18px; padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+    .cat-price {
+      font-size: 20px; font-weight: 900; letter-spacing: -0.5px;
+      background: var(--grad);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .cat-price-sub { font-size: 11px; color: var(--text-muted); font-weight: 400; }
+    .btn-cat {
+      padding: 9px 20px; border-radius: 8px;
+      background: var(--grad); color: #fff;
+      font-size: 13px; font-weight: 700; text-decoration: none;
+      transition: opacity .2s, transform .2s; white-space: nowrap;
+      box-shadow: 0 0 14px #00d4ff30;
+    }
+    .btn-cat:hover { opacity: .85; transform: translateY(-1px); }
+    .btn-preview {
+      padding: 9px 16px; border-radius: 8px;
+      background: transparent; color: var(--cyan);
+      font-size: 13px; font-weight: 700; text-decoration: none;
+      border: 1px solid #00d4ff40;
+      transition: background .2s, border-color .2s, transform .2s;
+      white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;
+    }
+    .btn-preview:hover { background: #00d4ff12; border-color: #00d4ff80; transform: translateY(-1px); }
+    .btn-boardroom {
+      padding: 9px 16px; border-radius: 8px;
+      background: transparent; color: #00d4ff;
+      font-size: 13px; font-weight: 700; text-decoration: none;
+      border: 1px solid #00d4ff55;
+      transition: background .2s, box-shadow .2s, transform .2s;
+      white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;
+      box-shadow: 0 0 10px #00d4ff18;
+    }
+    .btn-boardroom:hover { background: #00d4ff14; box-shadow: 0 0 22px #00d4ff38; transform: translateY(-1px); }
+    .cat-tag.boardroom { color: #00d4ff; background: #00d4ff0d; border-color: #00d4ff40; font-size: 10px; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      header { padding: 16px 24px; }
+      nav { display: none; }
+      .hamburger { display: flex; }
+      section { padding: 80px 24px; }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+      footer { padding: 48px 24px 28px; }
+      .calc-body { grid-template-columns: 1fr; }
+      .calc-left { border-right: none; border-bottom: 1px solid var(--border); }
+      .hero-code { max-width: 100%; }
+    }
+    @media (max-width: 600px) {
+      .hero-stats { gap: 28px; }
+      .footer-top { grid-template-columns: 1fr; }
+      footer { padding: 40px 20px 24px; }
+      #cookie-bar { padding: 18px 20px; }
+      #btt { bottom: 20px; right: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="ambient-grid"></div>
+
+<!-- Scroll Progress -->
+<div id="scroll-progress"></div>
+
+<!-- Floating particles -->
+<div class="particles" id="particles"></div>
+
+<!-- ─── HEADER ─── -->
+<header>
+  <a href="index.html" class="logo">
+    <div class="logo-icon">{/}</div>
+    <span class="logo-text">SiteCode</span>
+  </a>
+  <nav>
+    <a href="#services">Услуги</a>
+    <a href="catalog.html">Каталог</a>
+    <a href="#packages">Тарифы</a>
+    <a href="#calc">Калькулятор</a>
+    <a href="#contact" class="btn-nav">Заказать сайт</a>
+  </nav>
+  <button class="btn-profile" id="profileBtn" onclick="openAuth()">👤 Войти</button>
+  <button class="hamburger" id="menuBtn" aria-label="Меню">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<div class="menu-overlay" id="menuOverlay"></div>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#services" onclick="closeMenu()">Услуги</a>
+  <a href="catalog.html" onclick="closeMenu()">Каталог</a>
+  <a href="#packages" onclick="closeMenu()">Тарифы</a>
+  <a href="#calc" onclick="closeMenu()">Калькулятор</a>
+  <a href="#contact" class="btn-nav" onclick="closeMenu()">Заказать сайт</a>
+  <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.08)">
+    <a href="#" id="mobileAuthBtn" onclick="closeMenu();openAuth();return false;" style="color:#00d4ff">👤 Войти в аккаунт</a>
+  </div>
+</div>
+
+<!-- ─── HERO ─── -->
+<section class="hero" id="home">
+  <div class="hero-glow hero-glow-1"></div>
+  <div class="hero-glow hero-glow-2"></div>
+  <div class="hero-glow hero-glow-3"></div>
+
+  <div class="hero-badge">
+    <span></span> Профессиональная разработка сайтов
+  </div>
+
+  <h1>
+    Создаём сайты,<br />
+    которые <span class="brand" id="typer">продают</span><span class="typer-cursor">|</span>
+  </h1>
+
+  <p>
+    SiteCode — команда разработчиков, которая создаёт современные,
+    быстрые и эффективные веб-сайты для вашего бизнеса.
+    Ваш успех — наш код.
+  </p>
+
+  <div class="hero-btns">
+    <a href="#packages" class="btn-primary">Выбрать тариф</a>
+    <a href="#calc" class="btn-outline">Рассчитать цену ✦</a>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num" data-target="150" data-suffix="+">0</div>
+      <div class="stat-label">Проектов сдано</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" data-target="98" data-suffix="%">0</div>
+      <div class="stat-label">Довольных клиентов</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" data-target="5" data-suffix=" лет">0</div>
+      <div class="stat-label">На рынке</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" data-target="24" data-suffix="/7">0</div>
+      <div class="stat-label">Поддержка</div>
+    </div>
+  </div>
+
+  <div class="hero-code">
+    <div class="hero-code-bar">
+      <div class="hero-code-dots"><span></span><span></span><span></span></div>
+      <span class="hero-code-file">project.js — SiteCode</span>
+    </div>
+    <div class="hero-code-body" id="codeTyper"></div>
+  </div>
+</section>
+
+<!-- ─── SERVICES ─── -->
+<section class="services" id="services">
+  <div class="section-title">Наши <span class="accent">услуги</span></div>
+  <div class="section-sub">Полный цикл разработки — от идеи до запуска и продвижения</div>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon">🏢</div>
+      <h3>Корпоративные сайты</h3>
+      <p>Представительные сайты для компаний с уникальным дизайном, удобной CMS и высокой скоростью загрузки.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🛒</div>
+      <h3>Интернет-магазины</h3>
+      <p>Полнофункциональные магазины с каталогом, корзиной, оплатой и интеграцией с 1С и CRM системами.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🎯</div>
+      <h3>Лендинги</h3>
+      <p>Конверсионные одностраничники, которые превращают посетителей в клиентов. A/B тестирование в подарок.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">📱</div>
+      <h3>Мобильные версии</h3>
+      <p>Адаптивная вёрстка для всех устройств. Ваш сайт будет идеально выглядеть на смартфоне и планшете.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">⚡</div>
+      <h3>Веб-приложения</h3>
+      <p>Сложные SPA и PWA приложения на React, Vue.js. Личные кабинеты, дашборды, сервисы.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🔍</div>
+      <h3>SEO-оптимизация</h3>
+      <p>Технический SEO, семантика, контент-стратегия. Выводим сайты в топ поисковых систем.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── BESTSELLERS ─── -->
+<section class="catalog" id="bestsellers">
+  <div class="section-title">Чаще всего <span class="accent">покупают</span></div>
+  <div class="section-sub">Три самых востребованных шаблона среди наших клиентов. Цена зависит от типа сайта.</div>
+
+  <div class="catalog-grid" style="max-width:1100px;grid-template-columns:repeat(auto-fill,minmax(300px,1fr))">
+
+    <!-- Лендинг -->
+    <div class="cat-card" data-cat="landing">
+      <div class="cat-preview">
+        <div class="browser-bar">
+          <div class="b-dots"><span></span><span></span><span></span></div>
+          <div class="b-url">sitecode.ru/landing-business</div>
+        </div>
+        <div class="site-mock sm-land">
+          <div class="mock-nav">
+            <div class="mock-logo"></div>
+            <div class="mock-nav-link"></div><div class="mock-nav-link"></div><div class="mock-nav-link"></div>
+            <div class="mock-nav-btn"></div>
+          </div>
+          <div class="mock-hero">
+            <div class="mock-h" style="width:90%"></div>
+            <div class="mock-h sm"></div>
+            <div class="mock-h xs"></div>
+            <div class="mock-h xxs"></div>
+            <div class="mock-btn-row"><div class="mock-btn"></div><div class="mock-btn"></div></div>
+          </div>
+          <div class="mock-cards">
+            <div class="mock-card"></div><div class="mock-card"></div><div class="mock-card"></div>
+          </div>
+        </div>
+      </div>
+      <div class="cat-body">
+        <div class="cat-tags"><span class="cat-tag">Лендинг</span><span class="cat-tag green">Быстрый старт</span></div>
+        <h4>Business Landing</h4>
+        <p>Конверсионный одностраничник для продвижения товара или услуги. Включает hero-блок, преимущества, отзывы и форму заявки.</p>
+        <div class="cat-footer">
+          <div><div class="cat-price">15 000 ₸</div><div class="cat-price-sub">срок: 3–5 дней</div></div>
+          <a href="#contact" class="btn-cat">Заказать</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Корпоративный -->
+    <div class="cat-card" data-cat="corp">
+      <div class="cat-preview">
+        <div class="browser-bar">
+          <div class="b-dots"><span></span><span></span><span></span></div>
+          <div class="b-url">sitecode.ru/corporate-standard</div>
+        </div>
+        <div class="site-mock sm-corp">
+          <div class="mock-nav">
+            <div class="mock-logo"></div>
+            <div class="mock-nav-link"></div><div class="mock-nav-link"></div><div class="mock-nav-link"></div><div class="mock-nav-link"></div>
+            <div class="mock-nav-btn"></div>
+          </div>
+          <div class="mock-hero">
+            <div class="mock-h" style="width:75%"></div>
+            <div class="mock-h sm" style="width:55%"></div>
+            <div class="mock-h xs"></div>
+            <div class="mock-btn-row"><div class="mock-btn"></div></div>
+          </div>
+          <div class="mock-strip" style="width:80%"></div>
+          <div class="mock-strip" style="width:60%"></div>
+          <div class="mock-cards">
+            <div class="mock-card"></div><div class="mock-card"></div><div class="mock-card"></div>
+          </div>
+        </div>
+      </div>
+      <div class="cat-body">
+        <div class="cat-tags"><span class="cat-tag">Корпоративный</span><span class="cat-tag">До 10 страниц</span><span class="cat-tag boardroom">◆ Board Room</span></div>
+        <h4>Corporate Standard</h4>
+        <p>Многостраничный корпоративный сайт с разделами «О компании», «Услуги», «Команда», «Портфолио» и блогом. Включает доступ к Board Room — закрытому уровню для крупных проектов от 90 000 ₸.</p>
+        <div class="cat-footer">
+          <div><div class="cat-price">35 000 ₸</div><div class="cat-price-sub">срок: 10–14 дней</div></div>
+          <div style="display:flex;gap:8px">
+            <a href="catalog.html" class="btn-boardroom">◆ Board Room</a>
+            <a href="#contact" class="btn-cat">Заказать</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Интернет-магазин -->
+    <div class="cat-card" data-cat="shop">
+      <div class="cat-preview">
+        <div class="browser-bar">
+          <div class="b-dots"><span></span><span></span><span></span></div>
+          <div class="b-url">sitecode.ru/shop-pro</div>
+        </div>
+        <div class="site-mock sm-shop">
+          <div class="mock-nav">
+            <div class="mock-logo"></div>
+            <div class="mock-nav-link"></div><div class="mock-nav-link"></div>
+            <div class="mock-nav-btn"></div>
+          </div>
+          <div class="mock-hero" style="padding:8px 10px 4px">
+            <div class="mock-h sm" style="width:50%"></div>
+            <div class="mock-h xs"></div>
+          </div>
+          <div class="mock-grid2">
+            <div class="mock-card"></div><div class="mock-card"></div><div class="mock-card"></div><div class="mock-card"></div>
+          </div>
+          <div class="mock-grid2">
+            <div class="mock-card"></div><div class="mock-card"></div><div class="mock-card"></div><div class="mock-card"></div>
+          </div>
+          <div class="mock-strip" style="width:40%"></div>
+        </div>
+      </div>
+      <div class="cat-body">
+        <div class="cat-tags"><span class="cat-tag orange">Магазин</span><span class="cat-tag orange">Каталог + Корзина</span></div>
+        <h4>Shop Pro</h4>
+        <p>Полноценный интернет-магазин с каталогом, фильтрами, корзиной, онлайн-оплатой, личным кабинетом и интеграцией с 1С.</p>
+        <div class="cat-footer">
+          <div><div class="cat-price">55 000 ₸</div><div class="cat-price-sub">срок: 21–30 дней</div></div>
+          <div style="display:flex;gap:8px">
+            <a href="preview-shop.html" target="_blank" class="btn-preview">&#128065; Превью</a>
+            <a href="#contact" class="btn-cat">Заказать</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="text-align:center;margin-top:44px">
+    <a href="catalog.html" class="btn-outline" style="display:inline-flex;align-items:center;gap:10px;padding:14px 36px">
+      Смотреть весь каталог <span style="font-size:18px">→</span>
+    </a>
+  </div>
+</section>
+
+<!-- ─── PACKAGES ─── -->
+<section id="packages">
+  <div class="section-title"><span class="accent">Тарифы</span> и цены</div>
+  <div class="section-sub">Прозрачное ценообразование без скрытых платежей. Выберите подходящий пакет.</div>
+  <div class="packages-grid">
+    <div class="pkg-card">
+      <div class="pkg-name">Старт</div>
+      <div class="pkg-price"><span>от </span>15 000 ₸</div>
+      <div class="pkg-desc">Для малого бизнеса и стартапов</div>
+      <ul class="pkg-features">
+        <li class="active"><span class="check">✓</span> До 5 страниц</li>
+        <li class="active"><span class="check">✓</span> Адаптивный дизайн</li>
+        <li class="active"><span class="check">✓</span> Форма обратной связи</li>
+        <li class="active"><span class="check">✓</span> Базовое SEO</li>
+        <li><span class="cross">✗</span> Интеграция с CRM</li>
+        <li><span class="cross">✗</span> Личный кабинет</li>
+        <li><span class="cross">✗</span> Интернет-магазин</li>
+      </ul>
+      <a href="#contact" class="btn-pkg btn-pkg-outline">Заказать</a>
+    </div>
+    <div class="pkg-card featured">
+      <div class="pkg-badge">⭐ Популярный</div>
+      <div class="pkg-name">Бизнес</div>
+      <div class="pkg-price"><span>от </span>45 000 ₸</div>
+      <div class="pkg-desc">Для среднего бизнеса с амбициями</div>
+      <ul class="pkg-features">
+        <li class="active"><span class="check">✓</span> До 20 страниц</li>
+        <li class="active"><span class="check">✓</span> Уникальный дизайн</li>
+        <li class="active"><span class="check">✓</span> CMS для управления</li>
+        <li class="active"><span class="check">✓</span> Интеграция с CRM</li>
+        <li class="active"><span class="check">✓</span> SEO-продвижение</li>
+        <li class="active"><span class="check">✓</span> 3 месяца поддержки</li>
+        <li><span class="cross">✗</span> Интернет-магазин</li>
+      </ul>
+      <a href="#contact" class="btn-pkg btn-pkg-primary">Заказать</a>
+    </div>
+    <div class="pkg-card">
+      <div class="pkg-name">Премиум</div>
+      <div class="pkg-price"><span>от </span>90 000 ₸</div>
+      <div class="pkg-desc">Для крупных проектов и e-commerce</div>
+      <ul class="pkg-features">
+        <li class="active"><span class="check">✓</span> Без ограничений</li>
+        <li class="active"><span class="check">✓</span> Эксклюзивный дизайн</li>
+        <li class="active"><span class="check">✓</span> Интернет-магазин</li>
+        <li class="active"><span class="check">✓</span> Личный кабинет</li>
+        <li class="active"><span class="check">✓</span> Все интеграции</li>
+        <li class="active"><span class="check">✓</span> 12 месяцев поддержки</li>
+        <li class="active"><span class="check">✓</span> SEO + контекстная реклама</li>
+      </ul>
+      <a href="#contact" class="btn-pkg btn-pkg-outline">Заказать</a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PROCESS ─── -->
+<section class="process" id="process">
+  <div class="section-title">Как мы <span class="accent">работаем</span></div>
+  <div class="section-sub">Чёткий процесс, прозрачные сроки, результат в срок</div>
+  <div class="process-steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <h4>Бриф и анализ</h4>
+      <p>Изучаем ваш бизнес, конкурентов и целевую аудиторию. Составляем техническое задание.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <h4>Прототип</h4>
+      <p>Создаём структуру сайта и прорабатываем пользовательский опыт (UX). Согласовываем с вами.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <h4>Дизайн</h4>
+      <p>Разрабатываем уникальный дизайн под ваш бренд. Все правки включены в стоимость.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <h4>Разработка</h4>
+      <p>Верстаем и программируем. Регулярно показываем результат, всё под вашим контролем.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">05</div>
+      <h4>Тестирование</h4>
+      <p>Тщательно проверяем функционал, скорость и адаптивность на всех устройствах.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">06</div>
+      <h4>Запуск</h4>
+      <p>Публикуем сайт, настраиваем аналитику и передаём вам все доступы. Вы в деле!</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PORTFOLIO ─── -->
+<section id="portfolio">
+  <div class="section-title">Наши <span class="accent">работы</span></div>
+  <div class="section-sub">Избранные проекты из нашего портфолио</div>
+  <div class="portfolio-grid">
+    <div class="portfolio-card">
+      <div class="portfolio-img portfolio-img-1">🏥</div>
+      <div class="portfolio-body">
+        <span class="portfolio-tag">Медицина</span>
+        <h4>МедЦентр Плюс</h4>
+        <p>Многостраничный сайт медицинского центра с онлайн-записью, личным кабинетом пациента и интеграцией МИС.</p>
+      </div>
+    </div>
+    <div class="portfolio-card">
+      <div class="portfolio-img portfolio-img-2">🛍️</div>
+      <div class="portfolio-body">
+        <span class="portfolio-tag">E-commerce</span>
+        <h4>FashionStore</h4>
+        <p>Интернет-магазин одежды с каталогом 5000+ товаров, фильтрами, отзывами и интеграцией с 1С.</p>
+      </div>
+    </div>
+    <div class="portfolio-card">
+      <div class="portfolio-img portfolio-img-3">🏗️</div>
+      <div class="portfolio-body">
+        <span class="portfolio-tag">Строительство</span>
+        <h4>СтройПроф</h4>
+        <p>Корпоративный сайт строительной компании с портфолио объектов, калькулятором стоимости и CRM.</p>
+      </div>
+    </div>
+    <div class="portfolio-card">
+      <div class="portfolio-img portfolio-img-4">🍕</div>
+      <div class="portfolio-body">
+        <span class="portfolio-tag">Рестораны</span>
+        <h4>PizzaLand</h4>
+        <p>Сайт пиццерии с онлайн-заказом, системой лояльности, отслеживанием доставки в реальном времени.</p>
+      </div>
+    </div>
+    <div class="portfolio-card">
+      <div class="portfolio-img portfolio-img-5">🎓</div>
+      <div class="portfolio-body">
+        <span class="portfolio-tag">Образование</span>
+        <h4>EduPlatform</h4>
+        <p>Образовательная платформа с видеоуроками, тестами, сертификатами и личным кабинетом студента.</p>
+      </div>
+    </div>
+    <div class="portfolio-card">
+      <div class="portfolio-img portfolio-img-6">✈️</div>
+      <div class="portfolio-body">
+        <span class="portfolio-tag">Туризм</span>
+        <h4>TravelPro</h4>
+        <p>Туристическое агентство: каталог туров, форма бронирования, отзывы путешественников и блог.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── TESTIMONIALS ─── -->
+<section class="testimonials">
+  <div class="section-title">Отзывы <span class="accent">клиентов</span></div>
+  <div class="section-sub">Что говорят о нас те, кто уже работал с SiteCode</div>
+  <div class="testimonials-grid">
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-text">"SiteCode сделали нам сайт в срок и даже чуть раньше. Результат превзошёл ожидания — конверсия выросла на 40% за первый месяц. Однозначно рекомендую!"</div>
+      <div class="testi-author">
+        <div class="testi-avatar">А</div>
+        <div>
+          <div class="testi-name">Андрей Смирнов</div>
+          <div class="testi-role">CEO, TechStart</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-text">"Работаем с SiteCode уже 3 года. Они сделали наш интернет-магазин, а потом сопровождают и развивают его. Профессиональный подход, всегда на связи."</div>
+      <div class="testi-author">
+        <div class="testi-avatar">М</div>
+        <div>
+          <div class="testi-name">Мария Козлова</div>
+          <div class="testi-role">Директор, FashionLine</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-text">"Нужен был лендинг за 3 дня. ребята справились за 2! Дизайн огонь, сайт летает. Заявки пошли с первого дня. Буду обращаться ещё."</div>
+      <div class="testi-author">
+        <div class="testi-avatar">И</div>
+        <div>
+          <div class="testi-name">Иван Петров</div>
+          <div class="testi-role">Предприниматель</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CALCULATOR ─── -->
+<section class="calc-section" id="calc">
+  <div class="section-title">Рассчитайте <span class="accent">стоимость</span></div>
+  <div class="section-sub">Интерактивный калькулятор — узнайте примерную цену прямо сейчас</div>
+  <div class="calc-wrap">
+    <div class="calc-body">
+      <div class="calc-left">
+        <div class="calc-group">
+          <div class="calc-label">Тип сайта</div>
+          <div class="calc-options" id="cTypeOpts">
+            <label class="calc-option selected"><input type="radio" name="stype" value="15000" checked> Лендинг <span class="opt-price">от 15 000 ₸</span></label>
+            <label class="calc-option"><input type="radio" name="stype" value="35000"> Корпоративный <span class="opt-price">от 35 000 ₸</span></label>
+            <label class="calc-option"><input type="radio" name="stype" value="55000"> Интернет-магазин <span class="opt-price">от 55 000 ₸</span></label>
+            <label class="calc-option"><input type="radio" name="stype" value="90000"> Веб-приложение <span class="opt-price">от 90 000 ₸</span></label>
+          </div>
+        </div>
+        <div class="calc-group">
+          <div class="calc-label">Количество страниц</div>
+          <div class="calc-slider-wrap">
+            <input type="range" class="calc-slider" id="pagesSlider" min="1" max="30" value="5">
+            <div class="calc-slider-val"><span id="pagesVal">5</span> страниц (+900 ₸ за каждую сверх 5)</div>
+          </div>
+        </div>
+        <div class="calc-group">
+          <div class="calc-label">Дополнительно</div>
+          <div class="calc-options" id="cExtras">
+            <label class="calc-option"><input type="checkbox" value="8000"> SEO-оптимизация <span class="opt-price">+8 000 ₸</span></label>
+            <label class="calc-option"><input type="checkbox" value="12000"> Интеграция с CRM <span class="opt-price">+12 000 ₸</span></label>
+            <label class="calc-option"><input type="checkbox" value="15000"> Личный кабинет <span class="opt-price">+15 000 ₸</span></label>
+            <label class="calc-option"><input type="checkbox" value="5000"> Онлайн-чат <span class="opt-price">+5 000 ₸</span></label>
+            <label class="calc-option"><input type="checkbox" value="10000"> Мультиязычность <span class="opt-price">+10 000 ₸</span></label>
+          </div>
+        </div>
+        <div class="calc-group">
+          <div class="calc-label">Срочность</div>
+          <div class="calc-options" id="cUrgency">
+            <label class="calc-option selected"><input type="radio" name="urgency" value="1" checked> Стандарт <span class="opt-price">×1.0</span></label>
+            <label class="calc-option"><input type="radio" name="urgency" value="1.3"> Быстро (+30%) <span class="opt-price">×1.3</span></label>
+            <label class="calc-option"><input type="radio" name="urgency" value="1.6"> Срочно (+60%) <span class="opt-price">×1.6</span></label>
+          </div>
+        </div>
+      </div>
+      <div class="calc-right">
+        <div>
+          <div class="calc-total-label">Примерная стоимость</div>
+          <div class="calc-total" id="calcTotal">15 000 ₸</div>
+          <div class="calc-total-sub">*Финальная цена обсуждается после брифа. Это ориентировочный расчёт.</div>
+          <ul class="calc-breakdown" id="calcBreakdown">
+            <li><span>Лендинг</span><span class="cb-val">15 000 ₸</span></li>
+          </ul>
+        </div>
+        <button class="btn-primary" onclick="openFormModal()" style="width:100%;border:none;cursor:pointer;font-family:inherit;font-size:16px;padding:16px">
+          Заказать за <span id="calcTotalInline">15 000 ₸</span> →
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CTA ─── -->
+<section class="cta" id="contact">
+  <h2>Готовы запустить<br /><span class="accent">ваш сайт?</span></h2>
+  <p>Оставьте заявку — и мы свяжемся с вами в течение 30 минут для бесплатной консультации.</p>
+  <div class="cta-btns">
+    <button class="btn-primary" onclick="openFormModal()" style="border:none;cursor:pointer;font-family:inherit;font-size:16px">📝 Оставить заявку</button>
+    <a href="tel:+79991234567" class="btn-outline">📞 Позвонить</a>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="#" class="logo">
+        <div class="logo-icon">{/}</div>
+        <span class="logo-text">SiteCode</span>
+      </a>
+      <p>Создаём сайты, которые работают на вас. Профессиональная разработка, честные цены, реальный результат.</p>
+      <div class="footer-socials">
+        <a class="social-btn" href="#" title="Telegram">✈</a>
+        <a class="social-btn" href="#" title="VK">V</a>
+        <a class="social-btn" href="#" title="YouTube">▶</a>
+        <a class="social-btn" href="#" title="WhatsApp">W</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h5>Услуги</h5>
+      <ul>
+        <li><a href="#">Корпоративные сайты</a></li>
+        <li><a href="#">Интернет-магазины</a></li>
+        <li><a href="#">Лендинги</a></li>
+        <li><a href="#">Веб-приложения</a></li>
+        <li><a href="#">SEO-продвижение</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Навигация</h5>
+      <ul>
+        <li><a href="#services">Услуги</a></li>
+        <li><a href="catalog.html">Каталог</a></li>
+        <li><a href="#packages">Тарифы</a></li>
+        <li><a href="#calc">Калькулятор</a></li>
+        <li><a href="#contact">Заказать сайт</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Контакты</h5>
+      <ul>
+        <li><a href="tel:+79991234567">+7 (999) 123-45-67</a></li>
+        <li><a href="mailto:info@sitecode.ru">info@sitecode.ru</a></li>
+        <li><a href="#">Telegram</a></li>
+        <li><a href="#">WhatsApp</a></li>
+        <li><a href="#">Москва, Россия</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 SiteCode. Все права защищены.</p>
+    <p><a href="#">Политика конфиденциальности</a> · <a href="#">Договор оферты</a></p>
+  </div>
+</footer>
+
+<!-- ─── BTT ─── -->
+<button id="btt" onclick="scrollToTop()" title="Наверх">↑</button>
+
+<!-- ─── TOASTS ─── -->
+<div id="toasts"></div>
+
+<!-- ─── COOKIE ─── -->
+<div id="cookie-bar">
+  <p>🍪 Мы используем cookies для улучшения работы сайта. <a href="#">Подробнее</a></p>
+  <div class="cookie-btns">
+    <button class="btn-cookie btn-cookie-no" onclick="closeCookie(false)">Только нужные</button>
+    <button class="btn-cookie btn-cookie-ok" onclick="closeCookie(true)">Принять все</button>
+  </div>
+</div>
+
+<!-- ─── FORM MODAL ─── -->
+<div class="form-modal-overlay" id="formModalOverlay" onclick="if(event.target===this)closeFormModal()">
+  <div class="form-modal">
+    <button class="form-modal-close" onclick="closeFormModal()">✕</button>
+    <div id="formContent">
+      <h3>Обсудим проект? 🚀</h3>
+      <p>Оставьте контакты — свяжемся в течение 30 минут для бесплатной консультации.</p>
+      <form id="contactForm" onsubmit="submitForm(event)">
+        <div class="form-group">
+          <label>Ваше имя *</label>
+          <input type="text" class="form-input" id="fName" placeholder="Иван Иванов">
+        </div>
+        <div class="form-group">
+          <label>Телефон / Telegram *</label>
+          <input type="text" class="form-input" id="fPhone" placeholder="+7 (999) 000-00-00">
+        </div>
+        <div class="form-group">
+          <label>Бюджет (из калькулятора)</label>
+          <input type="text" class="form-input" id="fBudget" readonly placeholder="рассчитайте выше">
+        </div>
+        <div class="form-group">
+          <label>Комментарий</label>
+          <textarea class="form-input" id="fComment" placeholder="Расскажите о проекте..."></textarea>
+        </div>
+        <button type="submit" class="btn-primary" style="width:100%;border:none;cursor:pointer;font-family:inherit;font-size:15px;padding:15px;margin-top:4px">Отправить заявку →</button>
+      </form>
+    </div>
+    <div class="form-success" id="formSuccess">
+      <div class="success-icon">✅</div>
+      <h4>Заявка отправлена!</h4>
+      <p>Мы перезвоним вам в течение 30 минут. Спасибо за доверие к SiteCode!</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ===== STARFIELD WITH PARALLAX =====
+  const container = document.getElementById('particles');
+  const starData = [];
+  for (let i = 0; i < 180; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 3.5 + 0.8;
+    const bright = Math.random();
+    const speed = Math.random() * 0.25 + 0.03;
+    p.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;opacity:${0.1+Math.random()*0.5};background:${bright>.7?'#a8e8ff':bright>.4?'#ffffff':'#c8f0ff'};animation-duration:${Math.random()*4+2}s;animation-delay:${Math.random()*6}s;`;
+    container.appendChild(p);
+    starData.push({ el: p, speed });
+  }
+
+  // ===== SCROLL EVENTS =====
+  const progressBar = document.getElementById('scroll-progress');
+  const headerEl = document.querySelector('header');
+  const bttEl = document.getElementById('btt');
+  window.addEventListener('scroll', () => {
+    const sy = window.scrollY;
+    starData.forEach(d => { d.el.style.transform = `translateY(${-sy * d.speed}px)`; });
+    const pct = sy / (document.documentElement.scrollHeight - window.innerHeight);
+    progressBar.style.width = Math.min(pct * 100, 100) + '%';
+    headerEl.style.boxShadow = sy > 40 ? '0 4px 40px #00d4ff12' : 'none';
+    sy > 400 ? bttEl.classList.add('visible') : bttEl.classList.remove('visible');
+  }, { passive: true });
+
+  function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+  // ===== MOBILE MENU =====
+  const menuBtn = document.getElementById('menuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const menuOverlay = document.getElementById('menuOverlay');
+  function toggleMenu() {
+    menuBtn.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+    menuOverlay.classList.toggle('open');
+  }
+  function closeMenu() {
+    menuBtn.classList.remove('open');
+    mobileMenu.classList.remove('open');
+    menuOverlay.classList.remove('open');
+  }
+  menuBtn.addEventListener('click', toggleMenu);
+  menuOverlay.addEventListener('click', closeMenu);
+
+  // ===== TYPEWRITER =====
+  const twWords = ['продают', 'работают', 'конвертируют', 'впечатляют', 'растут'];
+  let twIdx = 0, twCh = 0, twDel = false;
+  const typerEl = document.getElementById('typer');
+  function typeStep() {
+    const word = twWords[twIdx];
+    if (!twDel) {
+      typerEl.textContent = word.substring(0, ++twCh);
+      if (twCh === word.length) { twDel = true; setTimeout(typeStep, 1900); return; }
+      setTimeout(typeStep, 80);
+    } else {
+      typerEl.textContent = word.substring(0, --twCh);
+      if (twCh === 0) { twDel = false; twIdx = (twIdx + 1) % twWords.length; }
+      setTimeout(typeStep, 40);
+    }
+  }
+  setTimeout(typeStep, 1200);
+
+  // ===== CODE TYPER =====
+  const codeLines = [
+    '<span class="kw">const</span> project <span class="op">=</span> <span class="kw">await</span> SiteCode.<span class="fn">create</span>({',
+    '  type<span class="op">:</span>    <span class="st">"premium"</span>,',
+    '  stack<span class="op">:</span>   [<span class="st">"React"</span>, <span class="st">"Node"</span>, <span class="st">"Python"</span>],',
+    '  design<span class="op">:</span>  <span class="st">"\ud83c\udfa8 pixel-perfect"</span>,',
+    '  seo<span class="op">:</span>     <span class="num">true</span>,  support<span class="op">:</span> <span class="st">"24/7"</span>',
+    '});',
+    '',
+    '<span class="cm">// \u2705 \u0417\u0430\u043f\u0443\u0441\u043a\u0430\u0435\u043c \u0432\u0430\u0448 \u0431\u0438\u0437\u043d\u0435\u0441 \u2192</span>',
+    '<span class="kw">await</span> project.<span class="fn">launch</span>();  <span class="cm">// \ud83d\ude80</span>',
+  ];
+  const codeEl = document.getElementById('codeTyper');
+  let cLi = 0;
+  function addLine() {
+    if (cLi >= codeLines.length) return;
+    const d = document.createElement('div');
+    d.innerHTML = codeLines[cLi++];
+    codeEl.appendChild(d);
+    setTimeout(addLine, 280);
+  }
+  setTimeout(addLine, 800);
+
+  // ===== COUNTER ANIMATION =====
+  const cntObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el = e.target;
+      const target = parseInt(el.dataset.target);
+      const suffix = el.dataset.suffix || '';
+      let cur = 0;
+      const step = target / (1600 / 16);
+      el.style.transition = 'opacity .6s, transform .6s';
+      const timer = setInterval(() => {
+        cur = Math.min(cur + step, target);
+        el.textContent = Math.floor(cur) + suffix;
+        el.style.opacity = '1'; el.style.transform = 'translateY(0)';
+        if (cur >= target) clearInterval(timer);
+      }, 16);
+      cntObs.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.stat-num[data-target]').forEach(c => {
+    c.style.opacity = '0'; c.style.transform = 'translateY(20px)';
+    cntObs.observe(c);
+  });
+
+  // ===== PRICE CALCULATOR =====
+  function calcUpdate() {
+    const typeInp = document.querySelector('input[name="stype"]:checked');
+    const urgInp = document.querySelector('input[name="urgency"]:checked');
+    const extras = [...document.querySelectorAll('#cExtras input:checked')];
+    const pages = parseInt(document.getElementById('pagesSlider').value);
+    document.getElementById('pagesVal').textContent = pages;
+    const base = typeInp ? parseInt(typeInp.value) : 15000;
+    const urg = urgInp ? parseFloat(urgInp.value) : 1;
+    const pageAdd = Math.max(0, pages - 5) * 900;
+    let extSum = 0;
+    const bd = [];
+    const typeLabel = typeInp ? typeInp.parentElement.textContent.replace(/от[\d\s₸]+$/, '').trim() : 'Лендинг';
+    bd.push({ n: typeLabel, v: base });
+    if (pageAdd > 0) bd.push({ n: `Доп. страницы (${pages - 5} шт.)`, v: pageAdd });
+    extras.forEach(ex => {
+      const val = parseInt(ex.value);
+      extSum += val;
+      const lbl = ex.parentElement.textContent.replace(/\+[\d\s₸]+$/, '').trim();
+      bd.push({ n: lbl, v: val });
+    });
+    const total = Math.round((base + pageAdd + extSum) * urg);
+    if (urg > 1) bd.push({ n: `Коэф. срочности ×${urg}`, v: null });
+    const fmt = n => n.toLocaleString('ru-RU') + ' ₸';
+    document.getElementById('calcTotal').textContent = fmt(total);
+    document.getElementById('calcTotalInline').textContent = fmt(total);
+    const fBudget = document.getElementById('fBudget');
+    if (fBudget) fBudget.value = fmt(total);
+    document.getElementById('calcBreakdown').innerHTML = bd.map(b =>
+      `<li><span>${b.n}</span><span class="cb-val">${b.v !== null ? fmt(b.v) : '——'}</span></li>`
+    ).join('');
+    document.querySelectorAll('#cTypeOpts .calc-option, #cUrgency .calc-option').forEach(o =>
+      o.classList.toggle('selected', o.querySelector('input').checked));
+    document.querySelectorAll('#cExtras .calc-option').forEach(o =>
+      o.classList.toggle('selected', !!o.querySelector('input:checked')));
+  }
+  document.querySelectorAll('.calc-option input').forEach(i => i.addEventListener('change', calcUpdate));
+  document.getElementById('pagesSlider').addEventListener('input', calcUpdate);
+  calcUpdate();
+
+  // ===== FORM MODAL =====
+  function openFormModal() {
+    document.getElementById('formModalOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    const ct = document.getElementById('calcTotal');
+    const fb = document.getElementById('fBudget');
+    if (ct && fb) fb.value = ct.textContent;
+    document.getElementById('contactForm').style.display = '';
+    document.getElementById('formSuccess').style.display = 'none';
+  }
+  function closeFormModal() {
+    document.getElementById('formModalOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeFormModal(); });
+  document.querySelectorAll('a[href="#contact"]').forEach(a => {
+    a.addEventListener('click', e => { e.preventDefault(); openFormModal(); });
+  });
+
+  // ===== FORM SUBMIT (simulate – replace with real backend/webhook) =====
+  function submitForm(e) {
+    e.preventDefault();
+    const name = document.getElementById('fName');
+    const phone = document.getElementById('fPhone');
+    [name, phone].forEach(f => f.classList.remove('error'));
+    let ok = true;
+    if (!name.value.trim()) { name.classList.add('error'); ok = false; }
+    if (!phone.value.trim()) { phone.classList.add('error'); ok = false; }
+    if (!ok) { showToast('⚠️', 'Заполните обязательные поля'); return; }
+    // Build payload (ready for Telegram bot / webhook)
+    const payload = {
+      name: name.value.trim(),
+      phone: phone.value.trim(),
+      budget: document.getElementById('fBudget').value,
+      comment: document.getElementById('fComment').value.trim(),
+      timestamp: new Date().toISOString()
+    };
+    console.log('📨 Lead:', JSON.stringify(payload, null, 2));
+    // Show success
+    document.getElementById('contactForm').style.display = 'none';
+    document.getElementById('formSuccess').style.display = 'block';
+    showToast('✅', 'Заявка отправлена! Перезвоним за 30 мин.');
+  }
+
+  // ===== TOAST =====
+  function showToast(icon, text, dur = 4500) {
+    const c = document.getElementById('toasts');
+    const t = document.createElement('div');
+    t.className = 'toast';
+    t.innerHTML = `<span class="toast-icon">${icon}</span><span>${text}</span>`;
+    c.appendChild(t);
+    requestAnimationFrame(() => requestAnimationFrame(() => t.classList.add('show')));
+    setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 400); }, dur);
+  }
+
+  // ===== COOKIE =====
+  if (!localStorage.getItem('sc_cookie')) {
+    setTimeout(() => document.getElementById('cookie-bar').classList.add('visible'), 2500);
+  }
+  function closeCookie(ok) {
+    localStorage.setItem('sc_cookie', ok ? 'all' : 'min');
+    document.getElementById('cookie-bar').classList.remove('visible');
+    if (ok) showToast('🍪', 'Cookies сохранены. Спасибо!');
+  }
+
+  // ===== COMET =====
+  function createComet(options = {}) {
+    const c = document.createElement('div');
+    c.className = 'comet-obj';
+    const direction = options.direction ?? 'left';
+    if (direction === 'right') c.classList.add('right');
+    const x = options.x ?? (Math.random() * window.innerWidth * 0.55 - 220);
+    const y = options.y ?? (28 + Math.random() * window.innerHeight * 0.3);
+    const len = options.length ?? (140 + Math.random() * 220);
+    const dur = (options.duration ?? (1.4 + Math.random() * 1.3)).toFixed(2);
+    const driftY = options.driftY ?? (16 + Math.random() * 28);
+    const animationName = direction === 'right' ? 'comet-shoot-right' : 'comet-shoot';
+    c.style.cssText = `left:${x}px;top:${y}px;width:${len}px;animation:${animationName} ${dur}s ease-in forwards;`;
+    c.style.setProperty('--comet-drift-y', `${driftY}vh`);
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), (parseFloat(dur) + 0.4) * 1000);
+  }
+
+  function launchRandomComet() {
+    const dir = Math.random() > 0.5 ? 'left' : 'right';
+    createComet({
+      direction: dir,
+      x: dir === 'left'
+        ? -230 - Math.random() * 120
+        : window.innerWidth + 30 + Math.random() * 150,
+      y: 22 + Math.random() * (window.innerHeight * 0.24),
+      length: 170 + Math.random() * 180,
+      duration: 1.2 + Math.random() * 1.1,
+      driftY: 10 + Math.random() * 18
+    });
+    setTimeout(launchRandomComet, 3200 + Math.random() * 6200);
+  }
+
+  setTimeout(launchRandomComet, 1200);
+
+  // ===== CATALOG FILTER =====
+  function filterCat(btn, cat) {
+    document.querySelectorAll('.cf-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.cat-card').forEach(c => {
+      c.style.display = (cat === 'all' || c.dataset.cat === cat) ? '' : 'none';
+    });
+  }
+
+  // ===== CARD ENTRANCE =====
+  const cardObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        setTimeout(() => {
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'translateY(0)';
+        }, e.target.dataset.delay || 0);
+        cardObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.service-card,.pkg-card,.step,.portfolio-card,.testi-card,.cat-card').forEach((c, i) => {
+    c.dataset.delay = (i % 5) * 60;
+    c.style.cssText += 'opacity:0;transform:translateY(28px);transition:opacity .5s,transform .5s,border-color .3s,box-shadow .3s;';
+    cardObs.observe(c);
+  });
+
+  // ===== WELCOME TOAST =====
+  if (!sessionStorage.getItem('welcomed')) {
+    setTimeout(() => { showToast('👋', 'Добро пожаловать в SiteCode!'); sessionStorage.setItem('welcomed', '1'); }, 1000);
+  }
+</script>
+
+<!-- ============================================================
+     ADMIN PANEL — trigger: Ctrl+Shift+A
+============================================================ -->
+<style>
+/* ── Shared design tokens (mirrors admin.html) ── */
+.adm-ov{position:fixed;inset:0;background:rgba(2,5,10,.94);backdrop-filter:blur(18px);z-index:99990;display:none;align-items:center;justify-content:center;padding:16px}
+.adm-ov.open{display:flex}
+.adm-shell{width:100%;max-width:880px;max-height:92vh;background:#131c28;border:1px solid #283244;border-radius:20px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 40px 120px rgba(0,0,0,.8)}
+
+/* ── Top bar ── */
+.adm-top{display:flex;align-items:center;justify-content:space-between;padding:15px 22px 13px;border-bottom:1px solid #283244;flex-shrink:0;background:#0f1520}
+.adm-logo{font-size:15px;font-weight:900;color:#eef2f7;display:flex;align-items:center;gap:10px;letter-spacing:-.3px}
+.adm-logo-ic{width:30px;height:30px;background:linear-gradient(135deg,#00d4ff,#0066cc);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px}
+.adm-logo-sub{font-size:11px;font-weight:500;color:#93a2b7;margin-left:2px}
+.adm-top-r{display:flex;align-items:center;gap:10px}
+.adm-save-all{padding:8px 18px;background:linear-gradient(135deg,#00d4ff,#0055cc);border:none;border-radius:10px;color:#fff;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;transition:opacity .2s}
+.adm-save-all:hover{opacity:.85}
+.adm-boardroom-link{padding:7px 14px;background:rgba(231,200,137,.08);border:1px solid rgba(231,200,137,.22);border-radius:10px;color:#e7c889;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:5px;transition:background .15s}
+.adm-boardroom-link:hover{background:rgba(231,200,137,.14)}
+.adm-close{width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:#93a2b7;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s,color .15s;line-height:1;font-family:inherit}
+.adm-close:hover{background:rgba(255,255,255,.1);color:#eef2f7}
+
+/* ── Tabs ── */
+.adm-tabs{display:flex;gap:0;border-bottom:1px solid #283244;flex-shrink:0;overflow-x:auto;scrollbar-width:none;padding:0 6px;background:#0f1520}
+.adm-tabs::-webkit-scrollbar{display:none}
+.adm-tab{padding:11px 16px;font-size:13px;font-weight:600;color:#93a2b7;cursor:pointer;border:none;background:none;font-family:inherit;white-space:nowrap;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;display:flex;align-items:center;gap:6px}
+.adm-tab:hover{color:#eef2f7}
+.adm-tab.act{color:#00d4ff;border-bottom-color:#00d4ff}
+
+/* ── Body & panes ── */
+.adm-body{flex:1;overflow-y:auto;padding:22px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.1) transparent;background:#131c28}
+.adm-body::-webkit-scrollbar{width:4px}
+.adm-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px}
+.adm-pane{display:none}
+.adm-pane.act{display:block}
+
+/* ── Grid & fields ── */
+.adm-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.adm-grid.single{grid-template-columns:1fr}
+.adm-field{display:flex;flex-direction:column;gap:5px;margin-bottom:4px}
+.adm-field label{font-size:11px;font-weight:800;color:#93a2b7;text-transform:uppercase;letter-spacing:.06em}
+.adm-field input,.adm-field textarea,.adm-field select{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:10px 14px;color:#eef2f7;font-size:14px;font-family:inherit;outline:none;transition:border-color .2s;width:100%}
+.adm-field input:focus,.adm-field textarea:focus,.adm-field select:focus{border-color:rgba(0,212,255,.4)}
+.adm-field textarea{resize:vertical;min-height:70px;line-height:1.55}
+.adm-field select option{background:#131c28}
+.adm-field .adm-hint{font-size:11px;color:#4a6a8a;line-height:1.5;margin-top:3px}
+
+/* ── Section headers ── */
+.adm-sh{font-size:13px;font-weight:800;color:#00d4ff;text-transform:uppercase;letter-spacing:.08em;margin:20px 0 12px;padding-bottom:7px;border-bottom:1px solid #283244;display:flex;align-items:center;gap:8px}
+.adm-sh:first-child{margin-top:0}
+
+/* ── Card blocks ── */
+.adm-card{background:#1a2535;border:1px solid #283244;border-radius:16px;padding:18px;margin-bottom:12px}
+
+/* ── Toggle switch ── */
+.adm-toggle-row{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.03);border:1px solid #283244;border-radius:12px;padding:11px 16px;margin-bottom:10px}
+.adm-toggle-row span{font-size:13px;color:#b8cfe2}
+.adm-sw{position:relative;width:42px;height:22px;flex-shrink:0}
+.adm-sw input{opacity:0;width:0;height:0;position:absolute}
+.adm-sw-track{position:absolute;inset:0;background:#1e2d40;border-radius:999px;cursor:pointer;transition:background .25s}
+.adm-sw input:checked + .adm-sw-track{background:linear-gradient(135deg,#00d4ff,#0055cc)}
+.adm-sw-track::after{content:'';position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:3px;left:3px;transition:transform .25s;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+.adm-sw input:checked + .adm-sw-track::after{transform:translateX(20px)}
+
+/* ── Password gate ── */
+.adm-gate{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:48px 20px;text-align:center;background:#0a0d12}
+.adm-gate h3{font-size:22px;font-weight:900;color:#eef2f7;letter-spacing:-.4px}
+.adm-gate p{font-size:13px;color:#93a2b7;max-width:300px;line-height:1.6}
+.adm-gate-input{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:14px 16px;color:#eef2f7;font-size:16px;font-family:inherit;outline:none;text-align:center;width:260px;letter-spacing:.12em;transition:border-color .2s}
+.adm-gate-input:focus{border-color:rgba(0,212,255,.5)}
+.adm-gate-btn{width:260px;padding:14px;background:linear-gradient(135deg,#00d4ff,#0055cc);border:none;border-radius:14px;color:#fff;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;transition:opacity .2s}
+.adm-gate-btn:hover{opacity:.85}
+.adm-gate-err{font-size:13px;color:#ff5566;min-height:20px}
+
+/* ── Stat cards ── */
+.adm-stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:0}
+.adm-stat-card{background:#1a2535;border:1px solid #283244;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:5px}
+.adm-stat-card label{font-size:10px;font-weight:800;color:#93a2b7;text-transform:uppercase;letter-spacing:.5px}
+.adm-stat-card input{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:7px 8px;color:#eef2f7;font-size:13px;font-family:inherit;outline:none;width:100%;text-align:center;font-weight:800;transition:border-color .2s}
+.adm-stat-card input:focus{border-color:rgba(0,212,255,.4)}
+
+/* ── API test indicator ── */
+.adm-api-status{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:5px 11px;border-radius:12px;margin-top:6px}
+.adm-api-status.ok{background:rgba(68,221,136,.08);color:#44dd88;border:1px solid rgba(68,221,136,.25)}
+.adm-api-status.err{background:rgba(255,85,102,.08);color:#ff5566;border:1px solid rgba(255,85,102,.2)}
+.adm-api-status.test{background:rgba(159,213,255,.07);color:#9fd5ff;border:1px solid rgba(159,213,255,.18)}
+.adm-test-btn{padding:8px 16px;background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.22);border-radius:10px;color:#9fd5ff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s;margin-top:6px}
+.adm-test-btn:hover{background:rgba(0,212,255,.16)}
+
+/* ── Color preview ── */
+.adm-color-row{display:flex;align-items:center;gap:12px}
+.adm-color-row input[type=color]{width:42px;height:42px;border:none;border-radius:10px;cursor:pointer;padding:0;background:none}
+
+/* ── Pkg editor ── */
+.adm-pkg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.adm-pkg-card{background:#1a2535;border:1px solid #283244;border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:8px}
+.adm-pkg-card .adm-pkg-name{font-size:11px;font-weight:800;color:#00d4ff;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
+
+/* ── Save feedback ── */
+@keyframes admFlash{0%{border-color:rgba(68,221,136,.5)}100%{border-color:#283244}}
+.adm-saved{animation:admFlash 1s ease}
+
+/* ── Keyboard hint ── */
+.adm-kbd-hint{position:fixed;bottom:90px;left:28px;z-index:9989;background:rgba(10,13,18,.9);border:1px solid #283244;border-radius:8px;padding:5px 10px;font-size:11px;color:#93a2b7;pointer-events:none;backdrop-filter:blur(8px);transition:opacity .4s}
+</style>
+
+<!-- Keyboard hint -->
+
+
+<!-- Admin overlay -->
+<div class="adm-ov" id="admOv">
+  <div class="adm-shell" id="admShell">
+
+    <!-- PASSWORD GATE -->
+    <div id="admGate" class="adm-gate">
+      <div class="adm-logo-ic" style="width:52px;height:52px;border-radius:14px;font-size:24px">⚙️</div>
+      <h3>SiteCode Admin</h3>
+      <p>Управление контентом и настройками основного сайта</p>
+      <input class="adm-gate-input" type="password" id="admPwdInput" placeholder="••••••••"
+        onkeydown="if(event.key==='Enter')checkAdmPwd()">
+      <button class="adm-gate-btn" onclick="checkAdmPwd()">Войти →</button>
+      <div class="adm-gate-err" id="admPwdErr">❌ Неверный пароль</div>
+      <div style="font-size:11px;color:rgba(147,162,183,.45);margin-top:4px">По умолчанию: <code style="color:rgba(147,162,183,.7)">sc2026</code></div>
+    </div>
+
+    <!-- MAIN PANEL (hidden until login) -->
+    <div id="admMain" style="display:none;flex-direction:column;flex:1;overflow:hidden;min-height:0">
+      <div class="adm-top">
+        <div class="adm-logo"><div class="adm-logo-ic">⚙️</div>SiteCode Admin<span class="adm-logo-sub">Управление сайтом</span></div>
+        <div class="adm-top-r">
+          <div id="admUserPill" style="display:none;align-items:center;gap:7px;padding:4px 11px 4px 4px;border-radius:999px;border:1px solid rgba(0,212,255,.2);background:rgba(0,212,255,.07);font-size:12px;font-weight:700;color:#9fd5ff">
+            <div id="admUserAva" style="width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:#fff;flex-shrink:0"></div>
+            <span id="admUserName"></span>
+          </div>
+          <a class="adm-boardroom-link" href="admin.html" target="_blank">🛡️ Board Room Admin</a>
+          <button class="adm-save-all" onclick="admSaveAll()">💾 Сохранить всё</button>
+          <button class="adm-close" onclick="closeAdm()">✕</button>
+        </div>
+      </div>
+      <div class="adm-tabs" id="admTabs">
+        <button class="adm-tab act" onclick="admTab(this,'pane-home')">🏠 Главная</button>
+        <button class="adm-tab" onclick="admTab(this,'pane-ai')">🤖 AI Чат</button>
+        <button class="adm-tab" onclick="admTab(this,'pane-prices')">💰 Тарифы</button>
+        <button class="adm-tab" onclick="admTab(this,'pane-contacts')">📞 Контакты</button>
+        <button class="adm-tab" onclick="admTab(this,'pane-seo')">🔍 SEO</button>
+        <button class="adm-tab" onclick="admTab(this,'pane-design')">🎨 Дизайн</button>
+        <button class="adm-tab" onclick="admTab(this,'pane-security')">🔒 Безопасность</button>
+        <button class="adm-tab" onclick="admTab(this,'pane-users')">👥 Пользователи</button>
+      </div>
+      <div class="adm-body">
+
+        <!-- ── HOME ── -->
+        <div class="adm-pane act" id="pane-home">
+          <div class="adm-sh">🏠 Герой: заголовок и текст</div>
+          <div class="adm-grid">
+            <div class="adm-field" style="grid-column:1/-1">
+              <label>Главный заголовок H1</label>
+              <input id="cf-h1" value="Создаём сайты, которые">
+              <div class="adm-hint">Первая строка. Второе слово выделяется анимацией тайпера (продают / работают / растут…)</div>
+            </div>
+            <div class="adm-field">
+              <label>Слова тайпера (через запятую)</label>
+              <input id="cf-typer" value="продают,работают,растут,конвертируют">
+            </div>
+            <div class="adm-field">
+              <label>Бейдж над заголовком</label>
+              <input id="cf-badge" value="Профессиональная разработка сайтов">
+            </div>
+            <div class="adm-field" style="grid-column:1/-1">
+              <label>Подзаголовок (описание)</label>
+              <textarea id="cf-sub">SiteCode — команда разработчиков, которая создаёт современные, быстрые и эффективные веб-сайты для вашего бизнеса. Ваш успех — наш код.</textarea>
+            </div>
+            <div class="adm-field">
+              <label>Кнопка 1 (CTA)</label>
+              <input id="cf-cta1" value="Выбрать тариф">
+            </div>
+            <div class="adm-field">
+              <label>Кнопка 2</label>
+              <input id="cf-cta2" value="Рассчитать цену ✦">
+            </div>
+          </div>
+
+          <div class="adm-sh">📊 Статистика в герое</div>
+          <div class="adm-stat-grid">
+            <div class="adm-stat-card"><label>Число 1</label><input id="st-v1" value="150"><label style="margin-top:2px">Суффикс</label><input id="st-s1" value="+"><label style="margin-top:2px">Подпись</label><input id="st-l1" value="Проектов сдано"></div>
+            <div class="adm-stat-card"><label>Число 2</label><input id="st-v2" value="98"><label style="margin-top:2px">Суффикс</label><input id="st-s2" value="%"><label style="margin-top:2px">Подпись</label><input id="st-l2" value="Довольных клиентов"></div>
+            <div class="adm-stat-card"><label>Число 3</label><input id="st-v3" value="5"><label style="margin-top:2px">Суффикс</label><input id="st-s3" value=" лет"><label style="margin-top:2px">Подпись</label><input id="st-l3" value="На рынке"></div>
+            <div class="adm-stat-card"><label>Число 4</label><input id="st-v4" value="24"><label style="margin-top:2px">Суффикс</label><input id="st-s4" value="/7"><label style="margin-top:2px">Подпись</label><input id="st-l4" value="Поддержка"></div>
+          </div>
+
+          <div class="adm-sh" style="margin-top:20px">🏢 Название компании</div>
+          <div class="adm-grid">
+            <div class="adm-field">
+              <label>Бренд (логотип, шапка)</label>
+              <input id="cf-brand" value="SiteCode">
+            </div>
+            <div class="adm-field">
+              <label>Слоган в подвале / мета</label>
+              <input id="cf-slogan" value="Разработка сайтов">
+            </div>
+          </div>
+        </div>
+
+        <!-- ── AI CHAT ── -->
+        <div class="adm-pane" id="pane-ai">
+          <div class="adm-sh">🤖 OpenAI API</div>
+          <div class="adm-toggle-row">
+            <span>Использовать реальный OpenAI API (GPT)</span>
+            <label class="adm-sw"><input type="checkbox" id="cf-useApi"><span class="adm-sw-track"></span></label>
+          </div>
+          <div class="adm-grid single">
+            <div class="adm-field">
+              <label>API Ключ (OpenAI)</label>
+              <input type="password" id="cf-apikey" placeholder="sk-proj-…" autocomplete="off">
+              <div class="adm-hint">Ключ хранится только в localStorage вашего браузера. Не передаётся на сервер.</div>
+              <div style="display:flex;gap:8px;align-items:center;margin-top:6px;flex-wrap:wrap">
+                <button class="adm-test-btn" onclick="testApiKey()">🔌 Проверить ключ</button>
+                <div id="apiStatusBadge" class="adm-api-status" style="display:none"></div>
+              </div>
+            </div>
+            <div class="adm-field">
+              <label>Модель GPT</label>
+              <select id="cf-model">
+                <option value="gpt-4o-mini">gpt-4o-mini (быстрый, дешёвый)</option>
+                <option value="gpt-4o">gpt-4o (умный, дороже)</option>
+                <option value="gpt-3.5-turbo">gpt-3.5-turbo (старый, совместимый)</option>
+              </select>
+            </div>
+            <div class="adm-field">
+              <label>Системный промпт (роль ИИ)</label>
+              <textarea id="cf-sysprompt" style="min-height:110px">Ты — AI-ассистент компании SiteCode. Отвечай на вопросы о разработке сайтов, ценах, сроках и услугах компании. Отвечай коротко, дружелюбно, на русском языке. Если не знаешь точного ответа — предложи связаться с менеджером.</textarea>
+            </div>
+          </div>
+
+          <div class="adm-sh">💬 Настройки виджета чата</div>
+          <div class="adm-toggle-row">
+            <span>Показывать виджет чата на сайте</span>
+            <label class="adm-sw"><input type="checkbox" id="cf-chatVisible" checked><span class="adm-sw-track"></span></label>
+          </div>
+          <div class="adm-grid">
+            <div class="adm-field">
+              <label>Имя бота (в шапке чата)</label>
+              <input id="cf-botname" value="SiteCode AI">
+            </div>
+            <div class="adm-field">
+              <label>Первое приветственное сообщение</label>
+              <input id="cf-welcome-msg" value="Привет! Я помогу подобрать нужный сайт и отвечу на любые вопросы по разработке. Что вас интересует? 👋">
+            </div>
+            <div class="adm-field">
+              <label>Статус под именем</label>
+              <input id="cf-botstatus" value="Онлайн · отвечает мгновенно">
+            </div>
+            <div class="adm-field">
+              <label>Быстрые подсказки (через "|")</label>
+              <input id="cf-chips" value="💰 Сколько стоит сайт?|⏱ Сроки разработки|📦 Что входит в проект?|📞 Связаться с менеджером">
+            </div>
+          </div>
+        </div>
+
+        <!-- ── PRICES ── -->
+        <div class="adm-pane" id="pane-prices">
+          <div class="adm-sh">💰 Тарифные пакеты</div>
+          <div class="adm-pkg-grid">
+            <div class="adm-pkg-card">
+              <div class="adm-pkg-name">Тариф 1</div>
+              <div class="adm-field"><label>Название</label><input id="pkg1-name" value="Старт"></div>
+              <div class="adm-field"><label>Цена (₸)</label><input id="pkg1-price" value="15 000" type="text"></div>
+              <div class="adm-field"><label>Описание</label><input id="pkg1-desc" value="Для малого бизнеса и стартапов"></div>
+            </div>
+            <div class="adm-pkg-card" style="border-color:rgba(0,212,255,.3)">
+              <div class="adm-pkg-name" style="color:#ffcc44">Тариф 2 (популярный)</div>
+              <div class="adm-field"><label>Название</label><input id="pkg2-name" value="Бизнес"></div>
+              <div class="adm-field"><label>Цена (₸)</label><input id="pkg2-price" value="45 000" type="text"></div>
+              <div class="adm-field"><label>Описание</label><input id="pkg2-desc" value="Для среднего бизнеса с амбициями"></div>
+            </div>
+            <div class="adm-pkg-card">
+              <div class="adm-pkg-name">Тариф 3</div>
+              <div class="adm-field"><label>Название</label><input id="pkg3-name" value="Премиум"></div>
+              <div class="adm-field"><label>Цена (₸)</label><input id="pkg3-price" value="90 000" type="text"></div>
+              <div class="adm-field"><label>Описание</label><input id="pkg3-desc" value="Для крупных проектов и e-commerce"></div>
+            </div>
+          </div>
+
+          <div class="adm-sh">🏷 CTA секция (внизу)</div>
+          <div class="adm-grid">
+            <div class="adm-field">
+              <label>Заголовок CTA</label>
+              <input id="cf-cta-h" value="Готовы запустить ваш сайт?">
+            </div>
+            <div class="adm-field">
+              <label>Подзаголовок CTA</label>
+              <input id="cf-cta-p" value="Оставьте заявку — и мы свяжемся с вами в течение 30 минут для бесплатной консультации.">
+            </div>
+          </div>
+        </div>
+
+        <!-- ── CONTACTS ── -->
+        <div class="adm-pane" id="pane-contacts">
+          <div class="adm-sh">📞 Контактная информация</div>
+          <div class="adm-grid">
+            <div class="adm-field">
+              <label>Телефон</label>
+              <input id="cf-phone" value="+7 (999) 123-45-67">
+            </div>
+            <div class="adm-field">
+              <label>Email</label>
+              <input id="cf-email" value="hello@sitecode.ru" type="email">
+            </div>
+            <div class="adm-field">
+              <label>WhatsApp (номер без +)</label>
+              <input id="cf-wa" value="79991234567">
+            </div>
+            <div class="adm-field">
+              <label>Telegram (username без @)</label>
+              <input id="cf-tg" value="sitecode_team">
+            </div>
+            <div class="adm-field" style="grid-column:1/-1">
+              <label>Адрес офиса</label>
+              <input id="cf-addr" value="Москва, ул. Примерная, д. 1">
+            </div>
+            <div class="adm-field">
+              <label>Рабочие часы</label>
+              <input id="cf-hours" value="Пн–Пт: 9:00 – 20:00">
+            </div>
+            <div class="adm-field">
+              <label>Ссылка кнопки «Позвонить»</label>
+              <input id="cf-tel-href" value="tel:+79991234567">
+            </div>
+          </div>
+
+          <div class="adm-sh">📩 Email для заявок с формы</div>
+          <div class="adm-grid">
+            <div class="adm-field">
+              <label>Куда слать заявки (mailto)</label>
+              <input id="cf-form-email" value="sales@sitecode.ru" type="email">
+              <div class="adm-hint">Используется в href=mailto: при сабмите формы. Для реальной отправки подключите бэкенд или сервис (Formspree, Telegram Bot и т.д.)</div>
+            </div>
+            <div class="adm-field">
+              <label>Telegram Bot Token (для заявок)</label>
+              <input id="cf-tg-token" placeholder="123456789:AAF…" autocomplete="off">
+            </div>
+            <div class="adm-field">
+              <label>Telegram Chat ID (для заявок)</label>
+              <input id="cf-tg-chatid" placeholder="-100123456789">
+              <div class="adm-hint">Заявки с формы будут отправляться в этот Telegram чат если заполнены Token и Chat ID.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── SEO ── -->
+        <div class="adm-pane" id="pane-seo">
+          <div class="adm-sh">🔍 Мета-теги</div>
+          <div class="adm-grid single">
+            <div class="adm-field">
+              <label>Title страницы (&lt;title&gt;)</label>
+              <input id="cf-title" value="SiteCode — Разработка сайтов">
+            </div>
+            <div class="adm-field">
+              <label>Meta Description</label>
+              <textarea id="cf-meta-desc">SiteCode — профессиональная разработка сайтов: лендинги, корпоративные сайты, интернет-магазины. Современный дизайн, быстрые сроки, поддержка 24/7.</textarea>
+            </div>
+            <div class="adm-field">
+              <label>Meta Keywords</label>
+              <input id="cf-meta-kw" value="разработка сайтов, создание сайта, веб-разработка, лендинг, интернет-магазин">
+            </div>
+            <div class="adm-field">
+              <label>Open Graph изображение (URL)</label>
+              <input id="cf-og-img" placeholder="https://sitecode.ru/og-image.jpg">
+            </div>
+          </div>
+
+          <div class="adm-sh">📊 Google Analytics / Яндекс.Метрика</div>
+          <div class="adm-grid">
+            <div class="adm-field">
+              <label>Google Analytics ID</label>
+              <input id="cf-ga" placeholder="G-XXXXXXXXXX">
+              <div class="adm-hint">Формат: G-XXXXXXXXXX. Код будет подставлен в &lt;head&gt; через localStorage.</div>
+            </div>
+            <div class="adm-field">
+              <label>Яндекс.Метрика ID</label>
+              <input id="cf-ym" placeholder="12345678">
+            </div>
+          </div>
+        </div>
+
+        <!-- ── DESIGN ── -->
+        <div class="adm-pane" id="pane-design">
+          <div class="adm-sh">🎨 Цветовая схема</div>
+          <div class="adm-grid">
+            <div class="adm-field">
+              <label>Акцентный цвет (cyan)</label>
+              <div class="adm-color-row">
+                <input type="color" id="cf-color-cyan" value="#00d4ff">
+                <input id="cf-color-cyan-hex" value="#00d4ff" style="flex:1">
+              </div>
+            </div>
+            <div class="adm-field">
+              <label>Цвет фона (тёмный)</label>
+              <div class="adm-color-row">
+                <input type="color" id="cf-color-bg" value="#060f1e">
+                <input id="cf-color-bg-hex" value="#060f1e" style="flex:1">
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:8px">
+            <button class="adm-test-btn" onclick="admApplyColors()">👁 Применить цвета</button>
+            <button class="adm-test-btn" style="margin-left:8px" onclick="admResetColors()">↺ Сбросить</button>
+          </div>
+
+          <div class="adm-sh">✨ Анимации и эффекты</div>
+          <div class="adm-toggle-row">
+            <span>Частицы / звёзды на фоне</span>
+            <label class="adm-sw"><input type="checkbox" id="cf-particles" checked><span class="adm-sw-track"></span></label>
+          </div>
+          <div class="adm-toggle-row">
+            <span>Сетка (ambient grid)</span>
+            <label class="adm-sw"><input type="checkbox" id="cf-grid" checked><span class="adm-sw-track"></span></label>
+          </div>
+          <div class="adm-toggle-row">
+            <span>Кометы</span>
+            <label class="adm-sw"><input type="checkbox" id="cf-comets" checked><span class="adm-sw-track"></span></label>
+          </div>
+          <div class="adm-toggle-row">
+            <span>Счётчики цифр в герое</span>
+            <label class="adm-sw"><input type="checkbox" id="cf-counters" checked><span class="adm-sw-track"></span></label>
+          </div>
+          <div class="adm-toggle-row">
+            <span>Приветственный тост при входе</span>
+            <label class="adm-sw"><input type="checkbox" id="cf-welcomeToast" checked><span class="adm-sw-track"></span></label>
+          </div>
+        </div>
+
+        <!-- ── SECURITY ── -->
+        <div class="adm-pane" id="pane-security">
+          <div class="adm-sh">� EmailJS — отправка кодов 2FA и сброса пароля</div>
+          <div style="background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.18);border-radius:12px;padding:14px;font-size:13px;color:#9fd5ff;line-height:1.7;margin-bottom:14px">
+            EmailJS позволяет отправлять письма прямо из браузера без сервера.<br>
+            1. Зарегистрируйтесь на <a href="https://www.emailjs.com" target="_blank" style="color:#00d4ff;font-weight:700">emailjs.com</a> (бесплатно — 200 писем/месяц)<br>
+            2. Создайте Email Service (Gmail, Outlook, SMTP и др.)<br>
+            3. Создайте Email Template — используйте переменные: <code style="background:rgba(255,255,255,.07);padding:1px 5px;border-radius:4px">{{otp_code}}</code>, <code style="background:rgba(255,255,255,.07);padding:1px 5px;border-radius:4px">{{to_email}}</code>, <code style="background:rgba(255,255,255,.07);padding:1px 5px;border-radius:4px">{{purpose}}</code><br>
+            4. Вставьте Public Key, Service ID и Template ID ниже
+          </div>
+          <div class="adm-grid">
+            <div class="adm-field">
+              <label>Public Key</label>
+              <input type="text" id="ejs-public-key" placeholder="aBcDe1FgHi2JkLmN3o">
+              <div class="adm-hint">Account → API Keys → Public Key</div>
+            </div>
+            <div class="adm-field">
+              <label>Service ID</label>
+              <input type="text" id="ejs-service-id" placeholder="service_xxxxxxx">
+            </div>
+            <div class="adm-field">
+              <label>Template ID</label>
+              <input type="text" id="ejs-template-id" placeholder="template_xxxxxxx">
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px">
+            <button class="adm-test-btn" onclick="admSaveEmailJS()">💾 Сохранить EmailJS</button>
+            <button class="adm-test-btn" onclick="admTestEmailJS()" style="border-color:rgba(68,221,136,.3);color:#44dd88">📤 Тест — отправить письмо</button>
+          </div>
+          <div id="admEjsStatus" style="font-size:13px;min-height:18px;margin-bottom:6px"></div>
+          <div style="background:rgba(255,255,255,.03);border:1px solid #283244;border-radius:10px;padding:12px;font-size:12px;color:#4a6a8a;line-height:1.7;margin-bottom:18px">
+            💡 До настройки EmailJS коды будут показываться в тосте прямо на экране (демо-режим). 2FA и сброс пароля работают и без настройки — просто код виден на экране, а не в письме.
+          </div>
+
+          <div class="adm-sh">�🔒 Смена пароля Admin-панели</div>
+          <div class="adm-grid">
+            <div class="adm-field">
+              <label>Текущий пароль</label>
+              <input type="password" id="pwd-old" placeholder="Текущий пароль">
+            </div>
+            <div class="adm-field">
+              <label>Новый пароль</label>
+              <input type="password" id="pwd-new" placeholder="Минимум 4 символа">
+            </div>
+            <div class="adm-field">
+              <label>Подтвердите новый пароль</label>
+              <input type="password" id="pwd-new2" placeholder="Повторите пароль">
+            </div>
+          </div>
+          <button class="adm-test-btn" onclick="admChangePwd()" style="margin-top:4px">🔑 Сменить пароль</button>
+          <div id="admPwdStatus" style="margin-top:8px;font-size:13px;display:none"></div>
+
+          <div class="adm-sh">🗑 Сброс настроек</div>
+          <div style="background:rgba(255,85,102,.07);border:1px solid rgba(255,85,102,.18);border-radius:12px;padding:14px;font-size:13px;color:#b8cfe2;line-height:1.65;margin-bottom:12px">
+            ⚠️ Сброс удалит все сохранённые настройки (тексты, цвета, API ключ) и вернёт значения по умолчанию.
+          </div>
+          <button class="adm-test-btn" style="border-color:rgba(255,85,102,.3);color:#ff5566" onclick="admResetAll()">🗑 Сбросить все настройки</button>
+
+          <div class="adm-sh">ℹ️ Версия</div>
+          <div style="font-size:13px;color:#385a78;line-height:1.8">
+            SiteCode Admin Panel <strong style="color:#93a2b7">v1.0</strong><br>
+            Все настройки хранятся в <code style="background:rgba(255,255,255,.06);padding:1px 5px;border-radius:4px;color:#9fd5ff">localStorage</code> браузера.<br>
+            API-ключ зашифрован в base64 в localStorage — не делитесь доступом к DevTools.<br>
+            <a href="admin.html" target="_blank" style="color:#e7c889;text-decoration:none;font-weight:700">🛡️ Открыть Board Room Admin →</a>
+          </div>
+        </div>
+
+        <!-- ── USERS ── -->
+        <div class="adm-pane" id="pane-users">
+          <div class="adm-sh">👥 Зарегистрированные пользователи</div>
+          <div id="admUsersList" style="display:flex;flex-direction:column;gap:10px"></div>
+          <div id="admUsersEmpty" style="display:none;color:#385a78;font-size:13px;padding:20px 0">Нет зарегистрированных пользователей.</div>
+        </div>
+
+      </div><!-- /adm-body -->
+    </div><!-- /admMain -->
+  </div><!-- /adm-shell -->
+</div><!-- /adm-ov -->
+
+<script>
+// ==================== ADMIN PANEL ====================
+const ADM_KEY = 'sc_admin_cfg';
+const ADM_PWD_KEY = 'sc_admin_pwd';
+
+// ── Defaults ──
+const ADM_DEFAULTS = {
+  h1:'Создаём сайты, которые',typer:'продают,работают,растут,конвертируют',badge:'Профессиональная разработка сайтов',
+  sub:'SiteCode — команда разработчиков, которая создаёт современные, быстрые и эффективные веб-сайты для вашего бизнеса. Ваш успех — наш код.',
+  cta1:'Выбрать тариф',cta2:'Рассчитать цену ✦',
+  stv1:'150',sts1:'+',stl1:'Проектов сдано',stv2:'98',sts2:'%',stl2:'Довольных клиентов',
+  stv3:'5',sts3:' лет',stl3:'На рынке',stv4:'24',sts4:'/7',stl4:'Поддержка',
+  brand:'SiteCode',slogan:'Разработка сайтов',
+  apikey:'',model:'gpt-4o-mini',sysprompt:'Ты — AI-ассистент компании SiteCode. Отвечай на вопросы о разработке сайтов, ценах, сроках и услугах компании. Отвечай коротко, дружелюбно, на русском языке. Если не знаешь точного ответа — предложи связаться с менеджером.',
+  useApi:false,chatVisible:true,botname:'SiteCode AI',
+  welcomeMsg:'Привет! Я помогу подобрать нужный сайт и отвечу на любые вопросы по разработке. Что вас интересует? 👋',
+  botstatus:'Онлайн · отвечает мгновенно',chips:'💰 Сколько стоит сайт?|⏱ Сроки разработки|📦 Что входит в проект?|📞 Связаться с менеджером',
+  pkg1name:'Старт',pkg1price:'15 000',pkg1desc:'Для малого бизнеса и стартапов',
+  pkg2name:'Бизнес',pkg2price:'45 000',pkg2desc:'Для среднего бизнеса с амбициями',
+  pkg3name:'Премиум',pkg3price:'90 000',pkg3desc:'Для крупных проектов и e-commerce',
+  ctaH:'Готовы запустить ваш сайт?',ctaP:'Оставьте заявку — и мы свяжемся с вами в течение 30 минут для бесплатной консультации.',
+  phone:'+7 (999) 123-45-67',email:'hello@sitecode.ru',wa:'79991234567',tg:'sitecode_team',
+  addr:'Москва, ул. Примерная, д. 1',hours:'Пн–Пт: 9:00 – 20:00',telHref:'tel:+79991234567',
+  formEmail:'sales@sitecode.ru',tgToken:'',tgChatid:'',
+  pageTitle:'SiteCode — Разработка сайтов',metaDesc:'SiteCode — профессиональная разработка сайтов.',metaKw:'разработка сайтов, создание сайта',ogImg:'',ga:'',ym:'',
+  colorCyan:'#00d4ff',colorBg:'#060f1e',
+  particles:true,grid:true,comets:true,counters:true,welcomeToast:true
+};
+
+function admGetCfg(){ try{ return Object.assign({},ADM_DEFAULTS,JSON.parse(localStorage.getItem(ADM_KEY)||'{}')); }catch(e){ return Object.assign({},ADM_DEFAULTS); } }
+function admSaveCfg(cfg){ localStorage.setItem(ADM_KEY,JSON.stringify(cfg)); }
+function admGetPwd(){ return localStorage.getItem(ADM_PWD_KEY)||'sc2026'; }
+
+// ── Open / close ──
+let admUnlocked = false;
+window.openAdm = function(){
+  document.getElementById('admOv').classList.add('open');
+  document.body.style.overflow='hidden';
+  if(!admUnlocked){ admShowGate(); } else { admShowMain(); }
+};
+window.closeAdm = function(){
+  document.getElementById('admOv').classList.remove('open');
+  document.body.style.overflow='';
+};
+
+document.getElementById('admOv').addEventListener('click', function(e){
+  if(e.target === this) closeAdm();
+});
+
+function admShowGate(){
+  document.getElementById('admGate').style.display='';
+  document.getElementById('admMain').style.display='none';
+}
+function admShowMain(){
+  document.getElementById('admGate').style.display='none';
+  document.getElementById('admMain').style.display='flex';
+  admLoadFields();
+  // Populate EmailJS fields
+  try{
+    const ejs=JSON.parse(localStorage.getItem('sc_emailjs')||'{}');
+    if(ejs.publicKey) document.getElementById('ejs-public-key').value=ejs.publicKey;
+    if(ejs.serviceId) document.getElementById('ejs-service-id').value=ejs.serviceId;
+    if(ejs.templateId) document.getElementById('ejs-template-id').value=ejs.templateId;
+  }catch(e){}
+  // Show logged-in user pill
+  (function(){
+    try{
+      const id=sessionStorage.getItem('sc_session')||localStorage.getItem('sc_session');
+      if(id){
+        const users=JSON.parse(localStorage.getItem('sc_users')||'[]');
+        const u=users.find(x=>x.id===id);
+        if(u){
+          const pill=document.getElementById('admUserPill');
+          const ava=document.getElementById('admUserAva');
+          const nm=document.getElementById('admUserName');
+          const AVC=['#e74c3c','#e67e22','#2ecc71','#1abc9c','#3498db','#9b59b6','#e91e63','#00bcd4','#ff5722','#00d4ff'];
+          let h=0; for(let c of(u.name||'?')) h=(h*31+c.charCodeAt(0))&0x7fffffff;
+          ava.style.background=AVC[h%AVC.length];
+          ava.textContent=(u.name||'?').split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase()||'?';
+          nm.textContent=u.name.split(' ')[0];
+          pill.style.display='flex';
+        }
+      }
+    }catch(e){}
+  })();
+}
+
+const STATUS_CFG={
+  standard:{label:'Стандарт',color:'#93a2b7',bg:'rgba(147,162,183,.1)',border:'rgba(147,162,183,.2)'},
+  premium:{label:'⭐ Premium',color:'#ffc700',bg:'rgba(255,199,0,.12)',border:'rgba(255,199,0,.35)'},
+  vip:{label:'👑 VIP',color:'#00d4ff',bg:'rgba(0,212,255,.1)',border:'rgba(0,212,255,.3)'}
+};
+
+function admRenderUsers(){
+  try{
+    const users=JSON.parse(localStorage.getItem('sc_users')||'[]');
+    const list=document.getElementById('admUsersList');
+    const empty=document.getElementById('admUsersEmpty');
+    if(!list)return;
+    list.innerHTML='';
+    if(!users.length){ empty.style.display=''; list.style.display='none'; return; }
+    empty.style.display='none'; list.style.display='flex';
+    const AVC=['#e74c3c','#e67e22','#2ecc71','#1abc9c','#3498db','#9b59b6','#e91e63','#00bcd4','#ff5722','#00d4ff'];
+    users.forEach(u=>{
+      let h=0; for(let c of(u.name||'?')) h=(h*31+c.charCodeAt(0))&0x7fffffff;
+      const col=AVC[h%AVC.length];
+      const initials=(u.name||'?').split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase()||'?';
+      const d=new Date(u.createdAt);
+      const dateStr=d.toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'});
+      const tfa=u.twoFa?'<span style="padding:2px 8px;border-radius:6px;background:rgba(68,221,136,.1);border:1px solid rgba(68,221,136,.2);color:#44dd88;font-size:10px;font-weight:800">2FA ✓</span>':'';
+      const st=u.status||'standard';
+      const sc=STATUS_CFG[st]||STATUS_CFG.standard;
+      const statusBadge=`<span style="padding:2px 9px;border-radius:6px;background:${sc.bg};border:1px solid ${sc.border};color:${sc.color};font-size:10px;font-weight:800">${sc.label}</span>`;
+      const selectOpts=Object.entries(STATUS_CFG).map(([k,v])=>`<option value="${k}"${st===k?' selected':''}>${v.label}</option>`).join('');
+      const row=document.createElement('div');
+      row.style.cssText='display:flex;align-items:center;gap:12px;padding:12px 14px;background:#1a2535;border:1px solid #283244;border-radius:12px;flex-wrap:wrap';
+      row.innerHTML=`<div style="width:40px;height:40px;border-radius:50%;background:${col};display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:#fff;flex-shrink:0">${u.avatar?`<img src="${u.avatar}" style="width:40px;height:40px;border-radius:50%;object-fit:cover">`:initials}</div><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:800;color:#eef2f7;display:flex;align-items:center;gap:6px;flex-wrap:wrap">${u.name} ${tfa} ${statusBadge}</div><div style="font-size:11px;color:#93a2b7;margin-top:1px">${u.email}</div><div style="font-size:10px;color:#4a6a8a;margin-top:2px">Зарегистрирован: ${dateStr}</div></div><div style="display:flex;align-items:center;gap:6px;flex-shrink:0"><select id="st_${u.id}" style="padding:5px 8px;border-radius:8px;background:#0f1826;border:1px solid #283244;color:#eef2f7;font-size:11px;font-family:inherit;cursor:pointer">${selectOpts}</select><button onclick="admSetUserStatus('${u.id}')" style="padding:5px 10px;border-radius:8px;background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.25);color:#00d4ff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">Применить</button><button onclick="admDeleteUser('${u.id}')" style="padding:5px 10px;border-radius:8px;background:rgba(255,85,102,.08);border:1px solid rgba(255,85,102,.2);color:#ff5566;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">Удалить</button></div>`;
+      list.appendChild(row);
+    });
+  }catch(e){}
+}
+window.admSetUserStatus=function(id){
+  try{
+    const sel=document.getElementById('st_'+id);
+    if(!sel)return;
+    let users=JSON.parse(localStorage.getItem('sc_users')||'[]');
+    const idx=users.findIndex(u=>u.id===id);
+    if(idx===-1)return;
+    users[idx].status=sel.value;
+    localStorage.setItem('sc_users',JSON.stringify(users));
+    admRenderUsers();
+    if(typeof showToast==='function') showToast('✅','Статус пользователя обновлён');
+  }catch(e){}
+};
+window.admDeleteUser=function(id){
+  if(!confirm('Удалить этого пользователя?'))return;
+  try{
+    let users=JSON.parse(localStorage.getItem('sc_users')||'[]');
+    users=users.filter(u=>u.id!==id);
+    localStorage.setItem('sc_users',JSON.stringify(users));
+    if(sessionStorage.getItem('sc_session')===id) sessionStorage.removeItem('sc_session');
+    if(localStorage.getItem('sc_session')===id) localStorage.removeItem('sc_session');
+    admRenderUsers();
+    if(typeof updateHeaderAuth==='function') updateHeaderAuth();
+  }catch(e){}
+};
+
+window.checkAdmPwd = function(){
+  const v = document.getElementById('admPwdInput').value;
+  const err = document.getElementById('admPwdErr');
+  if(v === admGetPwd()){ admUnlocked=true; err.style.display='none'; admShowMain(); }
+  else { err.style.display='block'; document.getElementById('admPwdInput').value=''; }
+};
+
+// ── Tabs ──
+window.admTab = function(btn, paneId){
+  if(paneId==='pane-users') admRenderUsers();
+  document.querySelectorAll('.adm-tab').forEach(t=>t.classList.remove('act'));
+  document.querySelectorAll('.adm-pane').forEach(p=>p.classList.remove('act'));
+  btn.classList.add('act');
+  document.getElementById(paneId).classList.add('act');
+};
+
+// ── Load fields from stored config ──
+function admLoadFields(){
+  const c = admGetCfg();
+  const map = {
+    'cf-h1':'h1','cf-typer':'typer','cf-badge':'badge','cf-sub':'sub',
+    'cf-cta1':'cta1','cf-cta2':'cta2',
+    'st-v1':'stv1','st-s1':'sts1','st-l1':'stl1','st-v2':'stv2','st-s2':'sts2','st-l2':'stl2',
+    'st-v3':'stv3','st-s3':'sts3','st-l3':'stl3','st-v4':'stv4','st-s4':'sts4','st-l4':'stl4',
+    'cf-brand':'brand','cf-slogan':'slogan',
+    'cf-apikey':'apikey','cf-model':'model','cf-sysprompt':'sysprompt',
+    'cf-botname':'botname','cf-welcome-msg':'welcomeMsg','cf-botstatus':'botstatus','cf-chips':'chips',
+    'pkg1-name':'pkg1name','pkg1-price':'pkg1price','pkg1-desc':'pkg1desc',
+    'pkg2-name':'pkg2name','pkg2-price':'pkg2price','pkg2-desc':'pkg2desc',
+    'pkg3-name':'pkg3name','pkg3-price':'pkg3price','pkg3-desc':'pkg3desc',
+    'cf-cta-h':'ctaH','cf-cta-p':'ctaP',
+    'cf-phone':'phone','cf-email':'email','cf-wa':'wa','cf-tg':'tg',
+    'cf-addr':'addr','cf-hours':'hours','cf-tel-href':'telHref',
+    'cf-form-email':'formEmail','cf-tg-token':'tgToken','cf-tg-chatid':'tgChatid',
+    'cf-title':'pageTitle','cf-meta-desc':'metaDesc','cf-meta-kw':'metaKw','cf-og-img':'ogImg',
+    'cf-ga':'ga','cf-ym':'ym',
+    'cf-color-cyan':'colorCyan','cf-color-cyan-hex':'colorCyan',
+    'cf-color-bg':'colorBg','cf-color-bg-hex':'colorBg'
+  };
+  Object.entries(map).forEach(([id,key])=>{
+    const el=document.getElementById(id); if(el && c[key]!==undefined) el.value=c[key];
+  });
+  const chkMap={'cf-useApi':'useApi','cf-chatVisible':'chatVisible','cf-particles':'particles','cf-grid':'grid','cf-comets':'comets','cf-counters':'counters','cf-welcomeToast':'welcomeToast'};
+  Object.entries(chkMap).forEach(([id,key])=>{
+    const el=document.getElementById(id); if(el) el.checked=!!c[key];
+  });
+  // sync color hex inputs
+  ['cyan','bg'].forEach(k=>{
+    const col=document.getElementById('cf-color-'+k);
+    const hex=document.getElementById('cf-color-'+k+'-hex');
+    if(col&&hex){ col.addEventListener('input',()=>hex.value=col.value); hex.addEventListener('input',()=>col.value=hex.value); }
+  });
+}
+
+// ── Read fields → config object ──
+function admReadFields(){
+  const c={};
+  const map = {
+    'cf-h1':'h1','cf-typer':'typer','cf-badge':'badge','cf-sub':'sub',
+    'cf-cta1':'cta1','cf-cta2':'cta2',
+    'st-v1':'stv1','st-s1':'sts1','st-l1':'stl1','st-v2':'stv2','st-s2':'sts2','st-l2':'stl2',
+    'st-v3':'stv3','st-s3':'sts3','st-l3':'stl3','st-v4':'stv4','st-s4':'sts4','st-l4':'stl4',
+    'cf-brand':'brand','cf-slogan':'slogan',
+    'cf-apikey':'apikey','cf-model':'model','cf-sysprompt':'sysprompt',
+    'cf-botname':'botname','cf-welcome-msg':'welcomeMsg','cf-botstatus':'botstatus','cf-chips':'chips',
+    'pkg1-name':'pkg1name','pkg1-price':'pkg1price','pkg1-desc':'pkg1desc',
+    'pkg2-name':'pkg2name','pkg2-price':'pkg2price','pkg2-desc':'pkg2desc',
+    'pkg3-name':'pkg3name','pkg3-price':'pkg3price','pkg3-desc':'pkg3desc',
+    'cf-cta-h':'ctaH','cf-cta-p':'ctaP',
+    'cf-phone':'phone','cf-email':'email','cf-wa':'wa','cf-tg':'tg',
+    'cf-addr':'addr','cf-hours':'hours','cf-tel-href':'telHref',
+    'cf-form-email':'formEmail','cf-tg-token':'tgToken','cf-tg-chatid':'tgChatid',
+    'cf-title':'pageTitle','cf-meta-desc':'metaDesc','cf-meta-kw':'metaKw','cf-og-img':'ogImg',
+    'cf-ga':'ga','cf-ym':'ym',
+    'cf-color-cyan-hex':'colorCyan','cf-color-bg-hex':'colorBg'
+  };
+  Object.entries(map).forEach(([id,key])=>{ const el=document.getElementById(id); if(el) c[key]=el.value; });
+  const chkMap={'cf-useApi':'useApi','cf-chatVisible':'chatVisible','cf-particles':'particles','cf-grid':'grid','cf-comets':'comets','cf-counters':'counters','cf-welcomeToast':'welcomeToast'};
+  Object.entries(chkMap).forEach(([id,key])=>{ const el=document.getElementById(id); if(el) c[key]=el.checked; });
+  return c;
+}
+
+// ── Save all & apply ──
+window.admSaveAll = function(){
+  const c = admReadFields();
+  admSaveCfg(c);
+  admApplyConfig(c);
+  // Flash feedback
+  document.getElementById('admShell').classList.add('adm-saved');
+  setTimeout(()=>document.getElementById('admShell').classList.remove('adm-saved'),900);
+  if(typeof showToast==='function') showToast('✅','Настройки сохранены!');
+};
+
+// ── Apply config to live page ──
+function admApplyConfig(c){
+  // Title
+  document.title = c.pageTitle||'SiteCode — Разработка сайтов';
+  // Brand name
+  document.querySelectorAll('.logo-text').forEach(el=>el.textContent=c.brand||'SiteCode');
+  // Stats
+  const stats=document.querySelectorAll('.stat-num');
+  if(stats[0]){stats[0].dataset.target=c.stv1;stats[0].dataset.suffix=c.sts1;}
+  if(stats[1]){stats[1].dataset.target=c.stv2;stats[1].dataset.suffix=c.sts2;}
+  if(stats[2]){stats[2].dataset.target=c.stv3;stats[2].dataset.suffix=c.sts3;}
+  if(stats[3]){stats[3].dataset.target=c.stv4;stats[3].dataset.suffix=c.sts4;}
+  document.querySelectorAll('.stat-label').forEach((el,i)=>{
+    const labels=[c.stl1,c.stl2,c.stl3,c.stl4]; if(labels[i]) el.textContent=labels[i];
+  });
+  // Hero sub
+  const heroPara = document.querySelector('.hero > p');
+  if(heroPara) heroPara.textContent=c.sub||'';
+  // H1 (before span)
+  const h1 = document.querySelector('.hero h1');
+  if(h1){ const span=h1.querySelector('span'); if(span){ h1.childNodes[0].textContent=(c.h1||'Создаём сайты, которые')+'\n'; } }
+  // Badge
+  const badge = document.querySelector('.hero-badge');
+  if(badge){ badge.innerHTML='<span></span> '+(c.badge||''); }
+  // Packages
+  const pkgNames=document.querySelectorAll('.pkg-name');
+  const pkgPrices=document.querySelectorAll('.pkg-price');
+  const pkgDescs=document.querySelectorAll('.pkg-desc');
+  [[0,'pkg1'],[1,'pkg2'],[2,'pkg3']].forEach(([i,k])=>{
+    if(pkgNames[i]) pkgNames[i].textContent=c[k+'name']||'';
+    if(pkgPrices[i]) pkgPrices[i].innerHTML='<span>от </span>'+(c[k+'price']||'')+' ₸';
+    if(pkgDescs[i]) pkgDescs[i].textContent=c[k+'desc']||'';
+  });
+  // CTA section
+  const ctaH=document.querySelector('.cta h2');
+  if(ctaH) ctaH.innerHTML=(c.ctaH||'').replace('ваш сайт?','<br /><span class="accent">ваш сайт?</span>');
+  const ctaP=document.querySelector('.cta p');
+  if(ctaP) ctaP.textContent=c.ctaP||'';
+  // AI chat widget visibility
+  const bubble=document.getElementById('aiBubble');
+  const chat=document.getElementById('aiChat');
+  if(bubble) bubble.style.display=c.chatVisible?'':'none';
+  if(chat && !c.chatVisible) chat.classList.remove('open');
+  // Bot name & status
+  const botNameEl=document.querySelector('.ai-head-name');
+  if(botNameEl) botNameEl.textContent=c.botname||'SiteCode AI';
+  const botStatEl=document.querySelector('.ai-head-status');
+  if(botStatEl){ const dot=botStatEl.querySelector('.ai-status-dot'); botStatEl.textContent=''; if(dot) botStatEl.appendChild(dot); botStatEl.append((c.botstatus||'')); }
+  // Colors
+  if(c.colorCyan) document.documentElement.style.setProperty('--cyan',c.colorCyan);
+  if(c.colorBg) document.documentElement.style.setProperty('--bg-deep',c.colorBg);
+  // Particles & grid
+  const pg=document.getElementById('particles'); if(pg) pg.style.display=c.particles?'':'none';
+  const ag=document.querySelector('.ambient-grid'); if(ag) ag.style.display=c.grid?'':'none';
+  // Typer words
+  if(c.typer && window._admTyperWords){ window._admTyperWords = c.typer.split(',').map(s=>s.trim()).filter(Boolean); }
+  // Phone link
+  const telLinks=document.querySelectorAll('a[href^="tel:"]');
+  if(c.telHref) telLinks.forEach(el=>el.href=c.telHref);
+}
+
+// ── Apply colors preview ──
+window.admApplyColors = function(){
+  const c=document.getElementById('cf-color-cyan-hex').value;
+  const bg=document.getElementById('cf-color-bg-hex').value;
+  if(c) document.documentElement.style.setProperty('--cyan',c);
+  if(bg) document.documentElement.style.setProperty('--bg-deep',bg);
+};
+window.admResetColors = function(){
+  document.documentElement.style.setProperty('--cyan','#00d4ff');
+  document.documentElement.style.setProperty('--bg-deep','#060f1e');
+  document.getElementById('cf-color-cyan-hex').value='#00d4ff';
+  document.getElementById('cf-color-cyan').value='#00d4ff';
+  document.getElementById('cf-color-bg-hex').value='#060f1e';
+  document.getElementById('cf-color-bg').value='#060f1e';
+};
+
+// ── Test API key ──
+window.testApiKey = async function(){
+  const key = document.getElementById('cf-apikey').value.trim();
+  const badge = document.getElementById('apiStatusBadge');
+  if(!key){ badge.className='adm-api-status err'; badge.textContent='❌ Введите API ключ'; badge.style.display='inline-flex'; return; }
+  badge.className='adm-api-status test'; badge.textContent='⏳ Проверяем…'; badge.style.display='inline-flex';
+  try{
+    const r = await fetch('https://api.openai.com/v1/models',{headers:{'Authorization':'Bearer '+key}});
+    if(r.ok){ badge.className='adm-api-status ok'; badge.textContent='✅ Ключ валидный'; }
+    else { badge.className='adm-api-status err'; badge.textContent='❌ Ключ недействителен ('+r.status+')'; }
+  }catch(e){ badge.className='adm-api-status err'; badge.textContent='❌ Ошибка сети'; }
+};
+
+// ── Change password ──
+window.admChangePwd = function(){
+  const old=document.getElementById('pwd-old').value;
+  const n=document.getElementById('pwd-new').value;
+  const n2=document.getElementById('pwd-new2').value;
+  const s=document.getElementById('admPwdStatus');
+  s.style.display='block';
+  if(old!==admGetPwd()){ s.style.color='#ff5577'; s.textContent='❌ Текущий пароль неверный'; return; }
+  if(n.length<4){ s.style.color='#ff5577'; s.textContent='❌ Новый пароль минимум 4 символа'; return; }
+  if(n!==n2){ s.style.color='#ff5577'; s.textContent='❌ Пароли не совпадают'; return; }
+  localStorage.setItem(ADM_PWD_KEY,n);
+  s.style.color='#00e676'; s.textContent='✅ Пароль успешно изменён';
+  document.getElementById('pwd-old').value=''; document.getElementById('pwd-new').value=''; document.getElementById('pwd-new2').value='';
+};
+
+// ── Reset all ──
+window.admResetAll = function(){
+  if(!confirm('Сбросить все настройки? Это действие нельзя отменить.')) return;
+  localStorage.removeItem(ADM_KEY);
+  admLoadFields();
+  admApplyConfig(ADM_DEFAULTS);
+  if(typeof showToast==='function') showToast('🗑','Настройки сброшены');
+};
+
+// ── EmailJS settings ──
+window.admSaveEmailJS = function(){
+  const pk=document.getElementById('ejs-public-key').value.trim();
+  const sid=document.getElementById('ejs-service-id').value.trim();
+  const tid=document.getElementById('ejs-template-id').value.trim();
+  const st=document.getElementById('admEjsStatus');
+  if(!pk||!sid||!tid){ st.style.color='#ff5566'; st.textContent='❌ Заполните все три поля'; return; }
+  localStorage.setItem('sc_emailjs',JSON.stringify({publicKey:pk,serviceId:sid,templateId:tid}));
+  st.style.color='#44dd88'; st.textContent='✅ Сохранено';
+  setTimeout(()=>{ st.textContent=''; },3000);
+};
+
+window.admTestEmailJS = async function(){
+  const st=document.getElementById('admEjsStatus');
+  const cfg=JSON.parse(localStorage.getItem('sc_emailjs')||'{}');
+  if(!cfg.publicKey||!cfg.serviceId||!cfg.templateId){ st.style.color='#ff5566'; st.textContent='❌ Сначала сохраните настройки EmailJS'; return; }
+  const testEmail=prompt('Email для тест-отправки:'); if(!testEmail) return;
+  st.style.color='#9fd5ff'; st.textContent='⏳ Отправка…';
+  try{
+    if(window.emailjs){
+      emailjs.init({ publicKey: cfg.publicKey });
+      await emailjs.send(cfg.serviceId, cfg.templateId, {
+        to_email: testEmail,
+        to_name: 'Тест',
+        otp_code: '123456',
+        purpose: 'Тест EmailJS',
+        site_name: 'SiteCode'
+      });
+      st.style.color='#44dd88'; st.textContent='✅ Письмо отправлено! Проверьте почту.';
+    } else { st.style.color='#ff5566'; st.textContent='❌ EmailJS SDK не загружен'; }
+  }catch(err){
+    st.style.color='#ff5566'; st.textContent='❌ Ошибка: '+((err&&err.text)||err);
+  }
+};
+
+// ── Keyboard shortcut: Ctrl+Shift+A ──
+document.addEventListener('keydown',function(e){
+  if(e.ctrlKey && e.shiftKey && e.key==='A'){ e.preventDefault(); openAdm(); }
+});
+
+
+// ── Apply saved config on page load ──
+(function(){
+  const c = admGetCfg();
+  // Apply non-intrusive settings immediately
+  document.title = c.pageTitle||'SiteCode — Разработка сайтов';
+  if(c.colorCyan!=='#00d4ff') document.documentElement.style.setProperty('--cyan',c.colorCyan);
+  if(c.colorBg!=='#060f1e') document.documentElement.style.setProperty('--bg-deep',c.colorBg);
+  const bubble=document.getElementById('aiBubble');
+  if(bubble && !c.chatVisible) bubble.style.display='none';
+  // Apply more after DOM settles
+  setTimeout(()=>admApplyConfig(c),200);
+})();
+
+// ── Hook OpenAI API into existing AI chat ──
+// Extend the aiSend KB lookup to call real API if configured
+(function(){
+  const _orig = window.aiSend;
+  // We patch sendMsg inside the AI chat IIFE by re-exposing via a global hook
+  window._scApiCall = async function(userText, onReply){
+    const c = admGetCfg();
+    if(!c.useApi || !c.apikey) return false;
+    try{
+      const r = await fetch('https://api.openai.com/v1/chat/completions',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':'Bearer '+c.apikey},
+        body:JSON.stringify({
+          model:c.model||'gpt-4o-mini',
+          messages:[{role:'system',content:c.sysprompt||'Ты ассистент SiteCode.'},{role:'user',content:userText}],
+          max_tokens:400,temperature:0.7
+        })
+      });
+      if(!r.ok) return false;
+      const d=await r.json();
+      const reply=d.choices&&d.choices[0]&&d.choices[0].message&&d.choices[0].message.content;
+      if(reply){ onReply(reply.trim()); return true; }
+      return false;
+    }catch(e){ return false; }
+  };
+})();
+</script>
+
+<!-- ===== AI CHAT WIDGET ===== -->
+<style>
+  /* Bubble button */
+  .ai-bubble {
+    position: fixed; bottom: 28px; left: 28px; z-index: 9990;
+    width: 56px; height: 56px; border-radius: 50%;
+    background: linear-gradient(135deg, #00d4ff, #0066cc);
+    border: none; cursor: pointer;
+    box-shadow: 0 6px 28px rgba(0,212,255,.45), 0 0 0 0 rgba(0,212,255,.3);
+    display: flex; align-items: center; justify-content: center;
+    transition: transform .25s, box-shadow .25s;
+    animation: ai-pulse 3s ease-in-out infinite;
+  }
+  .ai-bubble:hover { transform: scale(1.1); box-shadow: 0 10px 36px rgba(0,212,255,.6); animation: none; }
+  .ai-bubble svg { width: 24px; height: 24px; display: block; }
+  @keyframes ai-pulse {
+    0%,100% { box-shadow: 0 6px 28px rgba(0,212,255,.45), 0 0 0 0 rgba(0,212,255,.3); }
+    50%      { box-shadow: 0 6px 28px rgba(0,212,255,.55), 0 0 0 10px rgba(0,212,255,.0); }
+  }
+
+  /* Unread badge */
+  .ai-badge {
+    position: absolute; top: -3px; right: -3px;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: #ff4466; border: 2px solid #06111f;
+    font-size: 10px; font-weight: 800; color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    transition: opacity .2s, transform .2s;
+  }
+  .ai-badge.hidden { opacity: 0; transform: scale(0); }
+
+  /* Chat window */
+  .ai-chat {
+    position: fixed; bottom: 96px; left: 28px; z-index: 9991;
+    width: 360px; max-height: 520px;
+    background: linear-gradient(180deg, #0d2040 0%, #091528 100%);
+    border: 1px solid rgba(0,212,255,.28);
+    border-radius: 20px;
+    display: flex; flex-direction: column;
+    box-shadow: 0 24px 80px rgba(0,0,0,.55), 0 0 0 1px rgba(0,212,255,.1);
+    transform: translateY(16px) scale(.96); opacity: 0; pointer-events: none;
+    transition: transform .32s cubic-bezier(.22,.68,0,1.1), opacity .28s;
+    overflow: hidden;
+  }
+  .ai-chat.open { transform: translateY(0) scale(1); opacity: 1; pointer-events: all; }
+
+  /* Header */
+  .ai-head {
+    padding: 14px 16px 12px;
+    border-bottom: 1px solid rgba(0,212,255,.14);
+    display: flex; align-items: center; gap: 11px;
+    flex-shrink: 0;
+    background: rgba(0,212,255,.04);
+  }
+  .ai-ava {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, #00d4ff, #0055cc);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px; flex-shrink: 0;
+    box-shadow: 0 0 14px rgba(0,212,255,.4);
+  }
+  .ai-head-info { flex: 1; }
+  .ai-head-name { font-size: 14px; font-weight: 800; color: #eef2f7; letter-spacing: -.2px; }
+  .ai-head-status { font-size: 11px; color: #00d4ff; display: flex; align-items: center; gap: 5px; margin-top: 1px; }
+  .ai-status-dot { width: 6px; height: 6px; border-radius: 50%; background: #00e676; box-shadow: 0 0 6px #00e676; flex-shrink: 0; }
+  .ai-head-close {
+    width: 28px; height: 28px; border-radius: 8px;
+    background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+    color: #667c99; font-size: 14px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .2s, color .2s; line-height: 1;
+    flex-shrink: 0;
+  }
+  .ai-head-close:hover { background: rgba(255,255,255,.12); color: #eef2f7; }
+
+  /* Messages */
+  .ai-msgs {
+    flex: 1; overflow-y: auto; padding: 14px 14px 8px;
+    display: flex; flex-direction: column; gap: 10px;
+    scrollbar-width: thin; scrollbar-color: rgba(0,212,255,.2) transparent;
+  }
+  .ai-msgs::-webkit-scrollbar { width: 4px; }
+  .ai-msgs::-webkit-scrollbar-thumb { background: rgba(0,212,255,.2); border-radius: 2px; }
+
+  .ai-msg { display: flex; align-items: flex-end; gap: 8px; animation: msgIn .3s ease; }
+  @keyframes msgIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .ai-msg.user { flex-direction: row-reverse; }
+  .ai-msg-bubble {
+    max-width: 80%; padding: 10px 13px; border-radius: 14px;
+    font-size: 13px; line-height: 1.55; word-break: break-word;
+  }
+  .ai-msg.bot .ai-msg-bubble {
+    background: rgba(0,212,255,.1); border: 1px solid rgba(0,212,255,.18);
+    color: #d8edf8; border-bottom-left-radius: 4px;
+  }
+  .ai-msg.user .ai-msg-bubble {
+    background: linear-gradient(135deg, #00a8d0, #005faa);
+    color: #fff; border-bottom-right-radius: 4px;
+  }
+  .ai-msg-mini-ava {
+    width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+    background: linear-gradient(135deg, #00d4ff, #0055cc);
+    display: flex; align-items: center; justify-content: center; font-size: 12px;
+  }
+
+  /* Typing indicator */
+  .ai-typing { display: none; align-items: flex-end; gap: 8px; }
+  .ai-typing.show { display: flex; }
+  .ai-typing-bubble {
+    background: rgba(0,212,255,.08); border: 1px solid rgba(0,212,255,.15);
+    border-radius: 14px; border-bottom-left-radius: 4px;
+    padding: 10px 14px; display: flex; align-items: center; gap: 4px;
+  }
+  .ai-typing-bubble span {
+    width: 7px; height: 7px; border-radius: 50%; background: rgba(0,212,255,.5);
+    animation: typingDot 1.2s ease-in-out infinite;
+  }
+  .ai-typing-bubble span:nth-child(2) { animation-delay: .2s; }
+  .ai-typing-bubble span:nth-child(3) { animation-delay: .4s; }
+  @keyframes typingDot {
+    0%,80%,100% { transform: scale(.8); opacity:.4; }
+    40% { transform: scale(1.1); opacity:1; }
+  }
+
+  /* Quick chips */
+  .ai-chips {
+    display: flex; gap: 6px; flex-wrap: wrap;
+    padding: 0 14px 10px; flex-shrink: 0;
+  }
+  .ai-chip {
+    padding: 5px 11px; border-radius: 999px;
+    border: 1px solid rgba(0,212,255,.26); background: rgba(0,212,255,.07);
+    color: #7fd8ff; font-size: 11px; font-weight: 600; cursor: pointer;
+    transition: background .18s, border-color .18s; white-space: nowrap;
+    font-family: inherit;
+  }
+  .ai-chip:hover { background: rgba(0,212,255,.16); border-color: rgba(0,212,255,.5); color: #eef2f7; }
+
+  /* Input area */
+  .ai-input-row {
+    display: flex; gap: 8px; padding: 10px 12px 12px;
+    border-top: 1px solid rgba(0,212,255,.12); flex-shrink: 0;
+    background: rgba(0,0,0,.15);
+  }
+  .ai-input {
+    flex: 1; background: rgba(255,255,255,.06); border: 1px solid rgba(0,212,255,.2);
+    border-radius: 10px; padding: 9px 12px; color: #eef2f7;
+    font-size: 13px; font-family: inherit; outline: none; resize: none;
+    transition: border-color .2s; line-height: 1.5; max-height: 90px;
+  }
+  .ai-input::placeholder { color: rgba(255,255,255,.25); }
+  .ai-input:focus { border-color: rgba(0,212,255,.5); }
+  .ai-send {
+    width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
+    background: linear-gradient(135deg, #00c8f0, #0055cc); border: none;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: opacity .2s, transform .2s; align-self: flex-end;
+  }
+  .ai-send:hover { opacity: .85; transform: scale(1.07); }
+  .ai-send svg { width: 16px; height: 16px; }
+</style>
+
+<!-- Bubble -->
+<button class="ai-bubble" id="aiBubble" onclick="toggleAiChat()" aria-label="Чат с ИИ">
+  <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    <circle cx="9" cy="10" r=".8" fill="#fff" stroke="none"/>
+    <circle cx="12" cy="10" r=".8" fill="#fff" stroke="none"/>
+    <circle cx="15" cy="10" r=".8" fill="#fff" stroke="none"/>
+  </svg>
+  <div class="ai-badge" id="aiBadge">1</div>
+</button>
+
+<!-- Chat window -->
+<div class="ai-chat" id="aiChat">
+  <div class="ai-head">
+    <div class="ai-ava">🤖</div>
+    <div class="ai-head-info">
+      <div class="ai-head-name">SiteCode AI</div>
+      <div class="ai-head-status"><span class="ai-status-dot"></span>Онлайн · отвечает мгновенно</div>
+    </div>
+    <button class="ai-head-close" onclick="toggleAiChat()">✕</button>
+  </div>
+  <div class="ai-msgs" id="aiMsgs">
+    <div class="ai-msg bot">
+      <div class="ai-msg-mini-ava">🤖</div>
+      <div class="ai-msg-bubble">Привет! Я помогу подобрать нужный сайт и отвечу на любые вопросы по разработке. Что вас интересует? 👋</div>
+    </div>
+  </div>
+  <div class="ai-typing" id="aiTyping">
+    <div class="ai-msg-mini-ava" style="width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#00d4ff,#0055cc);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0">🤖</div>
+    <div class="ai-typing-bubble"><span></span><span></span><span></span></div>
+  </div>
+  <div class="ai-chips" id="aiChips">
+    <button class="ai-chip" onclick="askChip(this)">💰 Сколько стоит сайт?</button>
+    <button class="ai-chip" onclick="askChip(this)">⏱ Сроки разработки</button>
+    <button class="ai-chip" onclick="askChip(this)">📦 Что входит в проект?</button>
+    <button class="ai-chip" onclick="askChip(this)">🛒 Есть ли магазин?</button>
+    <button class="ai-chip" onclick="askChip(this)">📞 Связаться с менеджером</button>
+  </div>
+  <div class="ai-input-row">
+    <textarea class="ai-input" id="aiInput" placeholder="Напишите вопрос..." rows="1" onkeydown="aiKeyDown(event)" oninput="aiAutoResize(this)"></textarea>
+    <button class="ai-send" onclick="aiSend()" aria-label="Отправить">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<script>
+(function(){
+  const KB = [
+    { q: /цен|стоим|сколько|прайс/i, a: 'Цены стартуют от 15 000 ₸ за лендинг и до 90 000+ ₸ за корпоративный / Enterprise проект. Точная стоимость зависит от функционала. Хотите, я помогу подобрать подходящий вариант?' },
+    { q: /срок|долго|быстро|успе/i, a: 'Сроки разработки: лендинг — 3–5 дней, магазин — 21–30 дней, образовательная платформа — 25–35 дней. Есть срочный заказ — уточните задачу, ускоримся!' },
+    { q: /магаз|shop|корзин|1с/i, a: 'Да! Шаблон **Shop Pro** — полноценный интернет-магазин с каталогом, корзиной, онлайн-оплатой и интеграцией с 1С. Стоимость от 55 000 ₸.' },
+    { q: /лендинг|landing|business/i, a: 'Business Landing — это лаконичный одностраничник в чёрно-белой теме с калькулятором и живыми отзывами. Отлично подходит для старта. Цена: 15 000 ₸, срок 3–5 дней.' },
+    { q: /корпорат|corporate|board/i, a: 'Corporate Standard — наш флагман. Модульная архитектура, до 10 страниц, закрытый Board Room для крупных проектов от 90 000 ₸. Цена старта: 35 000 ₸.' },
+    { q: /красот|beauty|салон|фитнес/i, a: 'Beauty Studio — сайт салона красоты или фитнес-клуба: онлайн-запись, прайс, галерея, акции. Цена: 22 000 ₸, срок 7–10 дней.' },
+    { q: /авто|dealer|машин|кредит|trade/i, a: 'Auto Dealer — автосалон с каталогом, кредитным калькулятором, Trade-In оценщиком и записью на тест-драйв. Цена: 50 000 ₸, срок 14–21 день.' },
+    { q: /edu|обучен|курс|lms|сертифик/i, a: 'EduPlatform — полноценная LMS: видеоуроки, тесты, сертификаты, личный кабинет студента и оплата курсов. Цена: 70 000 ₸, срок 25–35 дней.' },
+    { q: /контакт|связ|телефон|менеджер|позвон/i, a: 'Свяжитесь с нами прямо сейчас! 📞 Заполните форму на сайте в разделе «Заказать сайт» — ответим в течение 30 минут в рабочее время.' },
+    { q: /гаранти|поддержк|после/i, a: 'Мы предоставляем 3 месяца поддержки после запуска бесплатно. В Board Room проектах — 12 месяцев. Всегда поможем с правками.' },
+    { q: /входит|включа|состав/i, a: 'В каждый проект входит: адаптивная вёрстка, SEO-основа, подключение к домену/хостингу, обучение работе с сайтом и поддержка после запуска.' },
+    { q: /привет|здравству|добр|hi|hello/i, a: 'Привет! Рад видеть вас в SiteCode! 😊 Я отвечу на вопросы о разработке, ценах, сроках и шаблонах. Чем могу помочь?' },
+  ];
+  const fallbacks = [
+    'Хороший вопрос! Для точного ответа лучше пообщаться с нашим менеджером — заполните форму «Заказать сайт», ответим быстро.',
+    'Уточните, пожалуйста — я могу рассказать о ценах, сроках, шаблонах или помочь выбрать подходящий тип сайта.',
+    'Для сложных вопросов свяжитесь с командой SiteCode напрямую. Мы всегда готовы помочь с вашим проектом! 🚀',
+  ];
+  let fallI = 0, chatOpen = false;
+
+  window.toggleAiChat = function() {
+    chatOpen = !chatOpen;
+    document.getElementById('aiChat').classList.toggle('open', chatOpen);
+    if (chatOpen) {
+      document.getElementById('aiBadge').classList.add('hidden');
+      setTimeout(() => document.getElementById('aiInput').focus(), 320);
+      scrollMsgs();
+    }
+  };
+
+  window.aiKeyDown = function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); aiSend(); }
+  };
+  window.aiAutoResize = function(el) {
+    el.style.height = 'auto';
+    el.style.height = Math.min(el.scrollHeight, 90) + 'px';
+  };
+
+  window.askChip = function(btn) {
+    const text = btn.textContent.replace(/^[^\s]+ /, '').trim();
+    sendMsg(btn.textContent.trim());
+    btn.remove();
+  };
+
+  window.aiSend = function() {
+    const el = document.getElementById('aiInput');
+    const text = el.value.trim();
+    if (!text) return;
+    el.value = ''; el.style.height = 'auto';
+    sendMsg(text);
+  };
+
+  function sendMsg(text) {
+    addMsg('user', text);
+    showTyping(true);
+    // Use real OpenAI API only when explicitly configured
+    const cfg = (typeof admGetCfg === 'function') ? admGetCfg() : {};
+    if (window._scApiCall && cfg.useApi && cfg.apikey) {
+      window._scApiCall(text, function(reply) {
+        showTyping(false);
+        addMsg('bot', reply);
+      }).then(function(used) {
+        if (!used) {
+          // API call failed — fall back to built-in KB
+          setTimeout(() => {
+            showTyping(false);
+            const match = KB.find(k => k.q.test(text));
+            addMsg('bot', match ? match.a : (fallbacks[fallI++ % fallbacks.length]));
+          }, 400);
+        }
+      });
+    } else {
+      // No API configured — built-in KB with natural response delay
+      setTimeout(() => {
+        showTyping(false);
+        const match = KB.find(k => k.q.test(text));
+        addMsg('bot', match ? match.a : (fallbacks[fallI++ % fallbacks.length]));
+      }, 700 + Math.random() * 600);
+    }
+  }
+
+  function addMsg(role, text) {
+    const wrap = document.getElementById('aiMsgs');
+    const row = document.createElement('div');
+    row.className = 'ai-msg ' + role;
+    const formatted = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    if (role === 'bot') {
+      row.innerHTML = '<div class="ai-msg-mini-ava">🤖</div><div class="ai-msg-bubble">' + formatted + '</div>';
+    } else {
+      row.innerHTML = '<div class="ai-msg-bubble">' + formatted + '</div>';
+    }
+    wrap.appendChild(row);
+    scrollMsgs();
+  }
+
+  function showTyping(show) {
+    document.getElementById('aiTyping').classList.toggle('show', show);
+    if (show) scrollMsgs();
+  }
+  function scrollMsgs() {
+    const el = document.getElementById('aiMsgs');
+    requestAnimationFrame(() => { el.scrollTop = el.scrollHeight; });
+  }
+})();
+</script>
+
+<!-- ============================= AUTH / PROFILE SYSTEM ============================= -->
+<style>
+/* ── Profile button in header ── */
+.btn-profile{padding:7px 14px;border:1px solid rgba(0,212,255,.3);border-radius:10px;background:rgba(0,212,255,.07);color:#00d4ff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;display:flex;align-items:center;gap:7px;white-space:nowrap;line-height:1;position:relative}
+.btn-profile:hover{background:rgba(0,212,255,.14)}
+.btn-profile.logged-in{border-radius:999px;padding:4px 13px 4px 4px}
+.profile-avatar-sm{width:29px;height:29px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff;flex-shrink:0;user-select:none;letter-spacing:0}
+@media(max-width:768px){.btn-profile{display:none!important}}
+
+/* ── Auth overlay ── */
+.auth-ov{position:fixed;inset:0;background:rgba(2,5,10,.92);backdrop-filter:blur(16px);z-index:99980;display:none;align-items:center;justify-content:center;padding:16px}
+.auth-ov.open{display:flex}
+.auth-box{width:100%;max-width:440px;background:#131c28;border:1px solid #283244;border-radius:24px;overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,.8);position:relative}
+.auth-tabs{display:flex;border-bottom:1px solid #283244;background:#0f1520}
+.auth-tab-btn{flex:1;padding:15px;font-size:14px;font-weight:700;color:#93a2b7;border:none;background:none;cursor:pointer;font-family:inherit;border-bottom:2px solid transparent;transition:color .15s,border-color .15s}
+.auth-tab-btn.act{color:#00d4ff;border-bottom-color:#00d4ff}
+.auth-body{padding:26px 30px 30px}
+.auth-pane{display:none}
+.auth-pane.act{display:block}
+.auth-title{font-size:21px;font-weight:900;letter-spacing:-.5px;margin-bottom:5px;color:#eef2f7}
+.auth-desc{font-size:13px;color:#93a2b7;line-height:1.6;margin-bottom:22px}
+.auth-field{margin-bottom:13px}
+.auth-field label{display:block;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#93a2b7;margin-bottom:5px}
+.auth-field input{width:100%;padding:11px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#eef2f7;font-size:14px;font-family:inherit;outline:none;transition:border-color .2s}
+.auth-field input:focus{border-color:rgba(0,212,255,.45)}
+.auth-err{font-size:13px;color:#ff5566;min-height:18px;margin-bottom:10px;display:none}
+.auth-err.show{display:block}
+.auth-submit{width:100%;padding:13px;border-radius:14px;background:linear-gradient(135deg,#00d4ff,#0055cc);border:none;color:#fff;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;transition:opacity .2s;margin-top:2px}
+.auth-submit:hover{opacity:.88}
+.auth-switch{text-align:center;font-size:13px;color:#93a2b7;margin-top:14px}
+.auth-switch a{color:#00d4ff;cursor:pointer;font-weight:700;text-decoration:none}
+.auth-switch a:hover{text-decoration:underline}
+.auth-close{position:absolute;top:13px;right:13px;width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:#93a2b7;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;transition:background .15s,color .15s;z-index:2}
+.auth-close:hover{background:rgba(255,255,255,.1);color:#eef2f7}
+/* ── Password strength ── */
+.pw-strength{display:flex;gap:4px;margin-top:7px}
+.pw-strength-bar{flex:1;height:3px;border-radius:2px;background:#283244;transition:background .3s}
+.pw-strength-bar.weak{background:#ff5566}
+.pw-strength-bar.medium{background:#e7c889}
+.pw-strength-bar.strong{background:#44dd88}
+/* ── Profile dropdown ── */
+.profile-drop{position:fixed;top:64px;right:18px;width:288px;background:#131c28;border:1px solid #283244;border-radius:20px;box-shadow:0 24px 80px rgba(0,0,0,.75);z-index:9970;display:none;overflow:hidden}
+@keyframes profileDropIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.profile-drop.open{display:block;animation:profileDropIn .18s ease}
+.profile-drop-head{padding:18px 18px 14px;background:linear-gradient(135deg,rgba(0,212,255,.07),rgba(0,85,204,.05));border-bottom:1px solid #283244;display:flex;align-items:center;gap:13px}
+.profile-avatar-lg{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#fff;flex-shrink:0;box-shadow:0 4px 16px rgba(0,0,0,.4);user-select:none;letter-spacing:0}
+.profile-drop-name{font-size:15px;font-weight:800;line-height:1.2;color:#eef2f7}
+.profile-drop-email{font-size:12px;color:#93a2b7;margin-top:3px;word-break:break-all}
+.profile-drop-since{font-size:11px;color:#4a6a8a;margin-top:2px}
+.profile-drop-body{padding:8px}
+.profile-drop-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;font-size:13px;font-weight:600;color:#b8cfe2;cursor:pointer;transition:background .15s,color .15s;border:none;background:none;width:100%;text-align:left;font-family:inherit}
+.profile-drop-item:hover{background:rgba(255,255,255,.06);color:#eef2f7}
+.profile-drop-item.danger{color:#ff5566}
+.profile-drop-item.danger:hover{background:rgba(255,85,102,.08)}
+.pdi-icon{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.profile-drop-divider{height:1px;background:#283244;margin:5px 10px}
+</style>
+
+<!-- AUTH MODAL -->
+<div class="auth-ov" id="authOv" onclick="if(event.target===this)closeAuth()">
+  <div class="auth-box">
+    <button class="auth-close" onclick="closeAuth()">✕</button>
+    <div class="auth-tabs" id="authTabs">
+      <button class="auth-tab-btn act" data-tab="login" onclick="switchAuthTab('login')">Войти</button>
+      <button class="auth-tab-btn" data-tab="reg" onclick="switchAuthTab('reg')">Регистрация</button>
+    </div>
+    <div class="auth-body">
+
+      <!-- ВХОД -->
+      <div class="auth-pane act" id="auth-pane-login">
+        <div class="auth-title">С возвращением! 👋</div>
+        <div class="auth-desc">Войдите в аккаунт SiteCode</div>
+        <div class="auth-field"><label>Email</label><input type="email" id="lEmail" placeholder="your@email.com" autocomplete="email" onkeydown="if(event.key==='Enter')doLogin()"></div>
+        <div class="auth-field"><label>Пароль</label><input type="password" id="lPw" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:10px">
+          <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:13px;color:#93a2b7;font-weight:500;text-transform:none;letter-spacing:0;white-space:nowrap">
+            <input type="checkbox" id="lRemember" style="width:15px;height:15px;cursor:pointer;flex-shrink:0;accent-color:#00d4ff"> Запомнить меня
+          </label>
+          <a href="#" onclick="openForgotPassword();return false" style="font-size:13px;color:#00d4ff;text-decoration:none;font-weight:600;white-space:nowrap">Забыли пароль?</a>
+        </div>
+        <div class="auth-err" id="login-err"></div>
+        <button class="auth-submit" onclick="doLogin()">Войти →</button>
+        <div class="auth-switch">Нет аккаунта? <a onclick="switchAuthTab('reg')">Зарегистрироваться</a></div>
+      </div>
+
+      <!-- РЕГИСТРАЦИЯ -->
+      <div class="auth-pane" id="auth-pane-reg">
+        <div class="auth-title">Создать аккаунт ✨</div>
+        <div class="auth-desc">Бесплатная регистрация — следите за проектами и заказами</div>
+        <div class="auth-field"><label>Имя и фамилия</label><input type="text" id="rName" placeholder="Иван Иванов" autocomplete="name"></div>
+        <div class="auth-field"><label>Email</label><input type="email" id="rEmail" placeholder="your@email.com" autocomplete="email"></div>
+        <div class="auth-field">
+          <label>Пароль</label>
+          <input type="password" id="rPw" placeholder="Минимум 6 символов" autocomplete="new-password" oninput="checkPwStrength(this.value)">
+          <div class="pw-strength"><div class="pw-strength-bar"></div><div class="pw-strength-bar"></div><div class="pw-strength-bar"></div><div class="pw-strength-bar"></div><div class="pw-strength-bar"></div></div>
+        </div>
+        <div class="auth-field"><label>Подтвердите пароль</label><input type="password" id="rPw2" placeholder="Повторите пароль" autocomplete="new-password" onkeydown="if(event.key==='Enter')doRegister()"></div>
+        <label style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;font-size:12px;color:#93a2b7;font-weight:500;margin-bottom:14px;line-height:1.5;text-transform:none;letter-spacing:0">
+          <input type="checkbox" id="rAgree" style="width:14px;height:14px;flex-shrink:0;margin-top:2px;cursor:pointer;accent-color:#00d4ff">
+          Принимаю <a href="terms.html" target="_blank" style="color:#00d4ff;font-weight:700;text-decoration:none;margin:0 3px">условия использования</a> и <a href="privacy.html" target="_blank" style="color:#00d4ff;font-weight:700;text-decoration:none;margin-left:3px">политику конфиденциальности</a>
+        </label>
+        <div class="auth-err" id="reg-err"></div>
+        <button class="auth-submit" onclick="doRegister()">Зарегистрироваться →</button>
+        <div class="auth-switch">Уже есть аккаунт? <a onclick="switchAuthTab('login')">Войти</a></div>
+      </div>
+
+      <!-- РЕДАКТИРОВАНИЕ ПРОФИЛЯ -->
+      <div class="auth-pane" id="auth-pane-edit">
+        <div class="auth-title">Редактировать профиль ✏️</div>
+        <div class="auth-desc">Обновите данные вашего аккаунта</div>
+        <!-- Avatar upload -->
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px">
+          <div id="epAvatarPreview" style="width:56px;height:56px;border-radius:50%;background:#1a2535;border:2px solid #283244;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:#fff;flex-shrink:0;overflow:hidden"></div>
+          <div>
+            <label style="display:inline-flex;align-items:center;gap:6px;padding:7px 13px;border-radius:10px;background:rgba(0,212,255,.07);border:1px solid rgba(0,212,255,.2);color:#00d4ff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s" onmouseenter="this.style.background='rgba(0,212,255,.14)'" onmouseleave="this.style.background='rgba(0,212,255,.07)'">
+              📷 Выбрать фото
+              <input type="file" id="epAvatarFile" accept="image/*" style="display:none" onchange="previewAvatar(this)">
+            </label>
+            <div style="font-size:11px;color:#4a6a8a;margin-top:5px">JPG, PNG, GIF — до 2 МБ</div>
+          </div>
+        </div>
+        <div class="auth-field"><label>Имя и фамилия</label><input type="text" id="epName" autocomplete="name"></div>
+        <div class="auth-field"><label>Email</label><input type="email" id="epEmail" autocomplete="email"></div>
+        <div class="auth-field"><label>Новый пароль (оставьте пустым — без изменений)</label><input type="password" id="epPw" placeholder="Новый пароль" autocomplete="new-password"></div>
+        <div class="auth-field"><label>Подтвердите новый пароль</label><input type="password" id="epPw2" placeholder="Повторите" autocomplete="new-password" onkeydown="if(event.key==='Enter')doSaveProfile()"></div>
+        <!-- 2FA toggle -->
+        <label style="display:flex;align-items:center;gap:10px;margin-bottom:14px;cursor:pointer;padding:11px 14px;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid #283244">
+          <input type="checkbox" id="ep2fa" style="width:16px;height:16px;accent-color:#00d4ff;flex-shrink:0;cursor:pointer">
+          <div>
+            <div style="font-size:13px;font-weight:700;color:#eef2f7">🔐 Двухфакторная аутентификация</div>
+            <div style="font-size:11px;color:#93a2b7;margin-top:2px">При входе на ваш email будет отправлен код подтверждения</div>
+          </div>
+        </label>
+        <div class="auth-err" id="ep-err"></div>
+        <button class="auth-submit" onclick="doSaveProfile()">Сохранить изменения →</button>
+        <button onclick="closeAuth()" style="width:100%;padding:11px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#93a2b7;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:9px;transition:background .15s">Отмена</button>
+      </div>
+
+      <!-- 2FA CODE -->
+      <div class="auth-pane" id="auth-pane-2fa">
+        <div class="auth-title">Код подтверждения 🔐</div>
+        <div class="auth-desc" id="tfa-desc">Мы отправили 6-значный код на ваш email. Введите его ниже.</div>
+        <div style="background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.18);border-radius:12px;padding:12px 14px;font-size:13px;color:#9fd5ff;margin-bottom:16px" id="tfaEmailHint"></div>
+        <div class="auth-field">
+          <label>Код из письма</label>
+          <input type="text" id="tfaCode" placeholder="000000" maxlength="6" style="font-size:22px;letter-spacing:8px;text-align:center;font-weight:900" onkeydown="if(event.key==='Enter')doVerify2FA()" oninput="this.value=this.value.replace(/\\D/g,'').slice(0,6)">
+        </div>
+        <div class="auth-err" id="tfa-err"></div>
+        <button class="auth-submit" onclick="doVerify2FA()">Подтвердить →</button>
+        <div style="text-align:center;margin-top:12px;font-size:13px;color:#93a2b7">Не пришло? <a onclick="resend2FACode()" href="#" style="color:#00d4ff;font-weight:700;text-decoration:none">Отправить повторно</a></div>
+        <button onclick="switchAuthTab('login')" style="width:100%;padding:11px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#93a2b7;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:9px;transition:background .15s">← Назад</button>
+      </div>
+
+      <!-- СБРОС ПАРОЛЯ -->
+      <div class="auth-pane" id="auth-pane-forgot">
+        <div class="auth-title" id="forgotTitle">Восстановление пароля 🔑</div>
+        <div class="auth-desc" id="forgotDesc">Введите email вашего аккаунта — мы отправим код для сброса пароля.</div>
+        <div class="auth-field" id="forgotEmailField">
+          <label>Email аккаунта</label>
+          <input type="email" id="forgotEmail" placeholder="your@email.com" onkeydown="if(event.key==='Enter')doSendForgotCode()">
+        </div>
+        <div class="auth-field" id="forgotCodeField" style="display:none">
+          <label>Код из письма</label>
+          <input type="text" id="forgotCodeInput" placeholder="000000" maxlength="6" style="font-size:22px;letter-spacing:8px;text-align:center;font-weight:900" oninput="this.value=this.value.replace(/\\D/g,'').slice(0,6)">
+        </div>
+        <div class="auth-field" id="forgotNewPwField" style="display:none">
+          <label>Новый пароль</label>
+          <input type="password" id="forgotNewPw" placeholder="Минимум 6 символов">
+        </div>
+        <div class="auth-field" id="forgotNewPw2Field" style="display:none">
+          <label>Подтвердите новый пароль</label>
+          <input type="password" id="forgotNewPw2" placeholder="Повторите" onkeydown="if(event.key==='Enter')doResetPassword()">
+        </div>
+        <div class="auth-err" id="forgot-err"></div>
+        <button class="auth-submit" id="forgotMainBtn" onclick="doSendForgotCode()">Отправить код →</button>
+        <button onclick="switchAuthTab('login')" style="width:100%;padding:11px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#93a2b7;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:9px;transition:background .15s">← Войти</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE DROPDOWN -->
+<div class="profile-drop" id="profileDrop">
+  <div class="profile-drop-head">
+    <div class="profile-avatar-lg" id="pdAvatar">?</div>
+    <div style="min-width:0">
+      <div class="profile-drop-name" id="pdName">—</div>
+      <div class="profile-drop-email" id="pdEmail">—</div>
+      <div class="profile-drop-since" id="pdSince"></div>
+    </div>
+  </div>
+  <div class="profile-drop-body">
+    <button class="profile-drop-item" onclick="openEditProfile()"><span class="pdi-icon">✏️</span>Редактировать профиль</button>
+    <button class="profile-drop-item" onclick="closeProfileDrop();openFormModal()"><span class="pdi-icon">📝</span>Оставить заявку</button>
+    <button class="profile-drop-item" onclick="closeProfileDrop();document.getElementById('calc').scrollIntoView({behavior:'smooth'})"><span class="pdi-icon">🧮</span>Калькулятор цен</button>
+    <div class="profile-drop-divider"></div>
+    <div id="pd2faStatus" style="padding:6px 12px;font-size:11px;color:#4a6a8a"></div>
+    <button class="profile-drop-item danger" onclick="doLogout()"><span class="pdi-icon">🚪</span>Выйти из аккаунта</button>
+  </div>
+</div>
+
+<script>
+// ==================== AUTH / PROFILE SYSTEM ====================
+(function(){
+  const AUTH_USERS = 'sc_users';
+  const AUTH_SES   = 'sc_session';
+  const AV_COLORS  = ['#e74c3c','#e67e22','#2ecc71','#1abc9c','#3498db','#9b59b6','#e91e63','#00bcd4','#ff5722','#00d4ff'];
+
+  function avColor(name){ let h=0; for(let c of(name||'?')) h=(h*31+c.charCodeAt(0))&0x7fffffff; return AV_COLORS[h%AV_COLORS.length]; }
+  function avInitials(name){ return(name||'?').split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase()||'?'; }
+
+  async function hashPw(pw){
+    const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(pw));
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  }
+
+  function getUsers(){ try{ return JSON.parse(localStorage.getItem(AUTH_USERS)||'[]'); }catch(e){ return[]; } }
+  function saveUsers(u){ localStorage.setItem(AUTH_USERS,JSON.stringify(u)); }
+
+  function getCurrentUser(){
+    const id=sessionStorage.getItem(AUTH_SES)||localStorage.getItem(AUTH_SES);
+    if(!id)return null;
+    return getUsers().find(u=>u.id===id)||null;
+  }
+  function setSession(id,remember){
+    if(remember) localStorage.setItem(AUTH_SES,id);
+    else sessionStorage.setItem(AUTH_SES,id);
+  }
+  function clearSession(){ sessionStorage.removeItem(AUTH_SES); localStorage.removeItem(AUTH_SES); }
+
+  // ── Update header button & mobile link ──
+  function updateHeaderAuth(){
+    const user=getCurrentUser();
+    const btn=document.getElementById('profileBtn');
+    if(btn){
+      if(user){
+        btn.className='btn-profile logged-in';
+        const avSrc=user.avatar?`<img src="${user.avatar}" style="width:29px;height:29px;border-radius:50%;object-fit:cover">`:`<div class="profile-avatar-sm" style="background:${avColor(user.name)}">${avInitials(user.name)}</div>`;
+        btn.innerHTML=avSrc+`<span>${user.name.split(' ')[0]}</span>`;
+        btn.onclick=toggleProfileDrop;
+      }else{
+        btn.className='btn-profile';
+        btn.innerHTML='👤 Войти';
+        btn.onclick=openAuth;
+      }
+    }
+    const mobileBtn=document.getElementById('mobileAuthBtn');
+    if(mobileBtn){
+      if(user){
+        mobileBtn.textContent=`👤 ${user.name.split(' ')[0]} — профиль`;
+        mobileBtn.onclick=e=>{e.preventDefault();closeMenu();toggleProfileDrop();};
+      }else{
+        mobileBtn.textContent='👤 Войти в аккаунт';
+        mobileBtn.onclick=e=>{e.preventDefault();closeMenu();openAuth();};
+      }
+    }
+  }
+
+  function authErrClear(){ document.querySelectorAll('.auth-err').forEach(e=>{e.classList.remove('show');e.textContent='';}); }
+  function authErr(id,msg){ const el=document.getElementById(id); if(el){el.textContent=msg;el.classList.add('show');} }
+
+  // ── Open / close modal ──
+  window.openAuth=function(tab){
+    document.getElementById('authTabs').style.display='';
+    document.getElementById('authOv').classList.add('open');
+    document.body.style.overflow='hidden';
+    switchAuthTab(tab==='reg'?'reg':'login');
+  };
+  window.closeAuth=function(){
+    document.getElementById('authOv').classList.remove('open');
+    document.body.style.overflow='';
+  };
+  window.switchAuthTab=function(tab){
+    document.querySelectorAll('.auth-tab-btn').forEach(b=>b.classList.toggle('act',b.dataset.tab===tab));
+    document.querySelectorAll('.auth-pane').forEach(p=>p.classList.toggle('act',p.id==='auth-pane-'+tab));
+    authErrClear();
+  };
+
+  // ── 2FA helpers ──
+  let _pendingTfaUserId=null, _pendingTfaTab=null, _pendingTfaRemember=false;
+  let _pendingForgotEmail=null;
+
+  function generate2FACode(){ return String(Math.floor(100000+Math.random()*900000)); }
+
+  // ── EmailJS config (set via Admin Panel → Безопасность) ──
+  function getEmailJSCfg(){
+    try{ return JSON.parse(localStorage.getItem('sc_emailjs')||'{}'); }catch(e){ return {}; }
+  }
+
+  async function sendEmailCode(email, purpose){
+    const code=generate2FACode();
+    sessionStorage.setItem('sc_2fa_code',code);
+    sessionStorage.setItem('sc_2fa_email',email);
+    sessionStorage.setItem('sc_2fa_purpose',purpose);
+    sessionStorage.setItem('sc_2fa_ts',Date.now().toString());
+
+    const cfg=getEmailJSCfg();
+    const purposeLabel=purpose==='forgot'?'Сброс пароля':'Вход в аккаунт';
+
+    // Helper: show error message with contact prompt
+    function showSendError(){
+      setTimeout(()=>{
+        const hint=document.getElementById('tfaEmailHint');
+        if(hint && hint.offsetParent!==null){
+          hint.innerHTML=`⚠️ Не удалось отправить письмо. Пожалуйста, <a href="index.html#contact" style="color:#00d4ff;font-weight:700">свяжитесь с нами</a>.`;
+        }
+      },400);
+    }
+
+    if(cfg.publicKey && cfg.serviceId && cfg.templateId && window.emailjs){
+      try{
+        emailjs.init({ publicKey: cfg.publicKey });
+        await emailjs.send(cfg.serviceId, cfg.templateId, {
+          to_email: email,
+          to_name: email.split('@')[0],
+          name: email.split('@')[0],
+          email: email,
+          otp_code: code,
+          message: `Ваш код подтверждения: ${code}\n\nЦель: ${purposeLabel}\n\nКод действителен 10 минут.`,
+          title: purposeLabel,
+          time: new Date().toLocaleString('ru-RU'),
+          purpose: purposeLabel,
+          site_name: 'SiteCode'
+        });
+        if(typeof showToast==='function') showToast('📧',`Код отправлен на ${email}`,6000);
+      }catch(err){
+        console.error('[EmailJS]', err);
+        if(typeof showToast==='function') showToast('⚠️','Ошибка отправки письма. Свяжитесь с нами.',8000);
+        showSendError();
+      }
+    } else {
+      if(typeof showToast==='function') showToast('⚠️','Сервис отправки не настроен. Свяжитесь с нами.',8000);
+      console.info(`[SiteCode 2FA] ${purposeLabel} code for ${email}: ${code}`);
+      showSendError();
+    }
+    return code;
+  }
+
+  function verify2FACode(inputCode){
+    const stored=sessionStorage.getItem('sc_2fa_code');
+    const ts=parseInt(sessionStorage.getItem('sc_2fa_ts')||'0');
+    if(!stored) return false;
+    if(Date.now()-ts>600000) return false; // 10 min expiry
+    return inputCode.trim()===stored;
+  }
+
+  function clear2FASession(){
+    ['sc_2fa_code','sc_2fa_email','sc_2fa_purpose','sc_2fa_ts'].forEach(k=>sessionStorage.removeItem(k));
+  }
+
+  // ── Login ──
+  window.doLogin=async function(){
+    const email=document.getElementById('lEmail').value.trim().toLowerCase();
+    const pw=document.getElementById('lPw').value;
+    const remember=document.getElementById('lRemember').checked;
+    authErrClear();
+    if(!email){authErr('login-err','Введите email');return;}
+    if(!pw){authErr('login-err','Введите пароль');return;}
+    const user=getUsers().find(u=>u.email===email);
+    if(!user){authErr('login-err','Пользователь с таким email не найден');return;}
+    if(await hashPw(pw)!==user.passwordHash){authErr('login-err','Неверный пароль');return;}
+    if(user.twoFa){
+      _pendingTfaUserId=user.id;
+      _pendingTfaRemember=remember;
+      _pendingTfaTab='login';
+      sendEmailCode(user.email,'login');
+      document.getElementById('tfaEmailHint').textContent=`📧 ${user.email}`;
+      document.getElementById('tfa-desc').textContent='Мы отправили 6-значный код на ваш email. Введите его ниже.';
+      document.getElementById('authTabs').style.display='none';
+      document.querySelectorAll('.auth-pane').forEach(p=>p.classList.remove('act'));
+      document.getElementById('auth-pane-2fa').classList.add('act');
+      document.getElementById('tfaCode').value='';
+      return;
+    }
+    setSession(user.id,remember);
+    closeAuth();
+    updateHeaderAuth();
+    if(typeof showToast==='function') showToast('👋',`С возвращением, ${user.name.split(' ')[0]}!`);
+  };
+
+  window.doVerify2FA=function(){
+    const code=document.getElementById('tfaCode').value.trim();
+    authErrClear();
+    if(!code||code.length<6){authErr('tfa-err','Введите 6-значный код');return;}
+    if(!verify2FACode(code)){authErr('tfa-err','Неверный или просроченный код');return;}
+    clear2FASession();
+    const purpose=sessionStorage.getItem('sc_2fa_purpose')||_pendingTfaTab;
+    if(_pendingTfaUserId){
+      setSession(_pendingTfaUserId,_pendingTfaRemember);
+      _pendingTfaUserId=null;
+    }
+    closeAuth();
+    updateHeaderAuth();
+    if(typeof showToast==='function') showToast('✅','Вход выполнен!');
+  };
+
+  window.resend2FACode=function(){
+    const email=sessionStorage.getItem('sc_2fa_email');
+    if(email) sendEmailCode(email, sessionStorage.getItem('sc_2fa_purpose')||'login');
+    document.getElementById('tfaCode').value='';
+    authErrClear();
+    return false;
+  };
+
+  window.openForgotPassword=function(){
+    authErrClear();
+    document.getElementById('forgotEmail').value='';
+    document.getElementById('forgotCodeInput').value='';
+    document.getElementById('forgotNewPw').value='';
+    document.getElementById('forgotNewPw2').value='';
+    document.getElementById('forgotEmailField').style.display='';
+    document.getElementById('forgotCodeField').style.display='none';
+    document.getElementById('forgotNewPwField').style.display='none';
+    document.getElementById('forgotNewPw2Field').style.display='none';
+    document.getElementById('forgotMainBtn').textContent='Отправить код →';
+    document.getElementById('forgotMainBtn').onclick=doSendForgotCode;
+    document.getElementById('forgotTitle').textContent='Восстановление пароля 🔑';
+    document.getElementById('forgotDesc').textContent='Введите email вашего аккаунта — мы отправим код для сброса пароля.';
+    document.getElementById('authTabs').style.display='none';
+    document.querySelectorAll('.auth-pane').forEach(p=>p.classList.remove('act'));
+    document.getElementById('auth-pane-forgot').classList.add('act');
+  };
+
+  window.doSendForgotCode=function(){
+    const email=document.getElementById('forgotEmail').value.trim().toLowerCase();
+    authErrClear();
+    if(!email||!/^[^@]+@[^@]+\.[^@]+$/.test(email)){authErr('forgot-err','Введите корректный email');return;}
+    const user=getUsers().find(u=>u.email===email);
+    if(!user){authErr('forgot-err','Пользователь с таким email не найден');return;}
+    _pendingForgotEmail=email;
+    sendEmailCode(email,'forgot');
+    document.getElementById('forgotEmailField').style.display='none';
+    document.getElementById('forgotCodeField').style.display='';
+    document.getElementById('forgotNewPwField').style.display='';
+    document.getElementById('forgotNewPw2Field').style.display='';
+    document.getElementById('forgotTitle').textContent='Введите код и новый пароль';
+    document.getElementById('forgotDesc').textContent=`Код отправлен на ${email}.`;
+    document.getElementById('forgotMainBtn').textContent='Сменить пароль →';
+    document.getElementById('forgotMainBtn').onclick=doResetPassword;
+  };
+
+  window.doResetPassword=async function(){
+    const code=document.getElementById('forgotCodeInput').value.trim();
+    const pw=document.getElementById('forgotNewPw').value;
+    const pw2=document.getElementById('forgotNewPw2').value;
+    authErrClear();
+    if(!code||code.length<6){authErr('forgot-err','Введите код из письма');return;}
+    if(!verify2FACode(code)){authErr('forgot-err','Неверный или просроченный код');return;}
+    if(pw.length<6){authErr('forgot-err','Пароль минимум 6 символов');return;}
+    if(pw!==pw2){authErr('forgot-err','Пароли не совпадают');return;}
+    const users=getUsers();
+    const idx=users.findIndex(u=>u.email===_pendingForgotEmail);
+    if(idx===-1){authErr('forgot-err','Пользователь не найден');return;}
+    users[idx].passwordHash=await hashPw(pw);
+    saveUsers(users);
+    clear2FASession();
+    _pendingForgotEmail=null;
+    closeAuth();
+    if(typeof showToast==='function') showToast('✅','Пароль успешно изменён!');
+  };
+
+  // ── Register ──
+  window.doRegister=async function(){
+    const name=document.getElementById('rName').value.trim();
+    const email=document.getElementById('rEmail').value.trim().toLowerCase();
+    const pw=document.getElementById('rPw').value;
+    const pw2=document.getElementById('rPw2').value;
+    const agree=document.getElementById('rAgree').checked;
+    authErrClear();
+    if(!name||name.length<2){authErr('reg-err','Введите ваше имя (минимум 2 символа)');return;}
+    if(!email||!/^[^@]+@[^@]+\.[^@]+$/.test(email)){authErr('reg-err','Введите корректный email');return;}
+    if(pw.length<6){authErr('reg-err','Пароль минимум 6 символов');return;}
+    if(pw!==pw2){authErr('reg-err','Пароли не совпадают');return;}
+    if(!agree){authErr('reg-err','Примите условия использования');return;}
+    const users=getUsers();
+    if(users.find(u=>u.email===email)){authErr('reg-err','Email уже зарегистрирован');return;}
+    const id='u_'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
+    users.push({id,name,email,passwordHash:await hashPw(pw),createdAt:new Date().toISOString()});
+    saveUsers(users);
+    setSession(id,false);
+    closeAuth();
+    updateHeaderAuth();
+    if(typeof showToast==='function') showToast('🎉',`Добро пожаловать, ${name.split(' ')[0]}!`);
+  };
+
+  // ── Profile dropdown ──
+  window.toggleProfileDrop=function(){
+    const drop=document.getElementById('profileDrop');
+    const user=getCurrentUser();
+    if(!user){openAuth();return;}
+    const ava=document.getElementById('pdAvatar');
+    if(user.avatar){
+      ava.style.background='transparent';
+      ava.innerHTML=`<img src="${user.avatar}" style="width:48px;height:48px;border-radius:50%;object-fit:cover">`;
+    }else{
+      ava.style.background=avColor(user.name);
+      ava.innerHTML=avInitials(user.name);
+    }
+    document.getElementById('pdName').textContent=user.name;
+    document.getElementById('pdEmail').textContent=user.email;
+    const d=new Date(user.createdAt);
+    document.getElementById('pdSince').textContent='С '+d.toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'});
+    const tfa2=document.getElementById('pd2faStatus');
+    if(tfa2) tfa2.textContent=user.twoFa?'🔐 Двухфакторная аутентификация включена':'';
+    drop.classList.toggle('open');
+  };
+  window.closeProfileDrop=function(){ document.getElementById('profileDrop')?.classList.remove('open'); };
+
+  // ── Logout ──
+  window.doLogout=function(){
+    clearSession();
+    closeProfileDrop();
+    updateHeaderAuth();
+    if(typeof showToast==='function') showToast('👋','Вы вышли из аккаунта');
+  };
+
+  // ── Avatar preview ──
+  window.previewAvatar=function(input){
+    const file=input.files[0]; if(!file)return;
+    if(file.size>2*1024*1024){alert('Файл слишком большой. Максимум 2 МБ');input.value='';return;}
+    const reader=new FileReader();
+    reader.onload=e=>{
+      const prev=document.getElementById('epAvatarPreview');
+      if(prev){ prev.innerHTML=`<img src="${e.target.result}" style="width:56px;height:56px;border-radius:50%;object-fit:cover">`; }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // ── Edit profile ──
+  window.openEditProfile=function(){
+    closeProfileDrop();
+    const user=getCurrentUser(); if(!user)return;
+    document.getElementById('epName').value=user.name;
+    document.getElementById('epEmail').value=user.email;
+    document.getElementById('epPw').value='';
+    document.getElementById('epPw2').value='';
+    document.getElementById('ep2fa').checked=!!user.twoFa;
+    // Show current avatar
+    const prev=document.getElementById('epAvatarPreview');
+    if(prev){
+      if(user.avatar){
+        prev.innerHTML=`<img src="${user.avatar}" style="width:56px;height:56px;border-radius:50%;object-fit:cover">`;
+      }else{
+        prev.style.background=avColor(user.name);
+        prev.textContent=avInitials(user.name);
+      }
+    }
+    authErrClear();
+    document.getElementById('authTabs').style.display='none';
+    document.querySelectorAll('.auth-pane').forEach(p=>p.classList.remove('act'));
+    document.getElementById('auth-pane-edit').classList.add('act');
+    document.getElementById('authOv').classList.add('open');
+    document.body.style.overflow='hidden';
+  };
+  window.doSaveProfile=async function(){
+    const user=getCurrentUser(); if(!user)return;
+    const name=document.getElementById('epName').value.trim();
+    const email=document.getElementById('epEmail').value.trim().toLowerCase();
+    const pw=document.getElementById('epPw').value;
+    const pw2=document.getElementById('epPw2').value;
+    const twoFa=document.getElementById('ep2fa').checked;
+    authErrClear();
+    if(!name||name.length<2){authErr('ep-err','Имя минимум 2 символа');return;}
+    if(!email||!/^[^@]+@[^@]+\.[^@]+$/.test(email)){authErr('ep-err','Введите корректный email');return;}
+    if(pw&&pw.length<6){authErr('ep-err','Новый пароль минимум 6 символов');return;}
+    if(pw&&pw!==pw2){authErr('ep-err','Пароли не совпадают');return;}
+    const users=getUsers();
+    if(users.find(u=>u.email===email&&u.id!==user.id)){authErr('ep-err','Этот email уже занят');return;}
+    const idx=users.findIndex(u=>u.id===user.id); if(idx===-1)return;
+    users[idx].name=name; users[idx].email=email; users[idx].twoFa=twoFa;
+    if(pw) users[idx].passwordHash=await hashPw(pw);
+    // Handle avatar file
+    const fileInput=document.getElementById('epAvatarFile');
+    if(fileInput&&fileInput.files&&fileInput.files[0]){
+      await new Promise(resolve=>{
+        const reader=new FileReader();
+        reader.onload=e=>{ users[idx].avatar=e.target.result; resolve(); };
+        reader.readAsDataURL(fileInput.files[0]);
+      });
+    }
+    saveUsers(users);
+    closeAuth();
+    updateHeaderAuth();
+    if(typeof showToast==='function') showToast('✅','Профиль обновлён');
+  };
+
+  // ── Password strength ──
+  window.checkPwStrength=function(pw){
+    let s=0;
+    if(pw.length>=6)s++; if(pw.length>=10)s++;
+    if(/[A-Z]/.test(pw))s++; if(/[0-9]/.test(pw))s++; if(/[^A-Za-z0-9]/.test(pw))s++;
+    document.querySelectorAll('.pw-strength-bar').forEach((bar,i)=>{
+      bar.classList.remove('weak','medium','strong');
+      if(i<s){ if(s<=2)bar.classList.add('weak'); else if(s<=3)bar.classList.add('medium'); else bar.classList.add('strong'); }
+    });
+  };
+
+  // ── Close dropdown on outside click ──
+  document.addEventListener('click',function(e){
+    const drop=document.getElementById('profileDrop');
+    const btn=document.getElementById('profileBtn');
+    if(drop&&drop.classList.contains('open')&&btn&&!drop.contains(e.target)&&!btn.contains(e.target)) closeProfileDrop();
+  });
+
+  updateHeaderAuth();
+})();
+</script>
+</body>
+</html>

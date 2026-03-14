@@ -1,0 +1,672 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DriveHub — Автосалон · Каталог · Кредит · Тест-драйв</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --o:#ff8c00;
+  --o2:#c96800;
+  --o3:#ff6a00;
+  --bg:#0a0a0a;
+  --bg2:#121212;
+  --bg3:#191919;
+  --bg4:#222;
+  --bdr:#2c2c2c;
+  --bdr2:#3d3d00;
+  --txt:#a09080;
+  --light:#d4c8bc;
+  --white:#f0ebe5;
+  --glow:rgba(255,140,0,.3)
+}
+body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--light);overflow-x:hidden}
+
+/* BANNER */
+.dbanner{position:fixed;top:0;left:0;right:0;z-index:9999;background:linear-gradient(90deg,#8a4400,var(--o),var(--o3),#8a4400);background-size:300%;animation:bshift 8s linear infinite;color:#000;padding:8px 24px;display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:800}
+@keyframes bshift{0%{background-position:0%}100%{background-position:300%}}
+.dbanner a{color:#000;text-decoration:none;background:rgba(0,0,0,.18);padding:5px 14px;border-radius:6px;margin-left:8px;font-size:12px;border:1px solid rgba(0,0,0,.22);font-weight:700;transition:background .2s}
+.dbanner a:hover{background:rgba(0,0,0,.3)}
+
+/* HEADER */
+header{position:fixed;top:38px;left:0;right:0;z-index:1000;transition:all .3s}
+header.sc{background:rgba(10,10,10,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--bdr);box-shadow:0 2px 28px rgba(0,0,0,.6)}
+.hdr{max-width:1320px;margin:0 auto;padding:0 4%;display:flex;align-items:center;justify-content:space-between;height:64px;gap:16px}
+.logo{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:var(--white);text-decoration:none;display:flex;align-items:center;gap:9px;letter-spacing:.5px;text-transform:uppercase}
+.logo-ic{width:36px;height:36px;background:linear-gradient(135deg,var(--o),var(--o2));border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 4px 16px var(--glow);flex-shrink:0}
+nav ul{display:flex;gap:24px;list-style:none}
+nav a{color:#666;text-decoration:none;font-size:14px;font-weight:600;transition:color .2s;text-transform:uppercase;letter-spacing:.5px;font-family:'Barlow Condensed',sans-serif;font-size:15px}
+nav a:hover{color:var(--white)}
+.hcta{padding:9px 20px;background:linear-gradient(135deg,var(--o),var(--o2));border-radius:7px;color:#000!important;font-weight:800!important;box-shadow:0 4px 14px var(--glow);transition:all .22s!important;letter-spacing:.5px}
+.hcta:hover{transform:translateY(-1px);box-shadow:0 8px 22px var(--glow)!important;color:#000!important}
+
+/* HERO */
+.hero{padding:138px 4% 80px;position:relative;overflow:hidden;background:var(--bg)}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 65% at 15% 100%,rgba(255,140,0,.07),transparent 55%),radial-gradient(ellipse 40% 40% at 90% 20%,rgba(255,106,0,.05),transparent 60%);pointer-events:none}
+.speedlines{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.spl{position:absolute;height:1px;background:linear-gradient(90deg,transparent,rgba(255,140,0,.18),transparent);animation:spdline linear infinite}
+@keyframes spdline{from{transform:translateX(-100%) scaleX(.3);opacity:0}50%{opacity:1}to{transform:translateX(200%) scaleX(1);opacity:0}}
+.hero-road{position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--o) 30%,var(--o) 70%,transparent)}
+.hi{max-width:1320px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;position:relative}
+.badge2{display:inline-flex;align-items:center;gap:7px;background:rgba(255,140,0,.1);border:1px solid rgba(255,140,0,.28);color:var(--o);padding:6px 14px;border-radius:5px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:18px;font-family:'Barlow Condensed',sans-serif}
+h1.hero-h{font-family:'Barlow Condensed',sans-serif;font-size:clamp(2.8rem,5.5vw,4.5rem);font-weight:900;line-height:1.0;color:var(--white);margin-bottom:14px;text-transform:uppercase;letter-spacing:1px}
+h1.hero-h span{color:var(--o)}
+.hsub{font-size:15px;color:var(--txt);line-height:1.72;margin-bottom:28px;max-width:480px}
+.hbtns{display:flex;gap:12px;flex-wrap:wrap}
+.btn1{padding:13px 26px;background:linear-gradient(135deg,var(--o),var(--o2));border-radius:7px;color:#000;font-weight:800;font-size:14px;border:none;cursor:pointer;font-family:'Barlow Condensed',sans-serif;transition:all .28s;text-decoration:none;display:inline-block;letter-spacing:.6px;text-transform:uppercase}
+.btn1:hover{transform:translateY(-2px);box-shadow:0 8px 28px var(--glow)}
+.btn2{padding:13px 26px;border:1.5px solid rgba(255,140,0,.36);border-radius:7px;color:var(--o);font-weight:700;font-size:14px;background:rgba(255,140,0,.06);cursor:pointer;font-family:'Barlow Condensed',sans-serif;transition:all .28s;text-decoration:none;display:inline-block;letter-spacing:.4px;text-transform:uppercase}
+.btn2:hover{background:rgba(255,140,0,.14);border-color:var(--o);color:var(--white)}
+.hero-stats{display:flex;gap:28px;margin-top:32px;padding-top:24px;border-top:1px solid var(--bdr)}
+.hs-i{text-align:center}
+.hn{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:900;color:var(--o);display:block;line-height:1}
+.hl{font-size:11px;color:#555;margin-top:3px;text-transform:uppercase;letter-spacing:.5px}
+
+/* CREDIT CALC */
+.calc-card{background:var(--bg3);border:1px solid var(--bdr);border-radius:14px;padding:24px;box-shadow:0 16px 52px rgba(0,0,0,.5)}
+.calc-card h3{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;color:var(--white);margin-bottom:20px;display:flex;align-items:center;gap:9px;text-transform:uppercase;letter-spacing:.5px}
+.calc-row{margin-bottom:16px}
+.calc-lbl{font-size:12px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;display:flex;justify-content:space-between}
+.calc-lbl span{color:var(--o);font-size:13px}
+input[type=range]{width:100%;accent-color:var(--o);cursor:pointer;height:4px;border-radius:2px}
+.calc-result{background:var(--bg2);border:1px solid rgba(255,140,0,.22);border-radius:10px;padding:16px;text-align:center;margin-top:6px}
+.cr-lbl{font-size:12px;color:#555;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+.cr-val{font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:900;color:var(--o);line-height:1}
+.cr-sub{font-size:11px;color:#444;margin-top:6px;line-height:1.6}
+.cr-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.cri{background:var(--bg);border:1px solid var(--bdr);border-radius:7px;padding:9px;text-align:center}
+.cri-l{font-size:10px;color:#444;text-transform:uppercase;letter-spacing:.4px}
+.cri-v{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;color:var(--light)}
+
+/* BRANDS */
+.brands{background:var(--bg2);border-top:1px solid var(--bdr);border-bottom:1px solid var(--bdr);padding:18px 4%}
+.brands-in{max-width:1320px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.brand-item{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;color:#3a3a3a;text-transform:uppercase;letter-spacing:1.5px;transition:color .2s;cursor:default}
+.brand-item:hover{color:var(--o)}
+.brands-title{font-size:12px;color:#333;font-weight:700;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
+
+/* SECTION HEADERS */
+.sh{text-align:center;margin-bottom:44px}
+.stag{display:inline-block;color:var(--o);font-size:11px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:10px;font-family:'Barlow Condensed',sans-serif;background:rgba(255,140,0,.08);padding:4px 12px;border-radius:3px;border:1px solid rgba(255,140,0,.16)}
+.sh h2{font-family:'Barlow Condensed',sans-serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;color:var(--white);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px}
+.sh p{color:#555;font-size:15px;max-width:500px;margin:0 auto;line-height:1.7}
+
+/* CARS SECTION */
+.cars-sect{max-width:1320px;margin:0 auto;padding:72px 4%}
+.filters-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:24px;padding:14px 18px;background:var(--bg3);border:1px solid var(--bdr);border-radius:10px}
+.fc{display:flex;gap:6px;flex-wrap:wrap}
+.fc-btn{padding:7px 16px;border:1px solid var(--bdr);border-radius:5px;cursor:pointer;font-size:13px;font-weight:700;color:#555;background:transparent;transition:all .2s;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.5px}
+.fc-btn.act{background:linear-gradient(135deg,var(--o),var(--o2));color:#000;border-color:transparent}
+.fc-btn:hover:not(.act){border-color:var(--o);color:var(--o)}
+.fr{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.fr label{font-size:12px;color:#555;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+select{background:var(--bg3);border:1px solid var(--bdr);color:var(--light);padding:7px 12px;border-radius:7px;font-size:13px;font-family:inherit;cursor:pointer;outline:none;transition:border-color .2s}
+select:focus{border-color:var(--o)}
+select option{background:var(--bg3)}
+.cars-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.cc{background:var(--bg3);border:1px solid var(--bdr);border-radius:12px;overflow:hidden;transition:all .28s;cursor:pointer}
+.cc:hover{border-color:rgba(255,140,0,.4);transform:translateY(-4px);box-shadow:0 14px 42px rgba(0,0,0,.55)}
+.cc-img{height:120px;display:flex;align-items:center;justify-content:center;font-size:56px;background:linear-gradient(135deg,var(--bg3),var(--bg2));border-bottom:1px solid var(--bdr);position:relative}
+.cc-badge{position:absolute;top:10px;left:10px;padding:3px 10px;border-radius:3px;font-size:10px;font-weight:900;font-family:'Barlow Condensed',sans-serif;letter-spacing:.8px;text-transform:uppercase}
+.cc-badge.new{background:var(--o);color:#000}
+.cc-badge.hot{background:#ef4444;color:#fff}
+.cc-badge.sale{background:#10b981;color:#fff}
+.cc-body{padding:14px 16px}
+.cc-brand{font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--o);font-weight:800;margin-bottom:3px;text-transform:uppercase;letter-spacing:1px}
+.cc-name{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;color:var(--white);margin-bottom:9px;line-height:1.2}
+.cc-specs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:11px}
+.sp{font-size:11px;color:#555;background:var(--bg2);padding:3px 8px;border-radius:4px;font-weight:600}
+.cc-pr-row{display:flex;align-items:flex-end;justify-content:space-between}
+.cc-price{font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:900;color:var(--white)}
+.cc-mo{font-size:11px;color:var(--o);margin-top:2px}
+.add-cmp{background:none;border:1px solid var(--bdr);color:#555;padding:6px 12px;border-radius:5px;cursor:pointer;font-size:11px;font-family:'Barlow Condensed',sans-serif;transition:all .2s;text-transform:uppercase;letter-spacing:.4px;font-weight:700}
+.add-cmp:hover{border-color:var(--o);color:var(--o)}
+.add-cmp.added{border-color:var(--o);color:var(--o);background:rgba(255,140,0,.08)}
+.cmp-panel{background:var(--bg3);border:1px solid var(--bdr);border-radius:12px;padding:24px;margin-top:24px;display:none}
+.cmp-panel.show{display:block}
+.cmp-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;color:var(--white);margin-bottom:16px;text-transform:uppercase;letter-spacing:.5px}
+.cmp-tbl{width:100%;border-collapse:collapse}
+.cmp-tbl th{background:rgba(255,140,0,.1);padding:11px;text-align:center;font-size:12px;color:var(--o);font-weight:800;text-transform:uppercase;border:1px solid var(--bdr);font-family:'Barlow Condensed',sans-serif;letter-spacing:.5px}
+.cmp-tbl td{padding:10px;text-align:center;border:1px solid var(--bdr);font-size:13px;color:var(--light)}
+.cmp-tbl tr:nth-child(even) td{background:var(--bg2)}
+.cmp-field{width:20%;text-align:left!important;color:#444;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.3px}
+
+/* TRADE-IN */
+.tradein{padding:72px 4%;background:var(--bg2)}
+.tradein-wrap{max-width:1320px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+.ti-info h2{font-family:'Barlow Condensed',sans-serif;font-size:clamp(2rem,3.8vw,2.9rem);font-weight:900;color:var(--white);margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px;line-height:1.05}
+.ti-info h2 span{color:var(--o)}
+.ti-info p{font-size:15px;color:var(--txt);line-height:1.75;margin-bottom:24px}
+.ti-steps{display:flex;flex-direction:column;gap:14px}
+.ti-step{display:flex;align-items:flex-start;gap:14px}
+.ti-num{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:900;color:var(--o);line-height:1;min-width:28px}
+.ti-step-txt strong{display:block;font-size:14px;font-weight:700;color:var(--white);margin-bottom:2px}
+.ti-step-txt span{font-size:13px;color:var(--txt)}
+.ti-card{background:var(--bg3);border:1px solid var(--bdr);border-radius:14px;padding:26px}
+.ti-card h3{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;color:var(--white);margin-bottom:20px;text-transform:uppercase;letter-spacing:.5px}
+.ti-result{background:var(--bg2);border:1px solid rgba(255,140,0,.22);border-radius:10px;padding:16px;text-align:center;margin:16px 0}
+.ti-r-lbl{font-size:12px;color:#555;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.ti-r-val{font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:900;color:var(--o)}
+
+/* TEST DRIVE */
+.td-sect{padding:72px 4%}
+.td-inner{max-width:1320px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+.td-info h2{font-family:'Barlow Condensed',sans-serif;font-size:clamp(2rem,3.8vw,2.9rem);font-weight:900;color:var(--white);margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px;line-height:1.05}
+.td-info h2 span{color:var(--o)}
+.td-info p{font-size:15px;color:var(--txt);line-height:1.75;margin-bottom:22px}
+.td-perks{display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
+.tp{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--light)}
+.tp-dot{width:8px;height:8px;border-radius:50%;background:var(--o);flex-shrink:0;box-shadow:0 0 8px var(--glow)}
+.td-form{background:var(--bg3);border:1px solid var(--bdr);border-radius:14px;padding:26px}
+.td-form h3{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;color:var(--white);margin-bottom:20px;text-transform:uppercase;letter-spacing:.5px}
+
+/* REVIEWS */
+.reviews{padding:72px 4%;overflow:hidden}
+.rvw-wrap{max-width:1320px;margin:0 auto}
+.rvw-outer{overflow:hidden}
+.rvw-track{display:flex;gap:18px;transition:transform .55s ease}
+.rv-card{flex-shrink:0;width:320px;background:var(--bg3);border:1px solid var(--bdr);border-radius:12px;padding:22px;transition:border-color .22s}
+.rv-card:hover{border-color:rgba(255,140,0,.3)}
+.rv-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.rv-stars{color:var(--o);font-size:14px}
+.rv-date{font-size:11px;color:#444}
+.rv-text{font-size:13px;color:var(--txt);line-height:1.72;margin-bottom:14px}
+.rv-bot{display:flex;align-items:center;gap:10px;padding-top:12px;border-top:1px solid var(--bdr)}
+.rv-av{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--o),var(--o2));display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:900;color:#000;flex-shrink:0}
+.rv-nm{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;color:var(--white);text-transform:uppercase;letter-spacing:.3px}
+.rv-car{font-size:11px;color:var(--o)}
+.rvw-dots{display:flex;justify-content:center;gap:6px;margin-top:22px}
+.rdot{width:8px;height:8px;border-radius:50%;background:var(--bdr);cursor:pointer;transition:all .25s}
+.rdot.act{background:var(--o);width:22px;border-radius:4px}
+
+/* INPUTS */
+.fi{margin-bottom:14px}
+label{display:block;font-size:11px;color:#444;font-weight:700;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
+input,select,textarea{width:100%;padding:11px 14px;background:var(--bg2);border:1px solid var(--bdr);border-radius:8px;color:var(--white);font-size:14px;font-family:inherit;transition:border-color .2s;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--o);box-shadow:0 0 0 3px rgba(255,140,0,.1)}
+input::placeholder,textarea::placeholder{color:#333}
+select option{background:var(--bg3)}
+
+/* TOAST */
+.ntf{position:fixed;bottom:26px;right:26px;background:var(--bg3);border:1px solid var(--o);border-radius:10px;padding:13px 18px;color:var(--white);font-size:13px;font-weight:700;z-index:9997;transform:translateX(120%);transition:transform .4s;max-width:300px;box-shadow:0 12px 32px rgba(0,0,0,.6)}
+.ntf.show{transform:translateX(0)}
+
+/* FLOAT CTA */
+.float-cta{position:fixed;bottom:28px;right:28px;z-index:999;background:linear-gradient(135deg,var(--o),var(--o2));color:#000;border:none;border-radius:50px;padding:13px 22px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;cursor:pointer;box-shadow:0 8px 28px var(--glow);transform:translateY(80px);opacity:0;transition:all .4s;display:flex;align-items:center;gap:8px}
+.float-cta.show{transform:translateY(0);opacity:1}
+.float-cta:hover{transform:translateY(-2px);box-shadow:0 12px 36px var(--glow)}
+
+/* REVEAL */
+.rev{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+.rev.vis{opacity:1;transform:translateY(0)}
+
+/* FOOTER */
+footer{background:#060606;border-top:1px solid var(--bdr);padding:50px 4% 60px}
+.ftr-wrap{max-width:1320px;margin:0 auto;display:grid;grid-template-columns:1fr auto auto;gap:60px;align-items:start}
+.ftr-logo-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.ftr-logo-txt{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:900;color:var(--white);text-transform:uppercase;letter-spacing:.5px}
+.ftr-desc{font-size:13px;color:#3a3a3a;line-height:1.7;max-width:300px;margin-bottom:16px}
+.ftr-addr{font-size:13px;color:#444;line-height:2}
+.ftr-addr a{color:var(--o);text-decoration:none}
+.ftr-col h4{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;color:#555;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.ftr-col a{display:block;color:#3a3a3a;text-decoration:none;font-size:14px;margin-bottom:8px;transition:color .2s}
+.ftr-col a:hover{color:var(--o)}
+.fbot{font-size:12px;color:#252525;margin-top:30px;padding-top:20px;border-top:1px solid var(--bdr);max-width:1320px;margin-left:auto;margin-right:auto}
+
+@media(max-width:1060px){.tradein-wrap,.td-inner{grid-template-columns:1fr}}
+@media(max-width:900px){.hi{grid-template-columns:1fr}.cars-grid{grid-template-columns:1fr 1fr}.ftr-wrap{grid-template-columns:1fr}}
+@media(max-width:600px){.cars-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- BANNER -->
+<div class="dbanner">
+  <div>🚗 Демо: <strong>Auto Dealer</strong> — автосалон: каталог, кредит, trade-in, тест-драйв</div>
+  <div><a href="catalog.html">← Каталог</a><a href="index.html">Заказать</a></div>
+</div>
+
+<!-- HEADER -->
+<header id="hdr">
+  <div class="hdr">
+    <a href="#" class="logo"><div class="logo-ic">🚗</div>DriveHub</a>
+    <nav><ul>
+      <li><a href="#carssect">Каталог</a></li>
+      <li><a href="#tradein">Trade-In</a></li>
+      <li><a href="#tdsect">Тест-драйв</a></li>
+      <li><a href="#tdsect" class="hcta">Записаться</a></li>
+    </ul></nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-bg"></div>
+  <div class="speedlines" id="splines"></div>
+  <div class="hero-road"></div>
+  <div class="hi">
+    <div>
+      <div class="badge2">🏆 Официальный дилер · 2025–2026</div>
+      <h1 class="hero-h">Найди своё<br>идеальное <span>авто</span></h1>
+      <p class="hsub">500+ автомобилей в наличии. Кредит от 4.9% без справок. Trade-In по максимальной оценке. Оформление от 1 часа.</p>
+      <div class="hbtns">
+        <button class="btn1" onclick="document.getElementById('carssect').scrollIntoView({behavior:'smooth'})">Смотреть каталог</button>
+        <a href="#tdsect" class="btn2">Тест-драйв</a>
+      </div>
+      <div class="hero-stats" id="cnt">
+        <div class="hs-i"><span class="hn" data-val="500" data-sfx="+">0</span><span class="hl">авто в наличии</span></div>
+        <div class="hs-i"><span class="hn" data-val="14" data-sfx="">0</span><span class="hl">лет на рынке</span></div>
+        <div class="hs-i"><span class="hn" data-val="12000" data-sfx="+">0</span><span class="hl">продаж</span></div>
+        <div class="hs-i"><span class="hn" data-val="4.9" data-dec="1" data-sfx="★">0</span><span class="hl">рейтинг</span></div>
+      </div>
+    </div>
+    <!-- CREDIT CALCULATOR -->
+    <div class="calc-card rev">
+      <h3>⚡ Калькулятор кредита</h3>
+      <div class="calc-row">
+        <div class="calc-lbl">Стоимость авто <span id="cp-v">2 000 000 ₸</span></div>
+        <input type="range" id="cp" min="500000" max="12000000" step="100000" value="2000000" oninput="calcCredit()">
+      </div>
+      <div class="calc-row">
+        <div class="calc-lbl">Первоначальный взнос <span id="dp-v">20%</span></div>
+        <input type="range" id="dp" min="10" max="60" step="5" value="20" oninput="calcCredit()">
+      </div>
+      <div class="calc-row">
+        <div class="calc-lbl">Срок кредита <span id="tm-v">36 мес</span></div>
+        <input type="range" id="tm" min="12" max="84" step="12" value="36" oninput="calcCredit()">
+      </div>
+      <div class="calc-row">
+        <div class="calc-lbl">Ставка <span id="rt-v">9.9%</span></div>
+        <input type="range" id="rt" min="3.9" max="22" step="0.1" value="9.9" oninput="calcCredit()">
+      </div>
+      <div class="calc-result">
+        <div class="cr-lbl">Ежемесячный платёж</div>
+        <div class="cr-val" id="crv">—</div>
+      </div>
+      <div class="cr-grid" id="crGrid"></div>
+      <button class="btn1" style="width:100%;margin-top:14px" onclick="showNtf('✅ Заявка на кредит отправлена! Ждите звонка менеджера.')">Подать заявку на кредит</button>
+    </div>
+  </div>
+</section>
+
+<!-- BRANDS -->
+<div class="brands rev">
+  <div class="brands-in">
+    <div class="brands-title">Официальные дилеры:</div>
+    <div class="brand-item">Toyota</div>
+    <div class="brand-item">BMW</div>
+    <div class="brand-item">Mercedes</div>
+    <div class="brand-item">Kia</div>
+    <div class="brand-item">Hyundai</div>
+    <div class="brand-item">Porsche</div>
+    <div class="brand-item">Tesla</div>
+    <div class="brand-item">Volkswagen</div>
+  </div>
+</div>
+
+<!-- CATALOG -->
+<section id="carssect">
+  <div class="cars-sect rev">
+    <div class="sh">
+      <div class="stag">Каталог</div>
+      <h2>Автомобили в наличии</h2>
+      <p>Нажмите «Сравнить» — выберите до 3 автомобилей и сравните характеристики</p>
+    </div>
+    <div class="filters-bar">
+      <div class="fc">
+        <button class="fc-btn act" onclick="setCat('all',this)">Все</button>
+        <button class="fc-btn" onclick="setCat('sedan',this)">Седаны</button>
+        <button class="fc-btn" onclick="setCat('suv',this)">SUV</button>
+        <button class="fc-btn" onclick="setCat('sport',this)">Спорт</button>
+        <button class="fc-btn" onclick="setCat('electric',this)">Электро</button>
+      </div>
+      <div class="fr">
+        <label>Сортировка:</label>
+        <select id="srt" onchange="renderCars()">
+          <option value="def">По умолчанию</option>
+          <option value="pa">Цена ↑</option>
+          <option value="pd">Цена ↓</option>
+        </select>
+      </div>
+    </div>
+    <div class="cars-grid" id="cg"></div>
+    <div class="cmp-panel" id="cmpPanel">
+      <div class="cmp-title">📊 Сравнение автомобилей</div>
+      <div id="cmpTbl"></div>
+      <button class="btn2" style="margin-top:14px;font-size:13px" onclick="clearCmp()">Очистить сравнение</button>
+    </div>
+  </div>
+</section>
+
+<!-- TRADE-IN -->
+<section class="tradein rev" id="tradein">
+  <div class="tradein-wrap">
+    <div class="ti-info">
+      <div class="stag">Trade-In</div>
+      <h2>Сдайте старое —<br>получите <span>новое</span></h2>
+      <p>Оцените ваш автомобиль онлайн за 2 минуты. Прозрачная оценка по рыночным ценам. Зачтём стоимость в счёт покупки нового авто.</p>
+      <div class="ti-steps">
+        <div class="ti-step"><div class="ti-num">01</div><div class="ti-step-txt"><strong>Укажите марку и параметры</strong><span>Заполните форму — модель, пробег, год, состояние</span></div></div>
+        <div class="ti-step"><div class="ti-num">02</div><div class="ti-step-txt"><strong>Мгновенная оценка</strong><span>Система рассчитает рыночную стоимость онлайн</span></div></div>
+        <div class="ti-step"><div class="ti-num">03</div><div class="ti-step-txt"><strong>Сдайте и получите скидку</strong><span>Стоимость зачитывается в счёт нового автомобиля</span></div></div>
+      </div>
+    </div>
+    <div class="ti-card">
+      <h3>Оценить автомобиль</h3>
+      <div class="fi"><label>Марка автомобиля</label>
+        <select id="tiMake">
+          <option>Toyota</option><option>BMW</option><option>Kia</option><option>Hyundai</option>
+          <option>Mercedes-Benz</option><option>Volkswagen</option><option>Skoda</option><option>Другая марка</option>
+        </select>
+      </div>
+      <div class="fi"><label>Пробег (км)</label>
+        <div class="calc-lbl" style="margin-top:6px">Пробег: <span id="ti-km-v">80 000 км</span></div>
+        <input type="range" id="ti-km" min="1000" max="300000" step="1000" value="80000" oninput="calcTI()">
+      </div>
+      <div class="fi"><label>Год выпуска</label>
+        <select id="tiYear" onchange="calcTI()">
+          <option>2025</option><option>2024</option><option>2023</option><option>2022</option>
+          <option>2021</option><option>2020</option><option>2019</option><option>2018</option>
+        </select>
+      </div>
+      <div class="fi"><label>Состояние</label>
+        <select id="tiCond" onchange="calcTI()">
+          <option value="1">Отличное — без повреждений</option>
+          <option value="0.88">Хорошее — мелкие царапины</option>
+          <option value="0.73">Среднее — требует ремонта</option>
+        </select>
+      </div>
+      <div class="ti-result">
+        <div class="ti-r-lbl">Оценочная стоимость</div>
+        <div class="ti-r-val" id="tiVal">Введите данные</div>
+      </div>
+      <button class="btn1" style="width:100%" onclick="showNtf('✅ Заявка на Trade-In принята! Менеджер свяжется в течение 30 минут.')">Подать заявку на Trade-In</button>
+    </div>
+  </div>
+</section>
+
+<!-- TEST DRIVE -->
+<section class="td-sect rev" id="tdsect">
+  <div class="td-inner">
+    <div class="td-info">
+      <div class="stag">Тест-Драйв</div>
+      <h2>Почувствуй <span>сам</span> —<br>бесплатный тест-драйв</h2>
+      <p>Запишитесь на тест-драйв любого автомобиля из каталога. Без давления и обязательств. Только вы и автомобиль вашей мечты.</p>
+      <div class="td-perks">
+        <div class="tp"><div class="tp-dot"></div>30–60 минут за рулём по городу</div>
+        <div class="tp"><div class="tp-dot"></div>Опытный инструктор рядом</div>
+        <div class="tp"><div class="tp-dot"></div>Полная техническая консультация</div>
+        <div class="tp"><div class="tp-dot"></div>Никаких обязательств или давления</div>
+        <div class="tp"><div class="tp-dot"></div>Кофе и угощения в шоу-руме</div>
+      </div>
+    </div>
+    <div class="td-form">
+      <h3>Запись на тест-драйв</h3>
+      <div class="fi"><label>Имя и фамилия</label><input type="text" id="tdName" placeholder="Александр Иванов"></div>
+      <div class="fi"><label>Телефон</label><input type="tel" id="tdPhone" placeholder="+7 (999) 000-00-00"></div>
+      <div class="fi"><label>Автомобиль</label>
+        <select id="tdCar">
+          <option>Toyota Camry 3.5 Prestige</option>
+          <option>BMW X5 xDrive40i</option>
+          <option>Kia Sportage 4WD</option>
+          <option>Tesla Model 3 Long Range</option>
+          <option>Mercedes C 220d AMG Line</option>
+          <option>Porsche Taycan 4S</option>
+          <option>Hyundai Tucson 2.0</option>
+          <option>Volkswagen Tiguan R-Line</option>
+        </select>
+      </div>
+      <div class="fi"><label>Удобная дата</label><input type="date" id="tdDate"></div>
+      <div class="fi"><label>Удобное время</label>
+        <select id="tdTime">
+          <option>10:00</option><option>11:00</option><option>12:00</option>
+          <option>13:00</option><option>14:00</option><option>15:00</option><option>16:00</option><option>17:00</option>
+        </select>
+      </div>
+      <button class="btn1" style="width:100%;font-size:15px;padding:14px" onclick="submitTd()">Записаться бесплатно →</button>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="reviews rev">
+  <div class="rvw-wrap">
+    <div class="sh">
+      <div class="stag">Отзывы</div>
+      <h2>Говорят покупатели</h2>
+    </div>
+    <div class="rvw-outer"><div class="rvw-track" id="rvt">
+      <div class="rv-card"><div class="rv-top"><div class="rv-stars">★★★★★</div><div class="rv-date">Фев 2026</div></div><div class="rv-text">Купил BMW X5 — оформление заняло меньше двух часов. Trade-In оценили по рыночной цене, без споров. Рекомендую!</div><div class="rv-bot"><div class="rv-av">С</div><div><div class="rv-nm">Сергей К.</div><div class="rv-car">BMW X5 xDrive40i</div></div></div></div>
+      <div class="rv-card"><div class="rv-top"><div class="rv-stars">★★★★★</div><div class="rv-date">Янв 2026</div></div><div class="rv-text">Tesla Model 3 — мечта! DriveHub помог с кредитом под 4.9%. Процесс очень прозрачный, никакого давления.</div><div class="rv-bot"><div class="rv-av">А</div><div><div class="rv-nm">Алексей Т.</div><div class="rv-car">Tesla Model 3 LR</div></div></div></div>
+      <div class="rv-card"><div class="rv-top"><div class="rv-stars">★★★★★</div><div class="rv-date">Мар 2026</div></div><div class="rv-text">Приехала на тест-драйв и уехала на Toyota Camry! Менеджеры профессиональные, атмосфера приятная.</div><div class="rv-bot"><div class="rv-av">М</div><div><div class="rv-nm">Мария В.</div><div class="rv-car">Toyota Camry 3.5</div></div></div></div>
+      <div class="rv-card"><div class="rv-top"><div class="rv-stars">★★★★★</div><div class="rv-date">Янв 2026</div></div><div class="rv-text">Купил Kia Sportage в рассрочку. Всё быстро, кредит одобрили за 20 минут. Авто в идеальном состоянии.</div><div class="rv-bot"><div class="rv-av">Д</div><div><div class="rv-nm">Дмитрий Н.</div><div class="rv-car">Kia Sportage 4WD</div></div></div></div>
+      <div class="rv-card"><div class="rv-top"><div class="rv-stars">★★★★☆</div><div class="rv-date">Дек 2025</div></div><div class="rv-text">Porsche Taycan — машина мечты! Менеджер был очень компетентен. Единственный минус — пришлось немного подождать.</div><div class="rv-bot"><div class="rv-av">П</div><div><div class="rv-nm">Павел И.</div><div class="rv-car">Porsche Taycan 4S</div></div></div></div>
+    </div></div>
+    <div class="rvw-dots" id="rdots"></div>
+  </div>
+</section>
+
+<!-- TOAST -->
+<div class="ntf" id="ntf"></div>
+
+<!-- FLOAT CTA -->
+<button class="float-cta" id="floatCta" onclick="document.getElementById('tdsect').scrollIntoView({behavior:'smooth'})">
+  🚗 Тест-драйв
+</button>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ftr-wrap">
+    <div>
+      <div class="ftr-logo-row"><div class="logo-ic">🚗</div><span class="ftr-logo-txt">DriveHub</span></div>
+      <div class="ftr-desc">Официальный автодилер. Каталог новых автомобилей, кредитование, Trade-In, тест-драйв. Москва.</div>
+      <div class="ftr-addr">
+        📍 Москва, Кутузовский пр., 32<br>
+        📞 <a href="tel:+74951234567">+7 (495) 123-45-67</a><br>
+        ⏰ Пн–Вс: 9:00 – 21:00
+      </div>
+    </div>
+    <div class="ftr-col">
+      <h4>Каталог</h4>
+      <a href="#">Новые авто</a>
+      <a href="#">Авто с пробегом</a>
+      <a href="#">Электромобили</a>
+      <a href="#">Спецпредложения</a>
+    </div>
+    <div class="ftr-col">
+      <h4>Сервисы</h4>
+      <a href="#">Кредит и лизинг</a>
+      <a href="#">Trade-In</a>
+      <a href="#">Тест-драйв</a>
+      <a href="#">Страхование</a>
+    </div>
+  </div>
+  <div class="fbot">© 2026 DriveHub Auto Group · Официальный дилер · Москва</div>
+</footer>
+
+<script>
+// Sticky header + float CTA
+window.addEventListener('scroll', function(){
+  document.getElementById('hdr').classList.toggle('sc', scrollY > 60);
+  document.getElementById('floatCta').classList.toggle('show', scrollY > 320);
+});
+
+// Speed lines
+var splines = document.getElementById('splines');
+for(var i = 0; i < 20; i++){
+  var ln = document.createElement('div');
+  ln.className = 'spl';
+  ln.style.cssText = 'top:'+(Math.random()*100)+'%;width:'+(80+Math.random()*260)+'px;animation-duration:'+(1.5+Math.random()*3)+'s;animation-delay:'+(Math.random()*4)+'s';
+  splines.appendChild(ln);
+}
+
+// Scroll reveal + counters
+var cntDone = false;
+var observer = new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if(e.isIntersecting){
+      e.target.classList.add('vis');
+      if(e.target.id==='cnt' && !cntDone){ cntDone=true; animateCounters(); }
+      observer.unobserve(e.target);
+    }
+  });
+}, {threshold: 0.12});
+document.querySelectorAll('.rev').forEach(function(el){ observer.observe(el); });
+observer.observe(document.getElementById('cnt'));
+
+function animateCounters(){
+  document.querySelectorAll('.hn[data-val]').forEach(function(el){
+    var to=parseFloat(el.dataset.val),sfx=el.dataset.sfx||'',dec=parseInt(el.dataset.dec)||0,cur=0;
+    var iv=setInterval(function(){
+      cur=Math.min(cur+to/55,to);
+      el.textContent=(dec?cur.toFixed(dec):Math.round(cur))+sfx;
+      if(cur>=to)clearInterval(iv);
+    },18);
+  });
+}
+
+// Credit calculator
+function calcCredit(){
+  var car = +document.getElementById('cp').value;
+  var dp  = +document.getElementById('dp').value;
+  var tm  = +document.getElementById('tm').value;
+  var rt  = parseFloat(document.getElementById('rt').value)/100/12;
+  document.getElementById('cp-v').textContent = (car/1e6).toFixed(1)+' млн ₸';
+  document.getElementById('dp-v').textContent = dp+'%';
+  document.getElementById('tm-v').textContent = tm+' мес';
+  document.getElementById('rt-v').textContent = document.getElementById('rt').value+'%';
+  var loan = car*(1-dp/100);
+  var pay = rt===0 ? loan/tm : loan*rt*Math.pow(1+rt,tm)/(Math.pow(1+rt,tm)-1);
+  var total = pay*tm;
+  var overpay = total - loan;
+  document.getElementById('crv').textContent = Math.round(pay).toLocaleString('ru')+' ₸/мес';
+  document.getElementById('crGrid').innerHTML =
+    '<div class="cri"><div class="cri-l">Сумма кредита</div><div class="cri-v">'+(loan/1e6).toFixed(2)+' млн</div></div>'+
+    '<div class="cri"><div class="cri-l">Взнос</div><div class="cri-v">'+((car*dp/100)/1e6).toFixed(2)+' млн</div></div>'+
+    '<div class="cri"><div class="cri-l">Переплата</div><div class="cri-v">'+(overpay/1e3).toFixed(0)+' тыс</div></div>'+
+    '<div class="cri"><div class="cri-l">Общая сумма</div><div class="cri-v">'+(total/1e6).toFixed(2)+' млн</div></div>';
+}
+calcCredit();
+
+// Trade-In estimator
+function calcTI(){
+  var km = +document.getElementById('ti-km').value;
+  document.getElementById('ti-km-v').textContent = km.toLocaleString('ru')+' км';
+  var year = parseInt(document.getElementById('tiYear').value);
+  var cond = parseFloat(document.getElementById('tiCond').value);
+  var base = 2200000;
+  var age = 2026 - year;
+  var ageCoef = Math.pow(0.84, age);
+  var kmCoef = Math.max(0.55, 1 - km/600000);
+  var val = Math.round(base * ageCoef * kmCoef * cond / 10000) * 10000;
+  document.getElementById('tiVal').textContent = val.toLocaleString('ru') + ' ₸';
+}
+calcTI();
+document.getElementById('ti-km').addEventListener('input', calcTI);
+
+// Car catalog
+var cars = [
+  {id:1,brand:'Toyota',name:'Camry 3.5 Prestige',cat:'sedan',price:3490000,icon:'🚙',fuel:'Бензин',power:'249 л.с.',year:2025,badge:'hot'},
+  {id:2,brand:'BMW',name:'X5 xDrive40i',cat:'suv',price:7200000,icon:'🚐',fuel:'Бензин',power:'340 л.с.',year:2025,badge:'new'},
+  {id:3,brand:'Kia',name:'Sportage 4WD 2.0',cat:'suv',price:2890000,icon:'🚗',fuel:'Бензин',power:'150 л.с.',year:2025,badge:''},
+  {id:4,brand:'Tesla',name:'Model 3 Long Range',cat:'electric',price:4100000,icon:'⚡',fuel:'Электро',power:'358 л.с.',year:2025,badge:'new'},
+  {id:5,brand:'Mercedes',name:'C 220d AMG Line',cat:'sedan',price:5650000,icon:'🏎️',fuel:'Дизель',power:'200 л.с.',year:2025,badge:''},
+  {id:6,brand:'Porsche',name:'Taycan 4S',cat:'sport',price:12800000,icon:'🚀',fuel:'Электро',power:'571 л.с.',year:2025,badge:'hot'},
+  {id:7,brand:'Hyundai',name:'Tucson 2.0 Prestige',cat:'suv',price:2650000,icon:'🛻',fuel:'Бензин',power:'149 л.с.',year:2025,badge:'sale'},
+  {id:8,brand:'Volkswagen',name:'Tiguan R-Line',cat:'suv',price:3180000,icon:'🚌',fuel:'Бензин',power:'150 л.с.',year:2025,badge:''},
+  {id:9,brand:'BMW',name:'M3 Competition',cat:'sport',price:9800000,icon:'🏁',fuel:'Бензин',power:'510 л.с.',year:2025,badge:'hot'},
+];
+var curCat='all', cmpList=[];
+
+function setCat(c,btn){
+  curCat=c;
+  document.querySelectorAll('.fc-btn').forEach(function(b){b.classList.remove('act');});
+  btn.classList.add('act');
+  renderCars();
+}
+
+function renderCars(){
+  var srt = document.getElementById('srt').value;
+  var res = cars.filter(function(c){ return curCat==='all'||c.cat===curCat; });
+  if(srt==='pa') res.sort(function(a,b){ return a.price-b.price; });
+  if(srt==='pd') res.sort(function(a,b){ return b.price-a.price; });
+  var mo = function(p){ var r=9.9/100/12,t=36,l=p*.8; return Math.round(l*r*Math.pow(1+r,t)/(Math.pow(1+r,t)-1)); };
+  document.getElementById('cg').innerHTML = res.map(function(c){
+    var inCmp = cmpList.includes(c.id);
+    var badgeTxt = c.badge==='new'?'NEW':c.badge==='hot'?'HOT':c.badge==='sale'?'SALE':'';
+    return '<div class="cc">'
+      +'<div class="cc-img">'+c.icon+(c.badge?'<div class="cc-badge '+c.badge+'">'+badgeTxt+'</div>':'')+'</div>'
+      +'<div class="cc-body"><div class="cc-brand">'+c.brand+'</div><div class="cc-name">'+c.name+'</div>'
+      +'<div class="cc-specs"><span class="sp">'+c.fuel+'</span><span class="sp">'+c.power+'</span><span class="sp">'+c.year+'</span></div>'
+      +'<div class="cc-pr-row"><div><div class="cc-price">'+c.price.toLocaleString('ru')+' ₸</div><div class="cc-mo">от '+mo(c.price).toLocaleString('ru')+' ₸/мес</div></div>'
+      +'<button class="add-cmp'+(inCmp?' added':'')+'" onclick="toggleCmp('+c.id+',this)">'+(inCmp?'✓ Added':'+ Сравнить')+'</button></div></div></div>';
+  }).join('');
+}
+
+function toggleCmp(id,btn){
+  if(cmpList.includes(id)){
+    cmpList=cmpList.filter(function(x){return x!==id;});
+    btn.className='add-cmp'; btn.textContent='+ Сравнить';
+  } else {
+    if(cmpList.length>=3){showNtf('⚠️ Максимум 3 авто');return;}
+    cmpList.push(id); btn.className='add-cmp added'; btn.textContent='✓ Added';
+  }
+  renderCmpTable();
+}
+
+function clearCmp(){ cmpList=[]; document.getElementById('cmpPanel').classList.remove('show'); renderCars(); }
+
+function renderCmpTable(){
+  if(cmpList.length<2){document.getElementById('cmpPanel').classList.remove('show');return;}
+  var sel = cmpList.map(function(id){ return cars.find(function(c){return c.id===id;}); });
+  var rows=[['Бренд',function(c){return c.brand;}],['Цена',function(c){return c.price.toLocaleString('ru')+' ₸';}],['Топливо',function(c){return c.fuel;}],['Мощность',function(c){return c.power;}],['Год',function(c){return c.year;}]];
+  var html='<table class="cmp-tbl"><tr><th></th>'+sel.map(function(c){return '<th>'+c.icon+' '+c.name+'</th>';}).join('')+'</tr>';
+  rows.forEach(function(r){html+='<tr><td class="cmp-field">'+r[0]+'</td>'+sel.map(function(c){return '<td>'+r[1](c)+'</td>';}).join('')+'</tr>';});
+  html+='</table>';
+  document.getElementById('cmpTbl').innerHTML=html;
+  document.getElementById('cmpPanel').classList.add('show');
+  document.getElementById('cmpPanel').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+// Test drive submit
+function submitTd(){
+  var nm = document.getElementById('tdName').value.trim();
+  var ph = document.getElementById('tdPhone').value.trim();
+  var car = document.getElementById('tdCar').value;
+  if(!nm){showNtf('⚠️ Введите ваше имя');return;}
+  if(!ph){showNtf('⚠️ Введите телефон');return;}
+  showNtf('✅ Тест-драйв: '+car+'. Позвоним в течение часа!');
+}
+
+function showNtf(msg){
+  var n=document.getElementById('ntf');
+  n.textContent=msg; n.classList.add('show');
+  setTimeout(function(){n.classList.remove('show');},3600);
+}
+
+// Reviews slider
+var rvIdx = 0;
+var rvCards = document.querySelectorAll('.rv-card').length;
+var rvVis = 3;
+var rvMax = rvCards - rvVis;
+var dotsEl = document.getElementById('rdots');
+for(var d=0; d<=rvMax; d++){
+  var dot = document.createElement('div');
+  dot.className='rdot'+(d===0?' act':'');
+  dot.setAttribute('data-i',d);
+  (function(idx){ dot.onclick=function(){ goRvSlide(idx); }; })(d);
+  dotsEl.appendChild(dot);
+}
+function goRvSlide(i){
+  rvIdx=i;
+  document.getElementById('rvt').style.transform='translateX(calc(-338px * '+i+'))';
+  document.querySelectorAll('.rdot').forEach(function(d,idx){d.classList.toggle('act',idx===i);});
+}
+setInterval(function(){ goRvSlide(rvIdx>=rvMax?0:rvIdx+1); },4000);
+
+renderCars();
+</script>
+</body>
+</html>

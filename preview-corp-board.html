@@ -1,0 +1,434 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Board Room — SiteCode</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0d12;--bg2:#111722;--panel:#141c27;--panel2:#1a2431;--line:#283244;--text:#eef2f7;--muted:#93a2b7;--gold:#e7c889;--gold2:#b78c44;--blue:#9fd5ff;--shadow:0 28px 90px rgba(0,0,0,.38)}
+body{font-family:'Inter',sans-serif;background:radial-gradient(circle at 10% 14%,rgba(159,213,255,.16),transparent 18%),radial-gradient(circle at 86% 10%,rgba(231,200,137,.14),transparent 20%),radial-gradient(circle at 50% 120%,rgba(183,140,68,.14),transparent 36%),linear-gradient(180deg,#0a0f16 0%,#10151e 38%,#0a0d12 100%);color:var(--text);overflow-x:hidden;position:relative;isolation:isolate}
+h1,h2,h3{font-family:'Cinzel',serif;letter-spacing:.04em}
+body::before,body::after{content:'';position:fixed;border-radius:50%;pointer-events:none;z-index:-2;filter:blur(110px);opacity:.26}
+body::before{width:320px;height:320px;top:90px;left:-120px;background:rgba(159,213,255,.18)}
+body::after{width:340px;height:340px;right:-120px;bottom:6%;background:rgba(231,200,137,.18)}
+.board-grid{position:fixed;inset:0;pointer-events:none;z-index:-1;background-image:linear-gradient(rgba(255,255,255,.028) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.028) 1px,transparent 1px);background-size:80px 80px;mask-image:radial-gradient(circle at center,rgba(0,0,0,.95),transparent 85%);opacity:.28}
+a{text-decoration:none;color:inherit}
+.hero{padding:34px 20px 24px;position:relative}.hero::after{content:'';position:absolute;inset:12% auto auto 58%;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(231,200,137,.12),transparent 70%);pointer-events:none}.wrap{max-width:1160px;margin:0 auto;position:relative;z-index:1}.top{display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap;padding:16px 18px;border-radius:22px;background:rgba(20,28,39,.78);backdrop-filter:blur(14px);border:1px solid #ffffff10;box-shadow:var(--shadow)}.brand{font-size:22px;font-weight:900;letter-spacing:-.03em}.brand span{color:var(--gold)}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn,.btn-ghost{padding:12px 18px;border-radius:14px;font-size:14px;font-weight:800}.btn{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#111}.btn-ghost{background:#ffffff06;border:1px solid #ffffff12;color:#fff}
+.hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:22px;align-items:stretch;margin-top:28px}.intro,.vault{padding:30px;border-radius:32px;border:1px solid #ffffff10;box-shadow:var(--shadow);backdrop-filter:blur(14px)}.intro{background:radial-gradient(circle at top right,rgba(159,213,255,.12),transparent 24%),linear-gradient(160deg,#162033,#0e1219)}.vault{background:radial-gradient(circle at left bottom,rgba(231,200,137,.1),transparent 22%),linear-gradient(180deg,#121923,#0c1016)}.eyebrow{display:inline-block;padding:8px 14px;border-radius:999px;background:#ffffff07;border:1px solid #ffffff10;color:var(--blue);font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:16px}.intro h1{font-size:clamp(40px,6vw,72px);line-height:.92;letter-spacing:-.05em;font-weight:900;max-width:760px;margin-bottom:18px}.intro p{font-size:17px;line-height:1.8;color:var(--muted);max-width:700px}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:26px}.metric{padding:16px;border-radius:18px;background:#ffffff05;border:1px solid #ffffff0a}.metric strong{display:block;font-size:28px;font-weight:900;margin-bottom:4px}.metric span{font-size:12px;line-height:1.6;color:var(--muted)}
+.vault-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.vault-top small{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--blue)}.secure{padding:7px 10px;border-radius:999px;background:#e7c8891c;border:1px solid #e7c88940;color:var(--gold);font-size:12px;font-weight:800}.vault-grid{display:grid;gap:12px}.vcard{padding:18px;border-radius:20px;background:#ffffff04;border:1px solid #ffffff0a}.vcard strong{display:block;font-size:18px;font-weight:800;margin-bottom:8px}.vcard p{font-size:13px;line-height:1.7;color:var(--muted)}
+.section{padding:30px 20px 72px;position:relative}.section::before{content:'';position:absolute;inset:0 20px 18px;border-radius:34px;background:radial-gradient(circle at right top,rgba(231,200,137,.08),transparent 22%),radial-gradient(circle at left bottom,rgba(159,213,255,.08),transparent 26%),linear-gradient(180deg,rgba(255,255,255,.028),rgba(255,255,255,.015));border:1px solid rgba(255,255,255,.06);pointer-events:none}.head{max-width:760px;margin-bottom:26px}.head span{display:inline-block;margin-bottom:10px;color:var(--blue);font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}.head h2{font-size:clamp(30px,4vw,52px);line-height:1;letter-spacing:-.04em;font-weight:900;margin-bottom:12px}.head p{font-size:16px;line-height:1.75;color:var(--muted)}
+.deck{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}.big-panel,.side-stack{padding:24px;border-radius:28px;background:#121923;border:1px solid #ffffff10;box-shadow:var(--shadow);backdrop-filter:blur(14px)}.board-line{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px}.signal{padding:14px;border-radius:18px;background:#ffffff05;border:1px solid #ffffff0a}.signal small{display:block;font-size:11px;color:var(--muted);text-transform:uppercase;margin-bottom:6px}.signal strong{font-size:20px;font-weight:900}
+.chart{margin-top:22px;padding:18px;border-radius:22px;background:#0d1218;border:1px solid #ffffff0a}.chart-grid{display:flex;align-items:end;gap:12px;height:180px}.bar{flex:1;border-radius:14px 14px 6px 6px;background:linear-gradient(180deg,var(--gold),#70552d);position:relative;min-height:32px;transition:height .4s ease}.bar span{position:absolute;bottom:-26px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--muted)}
+.side-stack{display:grid;gap:12px;align-content:start}.checkpoint{padding:18px;border-radius:20px;background:#ffffff04;border:1px solid #ffffff0a}.checkpoint strong{display:block;font-size:16px;font-weight:800;margin-bottom:8px}.checkpoint p{font-size:13px;line-height:1.7;color:var(--muted)}
+.table-wrap{margin-top:18px;overflow:auto;border-radius:22px;border:1px solid #ffffff0a}.table{width:100%;border-collapse:collapse;min-width:620px;background:#0d1218}.table th,.table td{padding:16px 18px;text-align:left;border-bottom:1px solid #ffffff08}.table th{font-size:12px;text-transform:uppercase;color:var(--blue);letter-spacing:.08em}.table td{font-size:14px;color:var(--muted)}.table td strong{color:#fff}
+.note{margin-top:18px;padding:18px;border-radius:20px;background:#ffffff04;border:1px solid #ffffff0a;font-size:14px;line-height:1.8;color:var(--muted);backdrop-filter:blur(14px)}
+.form-shell{display:grid;grid-template-columns:1fr .9fr;gap:18px}.form-panel,.contact-panel{padding:24px;border-radius:28px;background:#121923;border:1px solid #ffffff10;box-shadow:var(--shadow);backdrop-filter:blur(14px)}.form{display:grid;gap:12px}.form input,.form textarea,.form select{padding:15px 16px;border-radius:16px;border:1px solid #ffffff12;background:#0d1218;color:#fff;outline:none}.form textarea{min-height:120px;resize:vertical}.contact-panel{display:grid;gap:12px;align-content:start}.contact-box{padding:16px;border-radius:18px;background:#ffffff04;border:1px solid #ffffff0a}.contact-box strong{display:block;font-size:16px;font-weight:800;margin-bottom:6px}.contact-box p{font-size:13px;line-height:1.7;color:var(--muted)}
+.footer{padding:0 20px 56px}.footer .wrap{padding-top:22px;border-top:1px solid #ffffff10;color:var(--muted);font-size:13px;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}.toast{position:fixed;right:18px;bottom:18px;min-width:240px;max-width:320px;padding:14px 16px;border-radius:18px;background:#161d28;border:1px solid #ffffff12;box-shadow:var(--shadow);transform:translateY(16px);opacity:0;pointer-events:none;transition:.28s}.toast.show{opacity:1;transform:translateY(0)}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .55s ease,transform .55s ease}.reveal.visible{opacity:1;transform:translateY(0)}
+/* ─── TICKER ─── */
+.ticker-wrap{overflow:hidden;background:rgba(231,200,137,.06);border-bottom:1px solid rgba(231,200,137,.12);padding:10px 0;position:relative;z-index:10}
+.ticker-track{display:flex;gap:0;white-space:nowrap;animation:ticker 40s linear infinite}
+.ticker-track:hover{animation-play-state:paused}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ticker-item{padding:0 36px;font-size:12px;font-weight:700;color:rgba(231,200,137,.7);letter-spacing:.04em;display:inline-flex;align-items:center;gap:10px}
+.ticker-item::before{content:'◆';font-size:8px;color:var(--gold);opacity:.6}
+/* ─── PULSE DOT ─── */
+.pulse-dot{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:rgba(68,221,136,.08);border:1px solid rgba(68,221,136,.22);font-size:12px;font-weight:700;color:#44dd88;margin-bottom:16px}
+.pulse-dot::before{content:'';width:8px;height:8px;border-radius:50%;background:#44dd88;box-shadow:0 0 0 0 rgba(68,221,136,.4);animation:pulse-ring 1.8s ease-out infinite}
+@keyframes pulse-ring{0%{box-shadow:0 0 0 0 rgba(68,221,136,.5)}70%{box-shadow:0 0 0 9px rgba(68,221,136,0)}100%{box-shadow:0 0 0 0 rgba(68,221,136,0)}}
+/* ─── SIGNAL STATUS COLORS ─── */
+.signal-up{color:#44dd88}.signal-neutral{color:var(--gold)}.signal-warn{color:#ff9444}
+/* ─── DOC VAULT ─── */
+.doc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.doc-card{padding:24px;border-radius:24px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.03);display:flex;flex-direction:column;gap:14px;transition:border-color .25s,background .25s,transform .25s,box-shadow .25s;cursor:default}
+.doc-card:hover{border-color:rgba(231,200,137,.32);background:rgba(231,200,137,.04);transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,.24)}
+.doc-icon{width:44px;height:44px;border-radius:14px;background:rgba(231,200,137,.10);border:1px solid rgba(231,200,137,.22);display:flex;align-items:center;justify-content:center;font-size:20px}
+.doc-meta{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.doc-card h4{font-size:17px;font-weight:800;line-height:1.25;letter-spacing:-.3px}
+.doc-card p{font-size:13px;line-height:1.7;color:var(--muted);flex:1}
+.doc-footer{display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid rgba(255,255,255,.06)}
+.doc-status{font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px}
+.doc-status.ready{background:rgba(68,221,136,.10);color:#44dd88;border:1px solid rgba(68,221,136,.22)}
+.doc-status.review{background:rgba(231,200,137,.10);color:var(--gold);border:1px solid rgba(231,200,137,.22)}
+.doc-status.draft{background:rgba(255,255,255,.05);color:var(--muted);border:1px solid rgba(255,255,255,.10)}
+.doc-date{font-size:11px;color:rgba(255,255,255,.28)}
+/* ─── TIMELINE ─── */
+.tl{display:flex;flex-direction:column;position:relative;padding-left:28px}
+.tl::before{content:'';position:absolute;left:7px;top:12px;bottom:12px;width:2px;background:linear-gradient(180deg,rgba(231,200,137,.5),rgba(159,213,255,.3),rgba(255,255,255,.05))}
+.tl-item{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start;padding:18px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.tl-item:last-child{border-bottom:none}
+.tl-dot{width:16px;height:16px;border-radius:50%;border:2px solid;flex-shrink:0;margin-top:3px;position:relative;left:-29px;background:var(--bg)}
+.tl-dot.gold{border-color:var(--gold);box-shadow:0 0 10px rgba(231,200,137,.4)}
+.tl-dot.blue{border-color:var(--blue);box-shadow:0 0 10px rgba(159,213,255,.4)}
+.tl-dot.green{border-color:#44dd88;box-shadow:0 0 10px rgba(68,221,136,.4)}
+.tl-dot.muted{border-color:rgba(255,255,255,.2)}
+.tl-date{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.tl-body h4{font-size:16px;font-weight:800;margin-bottom:6px;letter-spacing:-.2px}
+.tl-body p{font-size:13px;line-height:1.7;color:var(--muted)}
+.tl-tag{display:inline-block;padding:3px 9px;border-radius:999px;font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-top:8px}
+.tl-tag.done{background:rgba(68,221,136,.1);color:#44dd88;border:1px solid rgba(68,221,136,.2)}
+.tl-tag.active{background:rgba(231,200,137,.1);color:var(--gold);border:1px solid rgba(231,200,137,.2)}
+.tl-tag.planned{background:rgba(255,255,255,.05);color:var(--muted);border:1px solid rgba(255,255,255,.1)}
+/* ─── ACCESS ROLES ─── */
+.roles-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.role-card{padding:18px;border-radius:20px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.03);text-align:center}
+.role-avatar{width:44px;height:44px;border-radius:14px;margin:0 auto 10px;font-size:18px;font-weight:900;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.1)}
+.role-card h4{font-size:14px;font-weight:800;margin-bottom:4px}
+.role-card p{font-size:12px;color:var(--muted);line-height:1.5}
+.role-badge{display:inline-block;padding:3px 8px;border-radius:999px;font-size:10px;font-weight:800;margin-top:8px;background:rgba(231,200,137,.08);color:var(--gold);border:1px solid rgba(231,200,137,.18)}
+/* ─── CONTACT ─── */
+.contact-shell{display:grid;grid-template-columns:1fr .85fr;gap:22px}
+.contact-form-wrap{padding:32px;border-radius:28px;background:radial-gradient(circle at top right,rgba(159,213,255,.06),transparent 40%),linear-gradient(180deg,#131e2e,#0d1520);border:1px solid rgba(255,255,255,.09);box-shadow:var(--shadow)}
+.contact-form-wrap h3{font-size:clamp(22px,3vw,32px);letter-spacing:-.8px;margin-bottom:8px}
+.contact-form-wrap>p{font-size:14px;color:var(--muted);line-height:1.75;margin-bottom:24px}
+.cform{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cform .full{grid-column:1/-1}
+.cform input,.cform textarea,.cform select{width:100%;padding:14px 16px;border-radius:14px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.04);color:#fff;font-size:14px;font-family:inherit;outline:none;transition:border-color .2s}
+.cform input:focus,.cform textarea:focus,.cform select:focus{border-color:rgba(231,200,137,.40)}
+.cform textarea{min-height:100px;resize:vertical}
+.cform select option{background:#131e2e}
+.cform-btn{grid-column:1/-1;padding:16px;border-radius:14px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#111;font-size:15px;font-weight:900;border:none;cursor:pointer;font-family:inherit;transition:opacity .2s,transform .2s}
+.cform-btn:hover{opacity:.88;transform:translateY(-1px)}
+.contact-info{display:flex;flex-direction:column;gap:14px}
+.ci-card{padding:22px;border-radius:22px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.03);display:flex;gap:16px;align-items:flex-start;transition:border-color .2s,background .2s}
+.ci-card:hover{border-color:rgba(231,200,137,.24);background:rgba(231,200,137,.03)}
+.ci-icon{width:44px;height:44px;border-radius:14px;background:rgba(231,200,137,.09);border:1px solid rgba(231,200,137,.18);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.ci-body h4{font-size:15px;font-weight:800;margin-bottom:4px}
+.ci-body p{font-size:13px;color:var(--muted);line-height:1.6}
+.ci-body a{color:var(--blue);text-decoration:none;font-weight:600}
+.ci-body a:hover{text-decoration:underline}
+.confidential-note{margin-top:14px;padding:16px;border-radius:16px;background:rgba(231,200,137,.05);border:1px solid rgba(231,200,137,.14);font-size:13px;color:var(--muted);line-height:1.7;display:flex;gap:12px;align-items:flex-start}
+.confidential-note::before{content:'🔒';flex-shrink:0;font-size:16px;margin-top:1px}
+@media(max-width:980px){.hero-grid,.deck,.form-shell,.contact-shell{grid-template-columns:1fr}.metrics,.board-line,.doc-grid,.roles-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.metrics,.board-line,.doc-grid,.roles-grid{grid-template-columns:1fr}.top{padding:14px}.intro,.vault,.big-panel,.side-stack,.form-panel,.contact-panel,.contact-form-wrap{padding:20px}.cform{grid-template-columns:1fr}.cform .full{grid-column:1}}
+</style>
+</head>
+<body>
+<!-- LOCK SCREEN (shown by default, hidden via JS if access granted) -->
+<div id="brLock" style="position:fixed;inset:0;background:radial-gradient(circle at 62% 18%,rgba(0,212,255,.09),transparent 28%),#0a0d12;display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;color:#eef2f7;padding:24px;text-align:center;z-index:99999">
+  <div style="max-width:480px">
+    <div style="font-size:52px;margin-bottom:22px;line-height:1;filter:drop-shadow(0 0 18px rgba(0,212,255,.3))">🔒</div>
+    <p style="font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#00d4ff;margin-bottom:14px">Private Board Room</p>
+    <h1 style="font-size:clamp(28px,6vw,46px);line-height:1.02;letter-spacing:-2px;font-weight:900;margin-bottom:16px">Закрытый доступ</h1>
+    <p style="font-size:15px;line-height:1.8;color:#8299b9;margin-bottom:32px">Board Room — закрытая зона для подачи расширенных брифов на крупные и сложные проекты. Доступен только в составе тарифа <strong style="color:#eef2f7">Corporate Standard</strong>.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <a href="catalog.html" style="padding:14px 28px;border-radius:14px;background:linear-gradient(135deg,#00c8f0,#0066d6);color:#fff;font-size:14px;font-weight:800;text-decoration:none;box-shadow:0 0 28px rgba(0,212,255,.30)">Перейти в каталог</a>
+      <a href="index.html" style="padding:14px 28px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);color:#8299b9;font-size:14px;font-weight:700;text-decoration:none">← Назад</a>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  if(localStorage.getItem('br_access')==='1'){document.getElementById('brLock').style.display='none';return;}
+  try{
+    const id=sessionStorage.getItem('sc_session')||localStorage.getItem('sc_session');
+    if(id){
+      const users=JSON.parse(localStorage.getItem('sc_users')||'[]');
+      const u=users.find(x=>x.id===id);
+      if(u&&(u.status==='premium'||u.status==='vip')){document.getElementById('brLock').style.display='none';}
+    }
+  }catch(e){}
+})();
+</script>
+<div class="board-grid"></div>
+
+<!-- LIVE TICKER -->
+
+<div class="ticker-wrap">
+  <div class="ticker-track" id="tickerTrack">
+    <span class="ticker-item">Принимаем заявки на крупные проекты — 2026</span>
+    <span class="ticker-item">Средний срок enterprise-разработки: 45–90 дней</span>
+    <span class="ticker-item">Порог входа в Board Room: от 90 000 ₸</span>
+    <span class="ticker-item">Команда: 12 специалистов в штате</span>
+    <span class="ticker-item">Принято проектов в Q1 2026: 8 из 10 мест</span>
+    <span class="ticker-item">Специализация: e-commerce, порталы, web-приложения</span>
+    <span class="ticker-item">Поддержка 24/7 на всех premium-проектах</span>
+    <span class="ticker-item">NDA подписываем до начала переговоров</span>
+    <!-- duplicate for seamless loop -->
+    <span class="ticker-item">Принимаем заявки на крупные проекты — 2026</span>
+    <span class="ticker-item">Средний срок enterprise-разработки: 45–90 дней</span>
+    <span class="ticker-item">Порог входа в Board Room: от 90 000 ₸</span>
+    <span class="ticker-item">Команда: 12 специалистов в штате</span>
+    <span class="ticker-item">Принято проектов в Q1 2026: 8 из 10 мест</span>
+    <span class="ticker-item">Специализация: e-commerce, порталы, web-приложения</span>
+    <span class="ticker-item">Поддержка 24/7 на всех premium-проектах</span>
+    <span class="ticker-item">NDA подписываем до начала переговоров</span>
+  </div>
+</div>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="top reveal">
+      <div class="brand">Site<span>Code</span> — Board Room</div>
+      <div class="actions">
+        <a class="btn-ghost" href="catalog.html">← Каталог</a>
+        <a class="btn" href="#brief">Оставить бриф</a>
+      </div>
+    </div>
+    <div class="hero-grid">
+      <div class="intro reveal">
+        <div class="pulse-dot">Принимаем заявки — свободных мест: 3</div>
+        <div class="eyebrow">Premium Project Brief</div>
+        <h1>Сложный проект? Мы берём такое.</h1>
+        <p>Board Room — приватный уровень SiteCode для крупных и нестандартных заказов. Отдельная команда, персональный менеджер, NDA и полный контроль над процессом от брифа до запуска.</p>
+        <div class="metrics" id="metricsGrid">
+          <div class="metric"><strong data-count="90">0</strong><span>тыс. ₸ — порог входа</span></div>
+          <div class="metric"><strong data-count="12">0</strong><span>специалистов в штате</span></div>
+          <div class="metric"><strong data-count="98">0</strong><span>% проектов в срок</span></div>
+        </div>
+      </div>
+      <div class="vault reveal">
+        <div class="vault-top"><small>Уровень проектов</small><div class="secure">● Premium tier</div></div>
+        <div class="vault-grid">
+          <div class="vcard"><strong>🏗 Enterprise-сайты</strong><p>Порталы, корпоративные экосистемы и мультираздельные сайты для средних и крупных компаний.</p></div>
+          <div class="vcard"><strong>🛒 Сложный e-commerce</strong><p>Магазины с тысячами товаров, кастомной логикой, интеграциями с 1С, складом и CRM.</p></div>
+          <div class="vcard"><strong>⚙️ Веб-приложения</strong><p>SaaS-платформы, личные кабинеты, дашборды — всё что сложнее обычного сайта.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="head reveal">
+      <span>Критерии проекта</span>
+      <h2>Когда стандартного тарифа недостаточно</h2>
+      <p>Если ваш проект попадает хотя бы в 2 из этих пунктов — Board Room именно для вас.</p>
+    </div>
+    <div class="deck">
+      <div class="big-panel reveal">
+        <strong style="font-size:18px;font-weight:800">Типовые проекты и ориентиры</strong>
+        <div class="board-line">
+          <div class="signal"><small>Бюджет</small><strong class="signal-neutral">90 000+ ₸</strong></div>
+          <div class="signal"><small>Страниц</small><strong class="signal-neutral">20+</strong></div>
+          <div class="signal"><small>Срок</small><strong class="signal-up">45–90 дн.</strong></div>
+          <div class="signal"><small>Команда</small><strong class="signal-up">5+ чел.</strong></div>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr><th>Тип проекта</th><th>Объём</th><th>Сроки</th><th>Бюджет от</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Корпоративный портал</strong></td><td>30+ страниц</td><td>45–60 дней</td><td style="color:#44dd88">90 000 ₸</td></tr>
+              <tr><td><strong>Enterprise e-commerce</strong></td><td>каталог 1000+ тов.</td><td>60–90 дней</td><td style="color:#44dd88">150 000 ₸</td></tr>
+              <tr><td><strong>SaaS / веб-приложение</strong></td><td>личный кабинет, API</td><td>60–120 дней</td><td style="color:var(--gold)">200 000 ₸</td></tr>
+              <tr><td><strong>Маркетплейс / платформа</strong></td><td>multi-vendor</td><td>90–180 дней</td><td style="color:var(--gold)">350 000 ₸</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="side-stack reveal">
+        <div class="checkpoint"><strong>Почему отдельный уровень?</strong><p>Стандартные тарифы рассчитаны на обычные задачи. Сложные проекты требуют отдельной команды, процесса и управления рисками.</p></div>
+        <div class="checkpoint"><strong>NDA включён</strong><p>Все участники команды подписывают соглашение о неразглашении до начала работ. Ваш проект остаётся конфиденциальным.</p></div>
+        <div class="checkpoint"><strong>Выделенный менеджер</strong><p>Один контактный человек ведёт проект от брифа до запуска. Никаких переключений и ситуаций «уточню у команды».</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BRIEF FORM -->
+<section class="section" id="brief">
+  <div class="wrap">
+    <div class="head reveal">
+      <span>Расширенный бриф</span>
+      <h2>Расскажите о вашем проекте</h2>
+      <p>Заполните бриф как можно подробнее — это поможет собрать правильную команду и дать точную оценку в течение дня.</p>
+    </div>
+    <div class="contact-shell">
+      <div class="contact-form-wrap reveal">
+        <h3>Бриф на разработку</h3>
+        <p>Ответим в течение одного рабочего дня с предварительной оценкой и следующими шагами.</p>
+        <form class="cform" id="contactForm">
+          <input type="text" id="cName" placeholder="Имя и должность" required>
+          <input type="text" id="cCompany" placeholder="Компания / название проекта">
+          <input type="text" id="cContact" placeholder="Telegram / email / телефон" class="full" required>
+          <select id="cType" class="full" required>
+            <option value="">Тип проекта</option>
+            <option>Корпоративный сайт / портал (30+ страниц)</option>
+            <option>Enterprise интернет-магазин (1000+ товаров)</option>
+            <option>Веб-приложение / SaaS-платформа</option>
+            <option>Личный кабинет / дашборд</option>
+            <option>Маркетплейс / multi-vendor</option>
+            <option>Редизайн крупного проекта</option>
+            <option>Другое — опишу ниже</option>
+          </select>
+          <textarea id="cMessage" placeholder="Опишите задачу: что должен делать сайт, кто целевая аудитория, есть ли аналоги, особые требования, примерный бюджет..." class="full" style="min-height:150px"></textarea>
+          <button class="cform-btn full" type="submit">Отправить бриф →</button>
+        </form>
+      </div>
+      <div class="contact-info reveal" id="contactInfo">
+        <div class="ci-card">
+          <div class="ci-icon">✉️</div>
+          <div class="ci-body">
+            <h4>Email</h4>
+            <p>Для брифов и партнёрских запросов<br><a href="mailto:hello@sitecode.ru">hello@sitecode.ru</a></p>
+          </div>
+        </div>
+        <div class="ci-card">
+          <div class="ci-icon">💬</div>
+          <div class="ci-body">
+            <h4>Telegram</h4>
+            <p>Быстрый ответ в рабочие часы<br><a href="https://t.me/sitecode" target="_blank">@sitecode</a></p>
+          </div>
+        </div>
+        <div class="ci-card">
+          <div class="ci-icon">📞</div>
+          <div class="ci-body">
+            <h4>Телефон</h4>
+            <p>По предварительной записи<br><a href="tel:+79991234567">+7 999 123-45-67</a></p>
+          </div>
+        </div>
+        <div class="confidential-note">
+          Все брифы обрабатываются конфиденциально. Данные не передаются третьим лицам. По запросу подписываем NDA до начала переговоров.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ПРОЦЕСС РАБОТЫ -->
+<section class="section">
+  <div class="wrap">
+    <div class="head reveal">
+      <span>Процесс</span>
+      <h2>Как мы ведём крупные проекты</h2>
+      <p>Прозрачный процесс — вы знаете, что происходит на каждом этапе и когда ждать результат.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px" id="timelineGrid">
+      <div class="tl reveal">
+        <div class="tl-item">
+          <div class="tl-dot gold"></div>
+          <div class="tl-body">
+            <div class="tl-date">01 — Бриф</div>
+            <h4>Изучаем задачу</h4>
+            <p>Разбираем бриф, задаём уточняющие вопросы, формируем список требований и подбираем команду.</p>
+            <span class="tl-tag active">Старт</span>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot blue"></div>
+          <div class="tl-body">
+            <div class="tl-date">02 — Оценка</div>
+            <h4>Смета и ТЗ</h4>
+            <p>Составляем детальное техническое задание и фиксированную смету. Без скрытых доплат.</p>
+            <span class="tl-tag done">Фиксируем</span>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot green"></div>
+          <div class="tl-body">
+            <div class="tl-date">03 — Дизайн</div>
+            <h4>Прототип и макеты</h4>
+            <p>Рисуем прототипы, согласовываем структуру. Только потом — дизайн-макеты всех страниц.</p>
+            <span class="tl-tag done">Согласование</span>
+          </div>
+        </div>
+      </div>
+      <div class="tl reveal">
+        <div class="tl-item">
+          <div class="tl-dot gold"></div>
+          <div class="tl-body">
+            <div class="tl-date">04 — Разработка</div>
+            <h4>Frontend + Backend</h4>
+            <p>Спринты по 2 недели. Показываем прогресс регулярно. Вы в курсе всего что происходит.</p>
+            <span class="tl-tag active">В работе</span>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot muted"></div>
+          <div class="tl-body">
+            <div class="tl-date">05 — Тестирование</div>
+            <h4>QA и нагрузочное</h4>
+            <p>Полное тестирование функционала, скорости, нагрузки, адаптивности и кросс-браузерности.</p>
+            <span class="tl-tag planned">Контроль</span>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot muted"></div>
+          <div class="tl-body">
+            <div class="tl-date">06 — Запуск</div>
+            <h4>Деплой и поддержка</h4>
+            <p>Публикация, настройка хостинга, обучение вашей команды. Поддержка 12 месяцев включена.</p>
+            <span class="tl-tag planned">Финал</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ЧТО ВКЛЮЧЕНО -->
+<section class="section">
+  <div class="wrap">
+    <div class="head reveal">
+      <span>Включено в Board Room</span>
+      <h2>Что вы получаете на этом уровне</h2>
+      <p>Всё необходимое для успешного запуска сложного проекта — без компромиссов по качеству.</p>
+    </div>
+    <div class="roles-grid reveal" id="rolesGrid">
+      <div class="role-card">
+        <div class="role-avatar" style="background:rgba(231,200,137,.12);border-color:rgba(231,200,137,.22)">👤</div>
+        <h4>Персональный менеджер</h4>
+        <p>Один контакт от первого звонка до сдачи. Всегда на связи.</p>
+        <span class="role-badge">Выделенный</span>
+      </div>
+      <div class="role-card">
+        <div class="role-avatar" style="background:rgba(159,213,255,.10);border-color:rgba(159,213,255,.20)">🛡️</div>
+        <h4>NDA и конфиденциальность</h4>
+        <p>Подписываем соглашение до начала работ. Ваша идея защищена.</p>
+        <span class="role-badge">Защита</span>
+      </div>
+      <div class="role-card">
+        <div class="role-avatar" style="background:rgba(68,221,136,.10);border-color:rgba(68,221,136,.20)">⚡</div>
+        <h4>Команда 5+ человек</h4>
+        <p>Дизайнер, фронт, бэкенд, QA и аналитик на вашем проекте.</p>
+        <span class="role-badge">Полный стек</span>
+      </div>
+      <div class="role-card">
+        <div class="role-avatar" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.12)">🔒</div>
+        <h4>Поддержка 12 месяцев</h4>
+        <p>Гарантия, исправления, обновления — год после запуска без доплат.</p>
+        <span class="role-badge">Приоритет</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap">
+    <span>© 2026 SiteCode — Board Room</span>
+    <span><a href="catalog.html" style="color:var(--muted)">← Вернуться в каталог</a></span>
+  </div>
+</footer>
+<div class="toast" id="toast"></div>
+<script>
+const revealObserver=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(!entry.isIntersecting)return;entry.target.classList.add('visible');revealObserver.unobserve(entry.target);});},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>revealObserver.observe(el));
+function animateCounter(el){const target=Number(el.dataset.count||0);const start=performance.now();const duration=1200;function frame(now){const progress=Math.min((now-start)/duration,1);const eased=1-Math.pow(1-progress,3);el.textContent=Math.round(target*eased);if(progress<1)requestAnimationFrame(frame);}requestAnimationFrame(frame);}
+const counterObserver=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(!entry.isIntersecting)return;entry.target.querySelectorAll('[data-count]').forEach(animateCounter);counterObserver.unobserve(entry.target);});},{threshold:.4});
+counterObserver.observe(document.querySelector('.metrics'));
+const toast=document.getElementById('toast');
+let toastTimer;
+function showToast(text){toast.textContent=text;toast.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove('show'),3400);}
+document.getElementById('contactForm').addEventListener('submit',event=>{event.preventDefault();const payload={name:document.getElementById('cName').value.trim(),company:document.getElementById('cCompany').value.trim(),contact:document.getElementById('cContact').value.trim(),type:document.getElementById('cType').value,message:document.getElementById('cMessage').value.trim(),source:'Board Room brief',createdAt:new Date().toISOString()};console.log('Board Room brief:',payload);showToast('Бриф принят! Ответим в течение одного рабочего дня.');event.target.reset();});
+// ── ADMIN DATA BINDING ──
+(function(){
+const raw=localStorage.getItem('br_content');if(!raw)return;
+let d;try{d=JSON.parse(raw);}catch(e){return;}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+if(d.ticker&&d.ticker.length){const items=[...d.ticker,...d.ticker];document.getElementById('tickerTrack').innerHTML=items.map(t=>`<span class="ticker-item">${esc(t)}</span>`).join('');}
+if(d.metrics&&d.metrics.length){document.getElementById('metricsGrid').innerHTML=d.metrics.map(m=>`<div class="metric"><strong data-count="${esc(String(m.value))}">0</strong><span>${esc(m.label)}</span></div>`).join('');}
+if(d.vault&&d.vault.length){document.getElementById('docGrid').innerHTML=d.vault.map(doc=>`<div class="doc-card reveal"><div class="doc-icon">${esc(doc.icon)}</div><div class="doc-meta">${esc(doc.meta)}</div><h4>${esc(doc.title)}</h4><p>${esc(doc.desc)}</p><div class="doc-footer"><span class="doc-status ${doc.status}">${esc(doc.statusLabel)}</span><span class="doc-date">${esc(doc.date)}</span></div></div>`).join('');document.querySelectorAll('#docGrid .reveal').forEach(el=>revealObserver.observe(el));}
+if(d.timeline&&d.timeline.length){const h1=d.timeline.slice(0,3),h2=d.timeline.slice(3,6);const tlCol=arr=>`<div class="tl reveal">${arr.map(tl=>`<div class="tl-item"><div class="tl-dot ${tl.dot}"></div><div class="tl-body"><div class="tl-date">${esc(tl.date)}</div><h4>${esc(tl.title)}</h4><p>${esc(tl.body)}</p><span class="tl-tag ${tl.tag}">${esc(tl.tagLabel)}</span></div></div>`).join('')}</div>`;document.getElementById('timelineGrid').innerHTML=tlCol(h1)+tlCol(h2);document.querySelectorAll('#timelineGrid .reveal').forEach(el=>revealObserver.observe(el));}
+if(d.roles&&d.roles.length){const RC={gold:'rgba(231,200,137,.12)',blue:'rgba(159,213,255,.10)',green:'rgba(68,221,136,.10)',white:'rgba(255,255,255,.06)'};const RB={gold:'rgba(231,200,137,.22)',blue:'rgba(159,213,255,.20)',green:'rgba(68,221,136,.20)',white:'rgba(255,255,255,.12)'};document.getElementById('rolesGrid').innerHTML=d.roles.map(r=>`<div class="role-card"><div class="role-avatar" style="background:${RC[r.color]||RC.white};border-color:${RB[r.color]||RB.white}">${esc(r.emoji)}</div><h4>${esc(r.title)}</h4><p>${esc(r.desc)}</p><span class="role-badge">${esc(r.badge)}</span></div>`).join('');}
+if(d.contacts){const c=d.contacts;const tg=(c.telegram||'').replace('@','');document.getElementById('contactInfo').innerHTML=`<div class="ci-card"><div class="ci-icon">✉️</div><div class="ci-body"><h4>Email</h4><p>Для деловых запросов и партнёрских предложений<br><a href="mailto:${esc(c.email)}">${esc(c.email)}</a></p></div></div><div class="ci-card"><div class="ci-icon">💬</div><div class="ci-body"><h4>Telegram</h4><p>Быстрый ответ в рабочие часы<br><a href="https://t.me/${esc(tg)}" target="_blank">${esc(c.telegram)}</a></p></div></div><div class="ci-card"><div class="ci-icon">📞</div><div class="ci-body"><h4>Телефон</h4><p>По предварительной записи<br><a href="tel:${esc((c.phone||'').replace(/\s/g,''))}">${esc(c.phone)}</a></p></div></div><div class="confidential-note">${esc(c.note)}</div>`;}
+})();
+</script>
+</body>
+</html>

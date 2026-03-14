@@ -1,0 +1,449 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Политика конфиденциальности — SiteCode</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-deep:    #060f1e;
+      --bg-dark:    #0a1628;
+      --bg-card:    #0e1f38;
+      --cyan:       #00d4ff;
+      --cyan-mid:   #00aadd;
+      --grad:       linear-gradient(135deg, #00d4ff 0%, #0099cc 50%, #0066aa 100%);
+      --text:       #e8f4fd;
+      --text-muted: #7ba3c0;
+      --border:     #1a3050;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background:
+        radial-gradient(circle at 12% 10%, rgba(0,212,255,.1), transparent 24%),
+        radial-gradient(circle at 85% 14%, rgba(0,119,182,.14), transparent 22%),
+        linear-gradient(180deg, #06111f 0%, #081526 38%, #07111d 100%);
+      color: var(--text);
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-dark); }
+    ::-webkit-scrollbar-thumb { background: var(--cyan-mid); border-radius: 3px; }
+
+    .ambient-grid {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size: 76px 76px;
+      mask-image: radial-gradient(circle at center, rgba(0,0,0,.9), transparent 88%);
+      opacity: .3;
+    }
+
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 60px;
+      background: rgba(6,15,30,.88);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .logo-icon {
+      width: 40px; height: 40px;
+      background: var(--grad); border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: 900; color: #fff;
+      box-shadow: 0 0 16px #00d4ff44;
+    }
+    .logo-text {
+      font-size: 20px; font-weight: 800; letter-spacing: -.5px;
+      background: var(--grad);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .header-back {
+      display: flex; align-items: center; gap: 7px;
+      color: var(--text-muted); text-decoration: none; font-size: 14px; font-weight: 500;
+      transition: color .2s;
+    }
+    .header-back:hover { color: var(--cyan); }
+
+    @media(max-width:640px){
+      header { padding: 14px 20px; }
+      .header-back span { display: none; }
+    }
+
+    .page {
+      position: relative; z-index: 1;
+      max-width: 820px; margin: 0 auto;
+      padding: 120px 24px 80px;
+    }
+
+    .page-hero { text-align: center; margin-bottom: 56px; }
+    .page-badge {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 6px 16px; border-radius: 999px;
+      border: 1px solid rgba(0,212,255,.25);
+      background: rgba(0,212,255,.07);
+      font-size: 12px; color: var(--cyan); font-weight: 600;
+      margin-bottom: 20px; letter-spacing: .04em;
+    }
+    .page-hero h1 {
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 900; letter-spacing: -1.5px; line-height: 1.1;
+      margin-bottom: 14px;
+    }
+    .page-hero h1 span {
+      background: var(--grad);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .page-hero p { font-size: 16px; color: var(--text-muted); line-height: 1.7; }
+    .page-updated { display: inline-block; margin-top: 12px; font-size: 12px; color: #4a6a8a; }
+
+    .content-card {
+      background: rgba(14,31,56,.6);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      overflow: hidden;
+    }
+
+    .toc {
+      padding: 24px 32px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(0,212,255,.03);
+    }
+    .toc-title { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; color: var(--cyan); margin-bottom: 12px; }
+    .toc-list { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; }
+    .toc-list a {
+      font-size: 13px; color: var(--text-muted); text-decoration: none;
+      padding: 4px 12px; border-radius: 8px; border: 1px solid var(--border);
+      background: rgba(255,255,255,.03); transition: color .15s, border-color .15s, background .15s;
+    }
+    .toc-list a:hover { color: var(--cyan); border-color: rgba(0,212,255,.3); background: rgba(0,212,255,.06); }
+
+    .doc-body { padding: 36px 32px 40px; display: flex; flex-direction: column; gap: 36px; }
+
+    .doc-section-hd { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+    .doc-section-num {
+      width: 28px; height: 28px; border-radius: 8px;
+      background: rgba(0,212,255,.1); border: 1px solid rgba(0,212,255,.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 900; color: var(--cyan); flex-shrink: 0;
+    }
+    .doc-section h2 { font-size: 18px; font-weight: 800; letter-spacing: -.3px; color: #eef2f7; }
+    .doc-section p { font-size: 14px; line-height: 1.8; color: #b8cfe2; margin-bottom: 10px; }
+    .doc-section p:last-child { margin-bottom: 0; }
+    .doc-section ul, .doc-section ol { padding-left: 18px; display: flex; flex-direction: column; gap: 7px; }
+    .doc-section li { font-size: 14px; line-height: 1.7; color: #b8cfe2; }
+    .doc-section li::marker { color: var(--cyan); }
+    .doc-divider { height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent); }
+
+    .doc-highlight {
+      padding: 14px 18px; border-radius: 12px;
+      background: rgba(0,212,255,.05); border: 1px solid rgba(0,212,255,.15);
+      font-size: 13px; color: #9fd5ff; line-height: 1.7; margin-top: 12px;
+    }
+    .doc-highlight strong { color: var(--cyan); }
+
+    /* Data table */
+    .data-table { width: 100%; border-collapse: collapse; margin-top: 14px; font-size: 13px; }
+    .data-table th {
+      background: rgba(0,212,255,.07); color: var(--cyan);
+      font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em;
+      padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border);
+    }
+    .data-table td { padding: 10px 14px; color: #b8cfe2; border-bottom: 1px solid rgba(26,48,80,.5); line-height: 1.6; }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:hover td { background: rgba(255,255,255,.02); }
+
+    /* Rights chips */
+    .rights-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+    .right-chip {
+      padding: 12px 14px; border-radius: 12px;
+      background: rgba(68,221,136,.05); border: 1px solid rgba(68,221,136,.15);
+      font-size: 13px; color: #b8cfe2; line-height: 1.6;
+    }
+    .right-chip strong { display: block; color: #44dd88; font-size: 12px; margin-bottom: 3px; font-weight: 700; }
+    @media(max-width:560px){ .rights-grid { grid-template-columns: 1fr; } }
+
+    .page-footer { margin-top: 40px; text-align: center; font-size: 13px; color: #4a6a8a; line-height: 1.8; }
+    .page-footer a { color: var(--cyan); text-decoration: none; font-weight: 600; }
+    .footer-links { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-top: 16px; }
+    .footer-links a { color: #4a6a8a; text-decoration: none; font-size: 13px; transition: color .15s; }
+    .footer-links a:hover { color: var(--cyan); }
+
+    @media(max-width:640px){
+      .toc { padding: 18px 20px; }
+      .doc-body { padding: 24px 20px 28px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="ambient-grid"></div>
+
+<header>
+  <a href="index.html" class="logo">
+    <div class="logo-icon">SC</div>
+    <span class="logo-text">SiteCode</span>
+  </a>
+  <a href="index.html" class="header-back">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+    <span>На главную</span>
+  </a>
+</header>
+
+<main class="page">
+
+  <div class="page-hero">
+    <div class="page-badge">🔒 Юридический документ</div>
+    <h1>Политика <span>конфиденциальности</span></h1>
+    <p>Как мы собираем, используем и защищаем ваши персональные данные</p>
+    <span class="page-updated">Последнее обновление: 14 марта 2026 г.</span>
+  </div>
+
+  <div class="content-card">
+
+    <div class="toc">
+      <div class="toc-title">Содержание</div>
+      <ul class="toc-list">
+        <li><a href="#p1">Общие положения</a></li>
+        <li><a href="#p2">Какие данные мы собираем</a></li>
+        <li><a href="#p3">Цели обработки</a></li>
+        <li><a href="#p4">Хранение и защита</a></li>
+        <li><a href="#p5">Передача третьим лицам</a></li>
+        <li><a href="#p6">Cookies</a></li>
+        <li><a href="#p7">Ваши права</a></li>
+        <li><a href="#p8">Контакты</a></li>
+      </ul>
+    </div>
+
+    <div class="doc-body">
+
+      <div class="doc-section" id="p1">
+        <div class="doc-section-hd">
+          <div class="doc-section-num">1</div>
+          <h2>Общие положения</h2>
+        </div>
+        <p>Настоящая Политика конфиденциальности (далее — «Политика») описывает, каким образом компания <strong>SiteCode</strong> (далее — «Компания», «мы») собирает, использует и защищает персональные данные пользователей веб-сайта <strong>sitecode.ru</strong> (далее — «Сайт»).</p>
+        <p>Политика разработана в соответствии с требованиями Федерального закона №152-ФЗ «О персональных данных» от 27 июля 2006 года. Используя Сайт, вы выражаете согласие с условиями настоящей Политики.</p>
+        <div class="doc-highlight">
+          <strong>Кратко:</strong> мы собираем только необходимые данные, не продаём их третьим лицам и даём вам полный контроль над вашей информацией.
+        </div>
+      </div>
+
+      <div class="doc-divider"></div>
+
+      <div class="doc-section" id="p2">
+        <div class="doc-section-hd">
+          <div class="doc-section-num">2</div>
+          <h2>Какие данные мы собираем</h2>
+        </div>
+        <p>В зависимости от способа взаимодействия с нами мы можем собирать следующие категории данных:</p>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Категория данных</th>
+              <th>Источник</th>
+              <th>Обязательность</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Имя и фамилия</td>
+              <td>Форма регистрации / заявки</td>
+              <td>Обязательно</td>
+            </tr>
+            <tr>
+              <td>Адрес электронной почты</td>
+              <td>Форма регистрации / заявки</td>
+              <td>Обязательно</td>
+            </tr>
+            <tr>
+              <td>Номер телефона</td>
+              <td>Форма заявки</td>
+              <td>По желанию</td>
+            </tr>
+            <tr>
+              <td>Сообщение / описание проекта</td>
+              <td>Форма обратной связи</td>
+              <td>По желанию</td>
+            </tr>
+            <tr>
+              <td>IP-адрес и данные браузера</td>
+              <td>Автоматически при посещении</td>
+              <td>Автоматически</td>
+            </tr>
+            <tr>
+              <td>Данные о сессиях и cookies</td>
+              <td>Автоматически при посещении</td>
+              <td>Автоматически</td>
+            </tr>
+            <tr>
+              <td>Аватар (фото профиля)</td>
+              <td>Загружается пользователем</td>
+              <td>По желанию</td>
+            </tr>
+          </tbody>
+        </table>
+        <p style="margin-top:14px">Мы не собираем специальные категории персональных данных (данные о расовой принадлежности, состоянии здоровья, биометрические данные и т.п.).</p>
+      </div>
+
+      <div class="doc-divider"></div>
+
+      <div class="doc-section" id="p3">
+        <div class="doc-section-hd">
+          <div class="doc-section-num">3</div>
+          <h2>Цели обработки данных</h2>
+        </div>
+        <p>Собранные данные используются исключительно для следующих целей:</p>
+        <ul>
+          <li>Обработка ваших заявок и вопросов, связь с вами по запросу</li>
+          <li>Создание и ведение личного кабинета пользователя</li>
+          <li>Подтверждение личности при входе (двухфакторная аутентификация)</li>
+          <li>Восстановление доступа к аккаунту при утере пароля</li>
+          <li>Исполнение договора на оказание услуг</li>
+          <li>Улучшение работы Сайта и анализ посещаемости</li>
+          <li>Отправка информационных и рекламных сообщений (только с вашего согласия)</li>
+          <li>Соблюдение требований законодательства</li>
+        </ul>
+        <p style="margin-top:12px">Мы не используем ваши данные в целях, не указанных в настоящей Политике, без вашего дополнительного согласия.</p>
+      </div>
+
+      <div class="doc-divider"></div>
+
+      <div class="doc-section" id="p4">
+        <div class="doc-section-hd">
+          <div class="doc-section-num">4</div>
+          <h2>Хранение и защита данных</h2>
+        </div>
+        <p>Данные личного кабинета (имя, email, хеш пароля) хранятся в <code style="background:rgba(255,255,255,.07);padding:1px 6px;border-radius:5px;color:#9fd5ff;font-size:13px">localStorage</code> вашего браузера на вашем устройстве. Мы применяем следующие меры защиты:</p>
+        <ul>
+          <li>Пароли хранятся исключительно в виде хеша SHA-256 — исходный текст пароля нигде не сохраняется</li>
+          <li>传输 данных осуществляется по защищённому протоколу HTTPS</li>
+          <li>Двухфакторная аутентификация доступна для дополнительной защиты аккаунта</li>
+          <li>Доступ к административным функциям защищён отдельным паролем</li>
+          <li>Регулярный аудит безопасности кода и инфраструктуры</li>
+        </ul>
+        <div class="doc-highlight" style="margin-top:14px">
+          <strong>Сроки хранения:</strong> данные аккаунта хранятся до удаления пользователем или администратором. Данные заявок — в течение 3 лет с момента их подачи.
+        </div>
+      </div>
+
+      <div class="doc-divider"></div>
+
+      <div class="doc-section" id="p5">
+        <div class="doc-section-hd">
+          <div class="doc-section-num">5</div>
+          <h2>Передача данных третьим лицам</h2>
+        </div>
+        <p>Мы не продаём, не передаём в аренду и не раскрываем ваши персональные данные третьим лицам, за исключением следующих случаев:</p>
+        <ul>
+          <li><strong style="color:#eef2f7">Партнёры-исполнители</strong> — привлекаемые для выполнения проектов специалисты получают только те данные, которые необходимы для работы</li>
+          <li><strong style="color:#eef2f7">Сервисные провайдеры</strong> — EmailJS (отправка кодов подтверждения), сервисы аналитики (Google Analytics, Яндекс.Метрика) при наличии соответствующих настроек</li>
+          <li><strong style="color:#eef2f7">Требования закона</strong> — по запросу уполномоченных государственных органов в строгом соответствии с законодательством РФ</li>
+          <li><strong style="color:#eef2f7">Защита прав</strong> — при необходимости предотвратить мошенничество или защитить права Компании</li>
+        </ul>
+        <p style="margin-top:12px">Все третьи стороны обязаны обеспечивать конфиденциальность ваших данных на уровне не ниже установленного настоящей Политикой.</p>
+      </div>
+
+      <div class="doc-divider"></div>
+
+      <div class="doc-section" id="p6">
+        <div class="doc-section-hd">
+          <div class="doc-section-num">6</div>
+          <h2>Cookies и локальное хранилище</h2>
+        </div>
+        <p>Сайт использует cookies и механизм <code style="background:rgba(255,255,255,.07);padding:1px 6px;border-radius:5px;color:#9fd5ff;font-size:13px">localStorage</code> браузера для следующих целей:</p>
+        <ul>
+          <li><strong style="color:#eef2f7">Необходимые:</strong> сессия входа в аккаунт, настройки интерфейса — без них Сайт не может корректно работать</li>
+          <li><strong style="color:#eef2f7">Функциональные:</strong> запоминание ваших предпочтений, настройки административной панели</li>
+          <li><strong style="color:#eef2f7">Аналитические:</strong> анонимные данные о посещаемости (при наличии подключённых сервисов аналитики)</li>
+        </ul>
+        <p style="margin-top:12px">Вы можете отключить cookies в настройках браузера, однако некоторые функции Сайта при этом могут работать некорректно. Данные localStorage хранятся только на вашем устройстве и доступны только вам.</p>
+      </div>
+
+      <div class="doc-divider"></div>
+
+      <div class="doc-section" id="p7">
+        <div class="doc-section-hd">
+          <div class="doc-section-num">7</div>
+          <h2>Ваши права</h2>
+        </div>
+        <p>В соответствии с законодательством о защите персональных данных вы имеете следующие права:</p>
+        <div class="rights-grid">
+          <div class="right-chip">
+            <strong>✅ Право на доступ</strong>
+            Получить информацию о том, какие ваши данные мы обрабатываем
+          </div>
+          <div class="right-chip">
+            <strong>✏️ Право на исправление</strong>
+            Обновить или исправить неточные персональные данные
+          </div>
+          <div class="right-chip">
+            <strong>🗑 Право на удаление</strong>
+            Запросить удаление ваших персональных данных («право быть забытым»)
+          </div>
+          <div class="right-chip">
+            <strong>🚫 Право на возражение</strong>
+            Отозвать согласие на обработку данных в маркетинговых целях
+          </div>
+          <div class="right-chip">
+            <strong>📦 Право на портируемость</strong>
+            Получить ваши данные в машиночитаемом формате
+          </div>
+          <div class="right-chip">
+            <strong>⏸ Право на ограничение</strong>
+            Ограничить обработку ваших данных в определённых случаях
+          </div>
+        </div>
+        <p style="margin-top:14px">Для реализации любого из вышеуказанных прав обратитесь к нам по контактам, указанным ниже. Мы рассмотрим ваш запрос в течение <strong style="color:#eef2f7">30 календарных дней</strong>.</p>
+        <p>Вы также вправе подать жалобу в Роскомнадзор или другой уполномоченный орган по защите данных, если считаете, что обработка ваших данных нарушает законодательство.</p>
+      </div>
+
+      <div class="doc-divider"></div>
+
+      <div class="doc-section" id="p8">
+        <div class="doc-section-hd">
+          <div class="doc-section-num">8</div>
+          <h2>Контакты</h2>
+        </div>
+        <p>По всем вопросам, связанным с обработкой персональных данных и реализацией ваших прав, обращайтесь:</p>
+        <ul>
+          <li>📧 Email: <a href="mailto:privacy@sitecode.ru" style="color:var(--cyan);text-decoration:none;font-weight:600">privacy@sitecode.ru</a></li>
+          <li>📞 Телефон: <a href="tel:+79991234567" style="color:var(--cyan);text-decoration:none;font-weight:600">+7 (999) 123-45-67</a></li>
+          <li>📍 Адрес: Москва, ул. Примерная, д. 1</li>
+          <li>⏰ Режим работы: Пн–Пт, 9:00–20:00</li>
+        </ul>
+        <div class="doc-highlight" style="margin-top:14px">
+          <strong>Изменения Политики:</strong> при существенных изменениях в Политике мы уведомим зарегистрированных пользователей по email. Актуальная версия всегда доступна на данной странице.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <p>© 2026 SiteCode. Все права защищены.</p>
+    <div class="footer-links">
+      <a href="index.html">Главная</a>
+      <a href="terms.html">Условия использования</a>
+      <a href="about.html">О нас</a>
+      <a href="blog.html">Блог</a>
+    </div>
+  </div>
+
+</main>
+
+</body>
+</html>

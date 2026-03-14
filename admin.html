@@ -1,0 +1,653 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel — Board Room</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0a0d12;--bg2:#0f1520;--panel:#131c28;--panel2:#1a2535;--line:#283244;--text:#eef2f7;--muted:#93a2b7;--gold:#e7c889;--gold2:#b78c44;--blue:#9fd5ff;--green:#44dd88;--red:#ff5566;--accent:#00d4ff}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+a{color:inherit;text-decoration:none}
+
+/* ── LOGIN ── */
+#loginWrap{position:fixed;inset:0;background:radial-gradient(circle at 30% 20%,rgba(0,212,255,.12),transparent 30%),radial-gradient(circle at 80% 80%,rgba(231,200,137,.10),transparent 30%),#0a0d12;display:flex;align-items:center;justify-content:center;padding:20px;z-index:9999}
+.login-box{width:100%;max-width:420px;background:linear-gradient(180deg,#131c28,#0d1520);border:1px solid rgba(255,255,255,.1);border-radius:28px;padding:40px 36px;text-align:center}
+.login-logo{font-size:48px;margin-bottom:20px}
+.login-box h1{font-size:26px;font-weight:900;letter-spacing:-.6px;margin-bottom:6px}
+.login-box>p{font-size:13px;color:var(--muted);margin-bottom:28px;line-height:1.7}
+.login-input{width:100%;padding:15px 16px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:#fff;font-size:16px;font-family:inherit;outline:none;transition:border-color .2s;margin-bottom:12px;text-align:center;letter-spacing:.12em}
+.login-input:focus{border-color:rgba(0,212,255,.5)}
+.login-btn{width:100%;padding:15px;border-radius:14px;background:linear-gradient(135deg,var(--accent),#0066d6);color:#fff;font-size:15px;font-weight:800;border:none;cursor:pointer;font-family:inherit;transition:opacity .2s}
+.login-btn:hover{opacity:.88}
+.login-err{font-size:13px;color:var(--red);margin-top:10px;min-height:20px}
+
+/* ── LAYOUT ── */
+#panelWrap{display:flex;min-height:100vh}
+.sidebar{width:230px;flex-shrink:0;background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+.sidebar-brand{padding:22px 20px 16px;border-bottom:1px solid var(--line)}
+.sidebar-brand strong{font-size:15px;font-weight:900;display:block;letter-spacing:-.3px}
+.sidebar-brand small{font-size:11px;color:var(--muted)}
+.nav{padding:12px 10px;flex:1;display:flex;flex-direction:column;gap:2px}
+.nav-item{padding:10px 12px;border-radius:12px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:9px;transition:background .15s,color .15s;border:none;background:none;width:100%;text-align:left;font-family:inherit}
+.nav-item:hover{background:rgba(255,255,255,.05);color:var(--text)}
+.nav-item.active{background:rgba(0,212,255,.1);color:var(--accent)}
+.nav-icon{font-size:16px;flex-shrink:0}
+.sidebar-footer{padding:16px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
+.sidebar-link{font-size:12px;color:var(--muted);padding:8px 10px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);text-align:center;cursor:pointer;transition:background .15s,color .15s;font-family:inherit;font-weight:600;display:block}
+.sidebar-link:hover{background:rgba(255,255,255,.07);color:var(--text)}
+.sidebar-link.logout{color:var(--red);background:rgba(255,85,102,.05);border-color:rgba(255,85,102,.15)}
+
+/* ── MAIN ── */
+.main-area{flex:1;padding:32px 40px;overflow-y:auto;max-width:940px;padding-bottom:100px}
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+.sec-title{font-size:22px;font-weight:900;letter-spacing:-.5px;margin-bottom:6px}
+.sec-desc{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:28px}
+
+/* ── CARDS ── */
+.card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:22px;margin-bottom:14px}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.card-header strong{font-size:14px;font-weight:700}
+.sub-card{background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:14px}
+
+/* ── FORM ── */
+label{display:block;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+input[type=text],input[type=email],input[type=url],input[type=tel],input[type=password],textarea,select{width:100%;padding:11px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#fff;font-size:14px;font-family:inherit;outline:none;transition:border-color .2s}
+input:focus,textarea:focus,select:focus{border-color:rgba(0,212,255,.4)}
+textarea{resize:vertical;min-height:80px}
+select option{background:#131c28}
+.field{margin-bottom:12px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+
+/* ── BUTTONS ── */
+.btn-add{padding:10px 18px;border-radius:12px;background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.24);color:var(--accent);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s,transform .15s}
+.btn-add:hover{background:rgba(0,212,255,.16);transform:translateY(-1px)}
+.btn-remove{padding:7px 12px;border-radius:10px;background:rgba(255,85,102,.08);border:1px solid rgba(255,85,102,.18);color:var(--red);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s;flex-shrink:0}
+.btn-remove:hover{background:rgba(255,85,102,.16)}
+.btn-save{padding:14px 36px;border-radius:14px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#111;font-size:15px;font-weight:900;border:none;cursor:pointer;font-family:inherit;transition:opacity .2s,transform .2s}
+.btn-save:hover{opacity:.9;transform:translateY(-1px)}
+.btn-danger{padding:12px 22px;border-radius:12px;background:rgba(255,85,102,.08);border:1px solid rgba(255,85,102,.2);color:var(--red);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s}
+.btn-danger:hover{background:rgba(255,85,102,.14)}
+.btn-neutral{padding:11px 20px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:var(--text);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s}
+.btn-neutral:hover{background:rgba(255,255,255,.1)}
+
+/* ── TICKER ROW ── */
+.ticker-row{display:flex;gap:10px;align-items:center;margin-bottom:8px}
+.ticker-row input{flex:1}
+
+/* ── STATUS PICKER ── */
+.status-row{display:flex;gap:8px;margin-top:6px}
+.status-btn{flex:1;padding:8px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;border:1px solid;transition:background .15s}
+.status-btn[data-s="ready"]{background:rgba(68,221,136,.08);border-color:rgba(68,221,136,.25);color:var(--green)}
+.status-btn[data-s="review"]{background:rgba(231,200,137,.08);border-color:rgba(231,200,137,.25);color:var(--gold)}
+.status-btn[data-s="draft"]{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1);color:var(--muted)}
+.status-btn.selected{outline:2px solid currentColor;outline-offset:1px}
+
+/* ── DOT PICKER ── */
+.dot-row{display:flex;gap:8px;align-items:center;padding:6px 0}
+.dot-opt{width:22px;height:22px;border-radius:50%;cursor:pointer;border:2px solid rgba(255,255,255,.18);transition:transform .15s;flex-shrink:0}
+.dot-opt.sel{transform:scale(1.4);border-color:#fff}
+.dot-opt.gold{background:var(--gold)}.dot-opt.blue{background:var(--blue)}
+.dot-opt.green{background:var(--green)}.dot-opt.muted{background:rgba(255,255,255,.22)}
+
+/* ── TAG PICKER ── */
+.tag-row{display:flex;gap:8px;flex-wrap:wrap;padding:4px 0}
+.tag-opt{padding:5px 13px;border-radius:999px;font-size:11px;font-weight:800;cursor:pointer;border:1px solid;transition:opacity .15s}
+.tag-opt.done{background:rgba(68,221,136,.08);border-color:rgba(68,221,136,.28);color:var(--green)}
+.tag-opt.active{background:rgba(231,200,137,.08);border-color:rgba(231,200,137,.28);color:var(--gold)}
+.tag-opt.planned{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1);color:var(--muted)}
+.tag-opt.sel{outline:2px solid currentColor;outline-offset:1px}
+
+/* ── SAVE BAR ── */
+.save-bar{position:fixed;bottom:0;left:230px;right:0;padding:14px 40px;background:rgba(10,13,18,.95);backdrop-filter:blur(10px);border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;z-index:100}
+.save-status{font-size:13px;color:var(--muted)}
+.save-status.unsaved{color:var(--gold)}
+.save-status.saved{color:var(--green)}
+
+/* ── TOAST ── */
+.toast{position:fixed;right:20px;bottom:72px;min-width:220px;padding:13px 18px;border-radius:16px;border:1px solid rgba(68,221,136,.28);background:rgba(15,21,32,.96);color:var(--green);font-size:14px;font-weight:700;opacity:0;transform:translateY(10px);transition:.28s;pointer-events:none;z-index:9999}
+.toast.show{opacity:1;transform:translateY(0)}
+
+/* ── INFO BADGE ── */
+.info-badge{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:12px;background:rgba(159,213,255,.07);border:1px solid rgba(159,213,255,.18);color:var(--blue);font-size:12px;font-weight:700;margin-bottom:20px}
+
+@media(max-width:768px){.sidebar{display:none}.save-bar{left:0}.main-area{padding:20px 16px}}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════
+     LOGIN SCREEN
+════════════════════════════════════════ -->
+<div id="loginWrap">
+  <div class="login-box">
+    <div class="login-logo">🛡️</div>
+    <h1>Board Room Admin</h1>
+    <p>Закрытый раздел управления контентом Board Room.<br>Доступ только для администратора.</p>
+    <input class="login-input" type="password" id="pwInput" placeholder="••••••••" autocomplete="current-password">
+    <button class="login-btn" id="loginBtn">Войти →</button>
+    <div class="login-err" id="loginErr"></div>
+    <p style="font-size:11px;color:rgba(147,162,183,.45);margin-top:18px;line-height:1.6">Начальный пароль: <code style="color:rgba(147,162,183,.7)">admin2026</code><br>Смените его в разделе Настройки.</p>
+    <div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,.07)">
+      <a href="index.html" style="font-size:12px;color:#9fd5ff;text-decoration:none;font-weight:600;display:flex;align-items:center;justify-content:center;gap:5px;transition:color .15s">⚙️ SiteCode Главный Admin →</a>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     ADMIN PANEL
+════════════════════════════════════════ -->
+<div id="panelWrap" style="display:none">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <strong>Board Room Admin</strong>
+      <small>Управление контентом</small>
+      <div id="brUserInfo" style="display:none;margin-top:10px;padding:8px 10px;border-radius:10px;background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.14)">
+        <div style="font-size:10px;font-weight:700;color:#4a6a8a;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">Вошёл как</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div id="brUserAva" style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff;flex-shrink:0;overflow:hidden"></div>
+          <div style="min-width:0">
+            <div id="brUserName" style="font-size:12px;font-weight:800;color:#eef2f7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>
+            <div id="brUserEmail" style="font-size:10px;color:#93a2b7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <nav class="nav">
+      <button class="nav-item active" data-tab="ticker"><span class="nav-icon">📡</span>Тикер</button>
+      <button class="nav-item" data-tab="metrics"><span class="nav-icon">📊</span>Метрики</button>
+      <button class="nav-item" data-tab="vault"><span class="nav-icon">📁</span>Document Vault</button>
+      <button class="nav-item" data-tab="timeline"><span class="nav-icon">🗓</span>Timeline</button>
+      <button class="nav-item" data-tab="roles"><span class="nav-icon">👥</span>Роли доступа</button>
+      <button class="nav-item" data-tab="contacts"><span class="nav-icon">✉️</span>Контакты</button>
+      <button class="nav-item" data-tab="settings"><span class="nav-icon">⚙️</span>Настройки</button>
+    </nav>
+    <div class="sidebar-footer">
+      <a class="sidebar-link" href="preview-corp-board.html" target="_blank">👁 Открыть Board Room</a>
+      <a class="sidebar-link" href="catalog.html" target="_blank">📋 Каталог</a>
+      <a class="sidebar-link" href="index.html" target="_blank" style="color:#9fd5ff;background:rgba(0,212,255,.06);border-color:rgba(0,212,255,.18)">⚙️ SiteCode Admin</a>
+      <button class="sidebar-link logout" id="logoutBtn">→ Выйти</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-area">
+
+    <!-- ── TICKER ── -->
+    <div class="tab-pane active" id="tab-ticker">
+      <div class="sec-title">📡 Строка тикера</div>
+      <div class="sec-desc">Сообщения, которые непрерывно прокручиваются в верхней строке Board Room. Рекомендуется 6–10 пунктов. Дублирование для бесшовной прокрутки происходит автоматически.</div>
+      <div id="tickerList"></div>
+      <button class="btn-add" id="addTicker">+ Добавить строку</button>
+    </div>
+
+    <!-- ── METRICS ── -->
+    <div class="tab-pane" id="tab-metrics">
+      <div class="sec-title">📊 Hero-метрики</div>
+      <div class="sec-desc">3 числовых показателя в верхнем блоке страницы. Анимируются при прокрутке к ним.</div>
+      <div id="metricsList"></div>
+    </div>
+
+    <!-- ── VAULT ── -->
+    <div class="tab-pane" id="tab-vault">
+      <div class="sec-title">📁 Document Vault</div>
+      <div class="sec-desc">Карточки закрытых документов. Максимум 6, рекомендуется 3 (3 колонки).</div>
+      <div id="vaultList"></div>
+      <button class="btn-add" id="addVault">+ Добавить документ</button>
+    </div>
+
+    <!-- ── TIMELINE ── -->
+    <div class="tab-pane" id="tab-timeline">
+      <div class="sec-title">🗓 Decision Timeline</div>
+      <div class="sec-desc">История ключевых решений. Отображается в 2 колонки. Первые 3 — левая колонка, следующие 3 — правая. Максимум 6.</div>
+      <div id="timelineList"></div>
+      <button class="btn-add" id="addTimeline">+ Добавить запись</button>
+    </div>
+
+    <!-- ── ROLES ── -->
+    <div class="tab-pane" id="tab-roles">
+      <div class="sec-title">👥 Роли доступа</div>
+      <div class="sec-desc">4 карточки ролей в секции Access Control. Количество фиксировано.</div>
+      <div id="rolesList"></div>
+    </div>
+
+    <!-- ── CONTACTS ── -->
+    <div class="tab-pane" id="tab-contacts">
+      <div class="sec-title">✉️ Контактная информация</div>
+      <div class="sec-desc">Данные, отображаемые в боковой колонке блока «Связаться с нами».</div>
+      <div class="card">
+        <div class="g2">
+          <div class="field"><label>Email</label><input type="email" id="cEmail" placeholder="hello@sitecode.ru"></div>
+          <div class="field"><label>Telegram</label><input type="text" id="cTelegram" placeholder="@sitecode"></div>
+        </div>
+        <div class="field"><label>Телефон</label><input type="tel" id="cPhone" placeholder="+7 999 123-45-67"></div>
+        <div class="field"><label>Заметка о конфиденциальности (под контактами)</label><textarea id="cNote"></textarea></div>
+      </div>
+    </div>
+
+    <!-- ── SETTINGS ── -->
+    <div class="tab-pane" id="tab-settings">
+      <div class="sec-title">⚙️ Настройки</div>
+      <div class="sec-desc">Смена пароля и управление данными.</div>
+      <div class="info-badge">🔒 Пароль хранится в виде SHA-256 хеша. Данные контента хранятся в localStorage вашего браузера.</div>
+      <div class="card" style="margin-bottom:18px">
+        <div class="card-header"><strong>Изменить пароль администратора</strong></div>
+        <div class="g3">
+          <div class="field"><label>Текущий пароль</label><input type="password" id="pwCurrent" placeholder="Текущий пароль"></div>
+          <div class="field"><label>Новый пароль</label><input type="password" id="pwNew" placeholder="Новый (мин. 8 символов)"></div>
+          <div class="field"><label>Повторите новый</label><input type="password" id="pwNew2" placeholder="Повтор"></div>
+        </div>
+        <button class="btn-neutral" id="changePwBtn">Сохранить пароль</button>
+        <div class="login-err" id="pwChangeErr" style="margin-top:10px"></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><strong>Сброс контента к умолчаниям</strong></div>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6">Удалит все ваши изменения и вернёт исходный контент Board Room. Пароль при этом не сбрасывается.</p>
+        <button class="btn-danger" id="resetBtn">Сбросить контент к умолчаниям</button>
+      </div>
+    </div>
+
+  </div><!-- /main-area -->
+
+  <!-- SAVE BAR -->
+  <div class="save-bar">
+    <span class="save-status" id="saveStatus">Нет изменений</span>
+    <div style="display:flex;gap:10px">
+      <button class="btn-neutral" id="previewBtn" onclick="window.open('preview-corp-board.html','_blank')">👁 Превью</button>
+      <button class="btn-save" id="saveBtn">💾 Сохранить и применить</button>
+    </div>
+  </div>
+
+</div><!-- /panelWrap -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ══════════════════════════════════════════════════
+   DEFAULTS — matches current preview-corp-board.html
+══════════════════════════════════════════════════ */
+const DEFAULTS = {
+  ticker:[
+    'Принимаем заявки на крупные проекты — 2026',
+    'Средний срок enterprise-разработки: 45–90 дней',
+    'Порог входа в Board Room: от 90 000 ₸',
+    'Команда: 12 специалистов в штате',
+    'Принято проектов в Q1 2026: 8 из 10 мест',
+    'Специализация: e-commerce, порталы, web-приложения',
+    'Поддержка 24/7 на всех premium-проектах',
+    'NDA подписываем до начала переговоров'
+  ],
+  metrics:[
+    {value:'90', label:'тыс. ₸ — порог входа'},
+    {value:'12', label:'специалистов в штате'},
+    {value:'98', label:'% проектов в срок'}
+  ],
+  vault:[
+    {icon:'🏗',meta:'Тип проекта',title:'Enterprise-сайты',desc:'Порталы, корпоративные экосистемы и мультираздельные сайты для средних и крупных компаний.',status:'ready',statusLabel:'Готов',date:''},
+    {icon:'🛒',meta:'Тип проекта',title:'Сложный e-commerce',desc:'Магазины с тысячами товаров, кастомной логикой, интеграциями с 1С, складом и CRM.',status:'ready',statusLabel:'Готов',date:''},
+    {icon:'⚙️',meta:'Тип проекта',title:'Веб-приложения',desc:'SaaS-платформы, личные кабинеты, дашборды — всё что сложнее обычного сайта.',status:'ready',statusLabel:'Готов',date:''}
+  ],
+  timeline:[
+    {date:'01 — Бриф',title:'Изучаем задачу',body:'Разбираем бриф, задаём уточняющие вопросы, формируем список требований и подбираем команду.',tag:'active',tagLabel:'Старт',dot:'gold'},
+    {date:'02 — Оценка',title:'Смета и ТЗ',body:'Составляем детальное техническое задание и фиксированную смету. Без скрытых доплат.',tag:'done',tagLabel:'Фиксируем',dot:'blue'},
+    {date:'03 — Дизайн',title:'Прототип и макеты',body:'Рисуем прототипы, согласовываем структуру. Только потом — дизайн-макеты всех страниц.',tag:'done',tagLabel:'Согласование',dot:'green'},
+    {date:'04 — Разработка',title:'Frontend + Backend',body:'Спринты по 2 недели. Показываем прогресс регулярно. Вы в курсе всего что происходит.',tag:'active',tagLabel:'В работе',dot:'gold'},
+    {date:'05 — Тестирование',title:'QA и нагрузочное',body:'Полное тестирование функционала, скорости, нагрузки, адаптивности и кросс-браузерности.',tag:'planned',tagLabel:'Контроль',dot:'muted'},
+    {date:'06 — Запуск',title:'Деплой и поддержка',body:'Публикация, настройка хостинга, обучение вашей команды. Поддержка 12 месяцев включена.',tag:'planned',tagLabel:'Финал',dot:'muted'}
+  ],
+  roles:[
+    {emoji:'👤',title:'Персональный менеджер',desc:'Один контакт от первого звонка до сдачи. Всегда на связи.',badge:'Выделенный',color:'gold'},
+    {emoji:'🛡️',title:'NDA и конфиденциальность',desc:'Подписываем соглашение до начала работ. Ваша идея защищена.',badge:'Защита',color:'blue'},
+    {emoji:'⚡',title:'Команда 5+ человек',desc:'Дизайнер, фронт, бэкенд, QA и аналитик на вашем проекте.',badge:'Полный стек',color:'green'},
+    {emoji:'🔒',title:'Поддержка 12 месяцев',desc:'Гарантия, исправления, обновления — год после запуска без доплат.',badge:'Приоритет',color:'white'}
+  ],
+  contacts:{
+    email:'hello@sitecode.ru',
+    telegram:'@sitecode',
+    phone:'+7 999 123-45-67',
+    note:'Все брифы обрабатываются конфиденциально. Данные не передаются третьим лицам. По запросу подписываем NDA до начала переговоров.'
+  }
+};
+
+const STATUS_LABELS = {ready:'Готов',review:'На ревью',draft:'Черновик'};
+const TAG_LABELS = {done:'Выполнено',active:'В процессе',planned:'Запланировано'};
+const DOTS = ['gold','blue','green','muted'];
+const TAGS = ['done','active','planned'];
+
+/* ══════════════════════════════════════════════════
+   AUTH
+══════════════════════════════════════════════════ */
+const DEFAULT_PW = 'admin2026';
+
+async function hashPw(pw){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+async function doLogin(){
+  const pw = document.getElementById('pwInput').value.trim();
+  const err = document.getElementById('loginErr');
+  err.textContent = '';
+  if(!pw){err.textContent='Введите пароль';return;}
+  const stored = localStorage.getItem('br_admin_hash');
+  if(!stored){
+    if(pw === DEFAULT_PW){
+      localStorage.setItem('br_admin_hash', await hashPw(pw));
+      openPanel();
+    } else { err.textContent = 'Неверный пароль'; }
+  } else {
+    if(await hashPw(pw) === stored) openPanel();
+    else err.textContent = 'Неверный пароль';
+  }
+}
+
+function openPanel(){
+  document.getElementById('loginWrap').style.display = 'none';
+  document.getElementById('panelWrap').style.display = 'flex';
+  loadData();
+  renderAll();
+  // Show site-registered user if any
+  (function(){
+    try{
+      const id=sessionStorage.getItem('sc_session')||localStorage.getItem('sc_session');
+      if(!id)return;
+      const users=JSON.parse(localStorage.getItem('sc_users')||'[]');
+      const u=users.find(x=>x.id===id);
+      if(!u)return;
+      const AVC=['#e74c3c','#e67e22','#2ecc71','#1abc9c','#3498db','#9b59b6','#e91e63','#00bcd4','#ff5722','#00d4ff'];
+      let h=0; for(let c of(u.name||'?')) h=(h*31+c.charCodeAt(0))&0x7fffffff;
+      const col=AVC[h%AVC.length];
+      const initials=(u.name||'?').split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase()||'?';
+      const ava=document.getElementById('brUserAva');
+      if(u.avatar){ ava.innerHTML=`<img src="${u.avatar}" style="width:28px;height:28px;border-radius:50%;object-fit:cover">`; }
+      else{ ava.style.background=col; ava.textContent=initials; }
+      document.getElementById('brUserName').textContent=u.name;
+      document.getElementById('brUserEmail').textContent=u.email;
+      document.getElementById('brUserInfo').style.display='';
+    }catch(e){}
+  })();
+}
+
+document.getElementById('loginBtn').addEventListener('click', doLogin);
+document.getElementById('pwInput').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
+document.getElementById('logoutBtn').addEventListener('click', ()=>{
+  document.getElementById('panelWrap').style.display = 'none';
+  document.getElementById('loginWrap').style.display = 'flex';
+  document.getElementById('pwInput').value = '';
+});
+
+/* ══════════════════════════════════════════════════
+   DATA
+══════════════════════════════════════════════════ */
+let data = {};
+
+function loadData(){
+  const raw = localStorage.getItem('br_content');
+  data = raw ? JSON.parse(raw) : deep(DEFAULTS);
+}
+
+function saveData(){
+  localStorage.setItem('br_content', JSON.stringify(data));
+  const s = document.getElementById('saveStatus');
+  s.textContent = '✓ Сохранено';
+  s.className = 'save-status saved';
+  showToast('✓ Изменения сохранены и применены на странице Board Room');
+}
+
+function markUnsaved(){
+  const s = document.getElementById('saveStatus');
+  s.textContent = 'Есть несохранённые изменения';
+  s.className = 'save-status unsaved';
+}
+
+function deep(obj){ return JSON.parse(JSON.stringify(obj)); }
+
+document.getElementById('saveBtn').addEventListener('click', saveData);
+
+/* ══════════════════════════════════════════════════
+   TABS
+══════════════════════════════════════════════════ */
+document.querySelectorAll('.nav-item[data-tab]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+  });
+});
+
+/* ══════════════════════════════════════════════════
+   RENDER ALL
+══════════════════════════════════════════════════ */
+function renderAll(){
+  renderTicker();
+  renderMetrics();
+  renderVault();
+  renderTimeline();
+  renderRoles();
+  renderContacts();
+}
+
+/* ── TICKER ── */
+function renderTicker(){
+  const wrap = document.getElementById('tickerList');
+  wrap.innerHTML = '';
+  data.ticker.forEach((text,i)=>{
+    const row = document.createElement('div');
+    row.className = 'ticker-row';
+    row.innerHTML = `<input type="text" value="${esc(text)}"><button class="btn-remove">✕</button>`;
+    wrap.appendChild(row);
+    row.querySelector('input').addEventListener('input', e=>{data.ticker[i]=e.target.value; markUnsaved();});
+    row.querySelector('.btn-remove').addEventListener('click', ()=>{ data.ticker.splice(i,1); renderTicker(); markUnsaved(); });
+  });
+}
+document.getElementById('addTicker').addEventListener('click',()=>{
+  data.ticker.push('Новый статус');
+  renderTicker(); markUnsaved();
+});
+
+/* ── METRICS ── */
+function renderMetrics(){
+  const wrap = document.getElementById('metricsList');
+  wrap.innerHTML = '';
+  data.metrics.forEach((m,i)=>{
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `<div class="card-header"><strong>Метрика ${i+1}</strong></div>
+      <div class="g2">
+        <div class="field"><label>Число / значение</label><input type="text" id="mv${i}" value="${esc(String(m.value))}"></div>
+        <div class="field"><label>Подпись</label><input type="text" id="ml${i}" value="${esc(m.label)}"></div>
+      </div>`;
+    wrap.appendChild(card);
+    card.querySelector(`#mv${i}`).addEventListener('input', e=>{data.metrics[i].value=e.target.value; markUnsaved();});
+    card.querySelector(`#ml${i}`).addEventListener('input', e=>{data.metrics[i].label=e.target.value; markUnsaved();});
+  });
+}
+
+/* ── VAULT ── */
+function renderVault(){
+  const wrap = document.getElementById('vaultList');
+  wrap.innerHTML = '';
+  data.vault.forEach((doc,i)=>{
+    const card = document.createElement('div');
+    card.className = 'sub-card';
+    card.innerHTML = `
+      <div class="card-header"><strong>Документ ${i+1}</strong><button class="btn-remove">Удалить</button></div>
+      <div class="g2">
+        <div class="field"><label>Иконка (эмодзи)</label><input type="text" id="vi${i}" value="${esc(doc.icon)}" maxlength="4"></div>
+        <div class="field"><label>Метаданные (тип файла и т.п.)</label><input type="text" id="vm${i}" value="${esc(doc.meta)}"></div>
+      </div>
+      <div class="g2">
+        <div class="field"><label>Заголовок документа</label><input type="text" id="vt${i}" value="${esc(doc.title)}"></div>
+        <div class="field"><label>Дата</label><input type="text" id="vdate${i}" value="${esc(doc.date)}"></div>
+      </div>
+      <div class="field"><label>Описание</label><textarea id="vdesc${i}">${esc(doc.desc)}</textarea></div>
+      <div class="field"><label>Статус</label>
+        <div class="status-row">
+          ${['ready','review','draft'].map(s=>`<button class="status-btn${doc.status===s?' selected':''}" data-s="${s}">${STATUS_LABELS[s]}</button>`).join('')}
+        </div>
+      </div>`;
+    wrap.appendChild(card);
+    ['vi','vm','vt','vdate'].forEach((pfx,fi)=>{
+      const field = ['icon','meta','title','date'][fi];
+      card.querySelector(`#${pfx}${i}`).addEventListener('input', e=>{data.vault[i][field]=e.target.value; markUnsaved();});
+    });
+    card.querySelector(`#vdesc${i}`).addEventListener('input', e=>{data.vault[i].desc=e.target.value; markUnsaved();});
+    card.querySelector('.btn-remove').addEventListener('click', ()=>{data.vault.splice(i,1); renderVault(); markUnsaved();});
+    card.querySelectorAll('.status-btn').forEach(btn=>btn.addEventListener('click', e=>{
+      const s = e.target.dataset.s;
+      data.vault[i].status = s;
+      data.vault[i].statusLabel = STATUS_LABELS[s];
+      markUnsaved(); renderVault();
+    }));
+  });
+}
+document.getElementById('addVault').addEventListener('click',()=>{
+  if(data.vault.length>=6){showToast('Максимум 6 документов');return;}
+  data.vault.push({icon:'📄',meta:'',title:'Новый документ',desc:'',status:'draft',statusLabel:'Черновик',date:''});
+  renderVault(); markUnsaved();
+});
+
+/* ── TIMELINE ── */
+function renderTimeline(){
+  const wrap = document.getElementById('timelineList');
+  wrap.innerHTML = '';
+  data.timeline.forEach((tl,i)=>{
+    const card = document.createElement('div');
+    card.className = 'sub-card';
+    card.innerHTML = `
+      <div class="card-header"><strong>Запись ${i+1} ${i<3?'(левая колонка)':'(правая колонка)'}</strong><button class="btn-remove">Удалить</button></div>
+      <div class="g2">
+        <div class="field"><label>Дата / Период</label><input type="text" id="tld${i}" value="${esc(tl.date)}" placeholder="Март 2026 / Q2 2026"></div>
+        <div class="field"><label>Заголовок</label><input type="text" id="tlt${i}" value="${esc(tl.title)}"></div>
+      </div>
+      <div class="field"><label>Описание</label><textarea id="tlb${i}">${esc(tl.body)}</textarea></div>
+      <div class="g2">
+        <div class="field"><label>Цвет точки</label>
+          <div class="dot-row" id="dotrow${i}">
+            ${DOTS.map(d=>`<div class="dot-opt ${d}${tl.dot===d?' sel':''}" data-d="${d}"></div>`).join('')}
+            <small style="font-size:11px;color:var(--muted);margin-left:4px">${tl.dot}</small>
+          </div>
+        </div>
+        <div class="field"><label>Тег статуса</label>
+          <div class="tag-row">
+            ${TAGS.map(k=>`<span class="tag-opt ${k}${tl.tag===k?' sel':''}" data-k="${k}">${TAG_LABELS[k]}</span>`).join('')}
+          </div>
+        </div>
+      </div>`;
+    wrap.appendChild(card);
+    card.querySelector(`#tld${i}`).addEventListener('input', e=>{data.timeline[i].date=e.target.value; markUnsaved();});
+    card.querySelector(`#tlt${i}`).addEventListener('input', e=>{data.timeline[i].title=e.target.value; markUnsaved();});
+    card.querySelector(`#tlb${i}`).addEventListener('input', e=>{data.timeline[i].body=e.target.value; markUnsaved();});
+    card.querySelector('.btn-remove').addEventListener('click', ()=>{data.timeline.splice(i,1); renderTimeline(); markUnsaved();});
+    card.querySelectorAll('.dot-opt').forEach(d=>d.addEventListener('click', e=>{
+      data.timeline[i].dot = e.target.dataset.d; markUnsaved(); renderTimeline();
+    }));
+    card.querySelectorAll('.tag-opt').forEach(t=>t.addEventListener('click', e=>{
+      const k = e.target.dataset.k;
+      data.timeline[i].tag = k; data.timeline[i].tagLabel = TAG_LABELS[k];
+      markUnsaved(); renderTimeline();
+    }));
+  });
+}
+document.getElementById('addTimeline').addEventListener('click',()=>{
+  if(data.timeline.length>=6){showToast('Максимум 6 записей');return;}
+  data.timeline.push({date:'',title:'Новое решение',body:'',tag:'planned',tagLabel:'Запланировано',dot:'muted'});
+  renderTimeline(); markUnsaved();
+});
+
+/* ── ROLES ── */
+function renderRoles(){
+  const wrap = document.getElementById('rolesList');
+  wrap.innerHTML = '';
+  data.roles.forEach((role,i)=>{
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="card-header"><strong>Роль ${i+1}</strong></div>
+      <div class="g2">
+        <div class="field"><label>Эмодзи</label><input type="text" id="re${i}" value="${esc(role.emoji)}" maxlength="4"></div>
+        <div class="field"><label>Название роли</label><input type="text" id="rt${i}" value="${esc(role.title)}"></div>
+      </div>
+      <div class="g2">
+        <div class="field"><label>Описание (что видит)</label><input type="text" id="rd${i}" value="${esc(role.desc)}"></div>
+        <div class="field"><label>Бейдж доступа</label><input type="text" id="rb${i}" value="${esc(role.badge)}"></div>
+      </div>`;
+    wrap.appendChild(card);
+    ['re','rt','rd','rb'].forEach((pfx,fi)=>{
+      const field = ['emoji','title','desc','badge'][fi];
+      card.querySelector(`#${pfx}${i}`).addEventListener('input', e=>{data.roles[i][field]=e.target.value; markUnsaved();});
+    });
+  });
+}
+
+/* ── CONTACTS ── */
+function renderContacts(){
+  document.getElementById('cEmail').value = data.contacts.email||'';
+  document.getElementById('cTelegram').value = data.contacts.telegram||'';
+  document.getElementById('cPhone').value = data.contacts.phone||'';
+  document.getElementById('cNote').value = data.contacts.note||'';
+  const pairs = [['cEmail','email'],['cTelegram','telegram'],['cPhone','phone'],['cNote','note']];
+  pairs.forEach(([id,key])=>{
+    const el = document.getElementById(id);
+    el.removeEventListener('input', el._handler||null);
+    el._handler = e=>{data.contacts[key]=e.target.value; markUnsaved();};
+    el.addEventListener('input', el._handler);
+  });
+}
+
+/* ══════════════════════════════════════════════════
+   SETTINGS — CHANGE PASSWORD
+══════════════════════════════════════════════════ */
+document.getElementById('changePwBtn').addEventListener('click', async ()=>{
+  const cur = document.getElementById('pwCurrent').value;
+  const nw  = document.getElementById('pwNew').value;
+  const nw2 = document.getElementById('pwNew2').value;
+  const err = document.getElementById('pwChangeErr');
+  err.style.color = 'var(--red)'; err.textContent = '';
+  const stored = localStorage.getItem('br_admin_hash');
+  if(!stored){ if(cur !== DEFAULT_PW){ err.textContent='Текущий пароль неверен'; return; } }
+  else { if(await hashPw(cur) !== stored){ err.textContent='Текущий пароль неверен'; return; } }
+  if(nw.length < 8){ err.textContent='Новый пароль: минимум 8 символов'; return; }
+  if(nw !== nw2){ err.textContent='Пароли не совпадают'; return; }
+  localStorage.setItem('br_admin_hash', await hashPw(nw));
+  err.style.color = 'var(--green)'; err.textContent = '✓ Пароль успешно изменён';
+  document.getElementById('pwCurrent').value='';
+  document.getElementById('pwNew').value='';
+  document.getElementById('pwNew2').value='';
+});
+
+/* ══════════════════════════════════════════════════
+   SETTINGS — RESET
+══════════════════════════════════════════════════ */
+document.getElementById('resetBtn').addEventListener('click', ()=>{
+  if(!confirm('Сбросить весь контент Board Room к умолчаниям?\nЭто действие нельзя отменить.')) return;
+  data = deep(DEFAULTS);
+  localStorage.removeItem('br_content');
+  renderAll();
+  const s = document.getElementById('saveStatus');
+  s.textContent = 'Нет изменений'; s.className = 'save-status';
+  showToast('✓ Контент сброшен к умолчаниям');
+});
+
+/* ══════════════════════════════════════════════════
+   HELPERS
+══════════════════════════════════════════════════ */
+function esc(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+let toastTimer;
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(()=>t.classList.remove('show'), 3400);
+}
+</script>
+</body>
+</html>

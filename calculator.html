@@ -1,0 +1,702 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Калькулятор стоимости — SiteCode</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg-deep:#060f1e;--bg-dark:#0a1628;--bg-card:#0e1f38;--bg-card2:#112341;--cyan:#00d4ff;--cyan-mid:#00aadd;--blue:#0077b6;--grad:linear-gradient(135deg,#00d4ff 0%,#0099cc 50%,#0066aa 100%);--text:#e8f4fd;--text-muted:#7ba3c0;--border:#1a3050}
+    html{scroll-behavior:smooth}
+    body{font-family:'Inter',sans-serif;background:radial-gradient(circle at top left,rgba(0,212,255,.16),transparent 28%),radial-gradient(circle at 88% 16%,rgba(0,119,182,.2),transparent 24%),linear-gradient(180deg,#06101d 0%,#081526 36%,#071221 100%);color:var(--text);overflow-x:hidden;position:relative;isolation:isolate}
+    body::before,body::after{content:'';position:fixed;border-radius:50%;pointer-events:none;z-index:-2;filter:blur(96px);opacity:.28}
+    body::before{width:320px;height:320px;top:110px;left:-120px;background:rgba(0,212,255,.22)}
+    body::after{width:380px;height:380px;right:-140px;bottom:10%;background:rgba(0,119,182,.2)}
+    ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg-dark)}::-webkit-scrollbar-thumb{background:var(--cyan-mid);border-radius:3px}
+
+    #scroll-progress{position:fixed;top:0;left:0;height:3px;z-index:9999;pointer-events:none;background:var(--grad);width:0%;box-shadow:0 0 10px #00d4ff80}
+
+    header{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:18px 60px;background:rgba(6,15,30,.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+    .logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+    .logo-icon{width:44px;height:44px;background:var(--grad);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#fff;box-shadow:0 0 20px #00d4ff55}
+    .logo-text{font-size:22px;font-weight:800;letter-spacing:-.5px;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    nav{display:flex;align-items:center;gap:32px}
+    nav a{color:var(--text-muted);text-decoration:none;font-size:14px;font-weight:500;transition:color .25s}
+    nav a:hover,nav a.active{color:var(--cyan)}
+    .btn-nav{padding:10px 24px;border-radius:8px;background:var(--grad);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 0 16px #00d4ff40;transition:opacity .25s}
+    .btn-nav:hover{opacity:.85}
+    .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}
+    .hamburger span{display:block;width:24px;height:2px;background:var(--cyan);border-radius:2px;transition:all .3s}
+    .hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+    .hamburger.open span:nth-child(2){opacity:0}
+    .hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+    .mobile-menu{position:fixed;top:0;right:-100%;width:280px;height:100vh;background:var(--bg-dark);border-left:1px solid var(--border);z-index:108;padding:80px 32px 40px;transition:right .35s cubic-bezier(.22,.68,0,1.1);display:flex;flex-direction:column}
+    .mobile-menu.open{right:0;box-shadow:-20px 0 60px #00000066}
+    .mobile-menu a{color:var(--text);text-decoration:none;font-size:17px;font-weight:600;padding:13px 0;border-bottom:1px solid var(--border);transition:color .2s}
+    .mobile-menu a:hover{color:var(--cyan)}
+    .mobile-menu .btn-nav{text-align:center;border-radius:8px;margin-top:20px;width:100%}
+    .menu-overlay{position:fixed;inset:0;background:#00000066;z-index:107;opacity:0;pointer-events:none;transition:opacity .3s}
+    .menu-overlay.open{opacity:1;pointer-events:all}
+
+    .particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+    .particle{position:absolute;border-radius:50%;background:#fff;animation:twinkle ease-in-out infinite}
+    @keyframes twinkle{0%,100%{opacity:.08;transform:scale(.7)}50%{opacity:.9;transform:scale(1.3)}}
+    .comet-obj{position:fixed;pointer-events:none;z-index:2;height:1.5px;border-radius:999px;background:linear-gradient(to right,transparent,rgba(160,220,255,.75) 30%,rgba(255,255,255,.95));filter:drop-shadow(0 0 3px rgba(0,180,255,.9))}
+    .comet-obj::after{content:'';position:absolute;right:-1px;top:50%;transform:translateY(-50%);width:5px;height:5px;border-radius:50%;background:#fff;box-shadow:0 0 6px 3px rgba(0,200,255,.9)}
+    @keyframes comet-shoot{0%{opacity:0;transform:translate(0,0)}6%{opacity:1}88%{opacity:1}100%{opacity:0;transform:translate(110vw,38vh)}}
+
+    /* HERO */
+    .calc-hero{min-height:36vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:130px 24px 48px;position:relative;overflow:hidden;z-index:1;background:linear-gradient(180deg,rgba(255,255,255,.01),rgba(255,255,255,0))}
+    .calc-hero-glow{position:absolute;width:700px;height:350px;background:#00d4ff;filter:blur(130px);opacity:.1;top:-80px;left:50%;transform:translateX(-50%);pointer-events:none}
+    .calc-hero h1{font-size:clamp(30px,5vw,58px);font-weight:900;letter-spacing:-2px;margin-bottom:14px}
+    .accent{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .calc-hero p{color:var(--text-muted);font-size:16px;max-width:520px;line-height:1.7}
+
+    /* WIZARD */
+    .wizard-section{padding:40px 60px 90px;position:relative;z-index:1;background:radial-gradient(circle at 12% 18%,rgba(0,212,255,.08),transparent 24%),radial-gradient(circle at 88% 74%,rgba(0,119,182,.1),transparent 24%),linear-gradient(180deg,rgba(8,20,36,.88),rgba(6,15,30,.96));overflow:hidden}
+    .wizard-section::before{content:'';position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(circle at 15% 30%,rgba(255,255,255,.55) 0 1px,transparent 2px),radial-gradient(circle at 78% 22%,rgba(185,233,255,.42) 0 1px,transparent 2px),radial-gradient(circle at 84% 68%,rgba(255,255,255,.35) 0 1px,transparent 2px);background-size:320px 240px,360px 260px,400px 280px;opacity:.32}
+    .wizard-wrap{max-width:900px;margin:0 auto}
+
+    /* Step indicators */
+    .steps-indicator{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:52px}
+    .step-ind{display:flex;flex-direction:column;align-items:center;gap:8px;position:relative}
+    .step-num{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;background:var(--bg-card);border:2px solid var(--border);color:var(--text-muted);transition:all .4s}
+    .step-ind.active .step-num{background:var(--grad);border-color:transparent;color:#fff;box-shadow:0 0 20px #00d4ff40}
+    .step-ind.done .step-num{background:#00d4ff15;border-color:var(--cyan);color:var(--cyan)}
+    .step-ind.done .step-num::after{content:'✓';font-size:16px}
+    .step-ind.done .step-num-inner{display:none}
+    .step-label{font-size:11.5px;font-weight:600;color:var(--text-muted);white-space:nowrap;transition:color .3s}
+    .step-ind.active .step-label,.step-ind.done .step-label{color:var(--cyan)}
+    .step-line{width:80px;height:2px;background:var(--border);flex-shrink:0;margin-bottom:22px;transition:background .4s}
+    .step-line.done{background:var(--cyan)}
+
+    /* Step panels */
+    .step-panel{display:none;animation:fadeSlide .35s ease}
+    .step-panel.active{display:block}
+    @keyframes fadeSlide{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:translateX(0)}}
+    .step-title{font-size:24px;font-weight:800;margin-bottom:8px;letter-spacing:-.5px}
+    .step-subtitle{color:var(--text-muted);font-size:14px;margin-bottom:32px;line-height:1.6}
+
+    /* Option cards */
+    .options-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;margin-bottom:32px}
+    .opt-card{position:relative;cursor:pointer;border:2px solid var(--border);border-radius:16px;padding:22px 20px;background:linear-gradient(180deg,rgba(16,31,56,.95),rgba(8,20,36,.93));transition:all .25s;box-shadow:0 18px 42px rgba(0,0,0,.14)}
+    .opt-card:hover{border-color:#00d4ff44;background:var(--bg-card2)}
+    .opt-card.selected{border-color:var(--cyan);background:#00d4ff0d;box-shadow:0 0 20px #00d4ff28}
+    .opt-card input[type=radio],.opt-card input[type=checkbox]{position:absolute;opacity:0;pointer-events:none;width:0;height:0}
+    .opt-icon{font-size:32px;margin-bottom:12px}
+    .opt-name{font-size:15px;font-weight:700;margin-bottom:4px}
+    .opt-desc{font-size:12px;color:var(--text-muted);line-height:1.5;margin-bottom:8px}
+    .opt-price{font-size:13px;font-weight:700;color:var(--cyan)}
+    .opt-check{position:absolute;top:12px;right:12px;width:22px;height:22px;border-radius:50%;background:var(--bg-card);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .25s}
+    .opt-card.selected .opt-check{background:var(--cyan);border-color:var(--cyan);color:#000;font-weight:900}
+
+    /* Range slider */
+    .slider-wrap{margin-bottom:32px}
+    .slider-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+    .slider-label span{font-size:14px;color:var(--text-muted)}
+    .slider-value{font-size:24px;font-weight:800;color:var(--cyan)}
+    input[type=range]{width:100%;height:8px;appearance:none;background:var(--bg-card2);border-radius:4px;outline:none;cursor:pointer;border:1px solid var(--border)}
+    input[type=range]::-webkit-slider-thumb{appearance:none;width:24px;height:24px;border-radius:50%;background:var(--grad);cursor:pointer;box-shadow:0 0 10px #00d4ff60}
+    input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:var(--grad);cursor:pointer;border:none}
+
+    /* Checklist features */
+    .features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-bottom:32px}
+    .feat-item{display:flex;align-items:center;gap:14px;padding:16px 18px;background:linear-gradient(180deg,rgba(16,31,56,.95),rgba(8,20,36,.93));border:1.5px solid var(--border);border-radius:12px;cursor:pointer;transition:all .25s;box-shadow:0 18px 42px rgba(0,0,0,.14)}
+    .feat-item:hover{border-color:#00d4ff33;background:var(--bg-card2)}
+    .feat-item.checked{border-color:var(--cyan);background:#00d4ff08}
+    .feat-item input[type=checkbox]{display:none}
+    .feat-cb{width:22px;height:22px;border-radius:6px;border:2px solid var(--border);background:var(--bg-card2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .25s}
+    .feat-item.checked .feat-cb{background:var(--cyan);border-color:var(--cyan);color:#000;font-weight:900}
+    .feat-text{flex:1}
+    .feat-name{font-size:14px;font-weight:700;margin-bottom:2px}
+    .feat-price{font-size:12px;color:var(--cyan);font-weight:600}
+
+    /* Urgency pills */
+    .urgency-wrap{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:32px}
+    .urg-btn{flex:1;min-width:120px;padding:16px 12px;border-radius:12px;border:2px solid var(--border);background:linear-gradient(180deg,rgba(16,31,56,.95),rgba(8,20,36,.93));cursor:pointer;text-align:center;transition:all .25s;box-shadow:0 18px 42px rgba(0,0,0,.14)}
+    .urg-btn:hover{border-color:#00d4ff33}
+    .urg-btn.selected{border-color:var(--cyan);background:#00d4ff0d}
+    .urg-btn .urg-icon{font-size:26px;margin-bottom:8px}
+    .urg-btn .urg-label{font-size:14px;font-weight:700;margin-bottom:4px}
+    .urg-btn .urg-time{font-size:12px;color:var(--text-muted);margin-bottom:6px}
+    .urg-btn .urg-mult{font-size:13px;font-weight:700;color:var(--cyan)}
+    .urg-btn.selected .urg-mult{color:#00ff88}
+
+    /* Summary */
+    .summary-box{background:radial-gradient(circle at top right,rgba(0,212,255,.08),transparent 24%),linear-gradient(180deg,rgba(16,31,56,.95),rgba(8,20,36,.93));border:1px solid var(--border);border-radius:20px;padding:32px;margin-bottom:24px;box-shadow:0 20px 48px rgba(0,0,0,.14)}
+    .summary-box h3{font-size:18px;font-weight:800;margin-bottom:20px;color:var(--cyan)}
+    .summary-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);font-size:14px}
+    .summary-row:last-of-type{border-bottom:none}
+    .summary-row.total{padding-top:16px;font-size:20px;font-weight:900}
+    .summary-row.total .s-val{font-size:26px;font-weight:900;color:var(--cyan)}
+    .summary-label{color:var(--text-muted)}
+    .s-val{font-weight:600}
+    .badge-urg{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#ff6b2b20;color:#ff8c4f;border:1px solid #ff6b2b40}
+    .badge-ok{background:#00ff8820;color:#00ee77;border:1px solid #00ff8840}
+
+    /* Contact step */
+    .contact-form{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+    .form-group{display:flex;flex-direction:column;gap:8px}
+    .form-group.full{grid-column:1/-1}
+    .form-group label{font-size:13px;font-weight:600;color:var(--text-muted)}
+    .form-group input,.form-group textarea,.form-group select{padding:14px 16px;background:var(--bg-card2);border:1.5px solid var(--border);border-radius:10px;color:var(--text);font-family:inherit;font-size:14px;transition:border-color .25s;outline:none}
+    .form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--cyan)}
+    .form-group textarea{resize:vertical;min-height:90px}
+    .form-group select option{background:var(--bg-dark)}
+
+    /* Buttons */
+    .wizard-btns{display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+    .btn-back-step{padding:13px 24px;border-radius:10px;border:1.5px solid #00d4ff44;background:transparent;color:var(--cyan);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:background .25s}
+    .btn-back-step:hover{background:#00d4ff11}
+    .btn-next-step{padding:13px 28px;border-radius:10px;background:var(--grad);border:none;color:#fff;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 0 20px #00d4ff30;transition:opacity .25s,transform .2s}
+    .btn-next-step:hover{opacity:.88;transform:translateY(-2px)}
+    .btn-next-step:disabled{opacity:.45;cursor:not-allowed;transform:none}
+    .price-preview{font-size:13px;color:var(--text-muted)}
+    .price-preview strong{color:var(--cyan);font-size:18px;font-weight:800}
+
+    /* Success */
+    .success-panel{display:none;text-align:center;padding:60px 40px}
+    .success-panel.visible{display:block;animation:fadeSlide .4s ease}
+    .success-icon{font-size:72px;margin-bottom:24px}
+    .success-panel h2{font-size:32px;font-weight:900;margin-bottom:12px}
+    .success-panel p{color:var(--text-muted);font-size:15px;max-width:420px;margin:0 auto 32px;line-height:1.7}
+    .btn-home{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border-radius:10px;background:var(--grad);color:#fff;font-size:15px;font-weight:700;text-decoration:none;box-shadow:0 0 20px #00d4ff30}
+
+    /* Toast */
+    #toasts{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);z-index:999;display:flex;flex-direction:column;align-items:center;gap:10px;pointer-events:none}
+    .toast{padding:12px 22px;border-radius:12px;background:#0e2a45;border:1px solid #00d4ff40;font-size:14px;font-weight:500;box-shadow:0 8px 32px #0005;opacity:0;transform:translateY(12px);transition:opacity .35s,transform .35s;pointer-events:none}
+    .toast.show{opacity:1;transform:translateY(0)}
+
+    #btt{position:fixed;bottom:32px;right:32px;z-index:200;width:46px;height:46px;border-radius:12px;background:var(--grad);border:none;cursor:pointer;color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px #00d4ff40;opacity:0;transform:translateY(20px);transition:opacity .3s,transform .3s;pointer-events:none}
+    #btt.visible{opacity:1;transform:translateY(0);pointer-events:all}
+
+    footer{background:var(--bg-dark);border-top:1px solid var(--border);padding:40px 60px;position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+    footer p{color:var(--text-muted);font-size:13px}
+    footer a{color:var(--cyan);text-decoration:none}
+    .btn-back-home{display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:8px;border:1.5px solid #00d4ff44;color:var(--cyan);font-size:14px;font-weight:600;text-decoration:none;transition:background .25s}
+    .btn-back-home:hover{background:#00d4ff11}
+
+    @media(max-width:900px){
+      header{padding:16px 24px}nav{display:none}.hamburger{display:flex}
+      .wizard-section{padding:30px 20px 70px}
+      .contact-form{grid-template-columns:1fr}
+      .step-line{width:40px}
+    }
+    @media(max-width:600px){
+      .steps-indicator{gap:0}.step-line{width:24px}
+      .options-grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+
+<div id="scroll-progress"></div>
+<div class="particles" id="particles"></div>
+<div id="toasts"></div>
+
+<header>
+  <a href="index.html" class="logo">
+    <div class="logo-icon">{/}</div>
+    <span class="logo-text">SiteCode</span>
+  </a>
+  <nav>
+    <a href="index.html">Главная</a>
+    <a href="catalog.html">Каталог</a>
+    <a href="index.html#packages">Тарифы</a>
+    <a href="about.html">О нас</a>
+    <a href="blog.html">Блог</a>
+    <a href="index.html#contact" class="btn-nav">Заказать сайт</a>
+  </nav>
+  <button class="hamburger" id="menuBtn" aria-label="Меню">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<div class="menu-overlay" id="menuOverlay"></div>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">Главная</a>
+  <a href="catalog.html">Каталог</a>
+  <a href="index.html#packages">Тарифы</a>
+  <a href="about.html">О нас</a>
+  <a href="blog.html">Блог</a>
+  <a href="index.html#contact" class="btn-nav">Заказать сайт</a>
+</div>
+
+<div class="calc-hero">
+  <div class="calc-hero-glow"></div>
+  <h1>Калькулятор <span class="accent">стоимости</span></h1>
+  <p>Ответьте на 4 простых вопроса и получите точную оценку стоимости вашего проекта за 2 минуты.</p>
+</div>
+
+<section class="wizard-section">
+  <div class="wizard-wrap">
+
+    <!-- Step indicator -->
+    <div class="steps-indicator">
+      <div class="step-ind active" id="si1">
+        <div class="step-num"><span class="step-num-inner">1</span></div>
+        <div class="step-label">Тип сайта</div>
+      </div>
+      <div class="step-line" id="sl1"></div>
+      <div class="step-ind" id="si2">
+        <div class="step-num"><span class="step-num-inner">2</span></div>
+        <div class="step-label">Функции</div>
+      </div>
+      <div class="step-line" id="sl2"></div>
+      <div class="step-ind" id="si3">
+        <div class="step-num"><span class="step-num-inner">3</span></div>
+        <div class="step-label">Сроки</div>
+      </div>
+      <div class="step-line" id="sl3"></div>
+      <div class="step-ind" id="si4">
+        <div class="step-num"><span class="step-num-inner">4</span></div>
+        <div class="step-label">Итог</div>
+      </div>
+    </div>
+
+    <!-- STEP 1: Project type -->
+    <div class="step-panel active" id="step1">
+      <div class="step-title">Какой сайт вам нужен?</div>
+      <div class="step-subtitle">Выберите тип проекта — это основа расчёта стоимости</div>
+      <div class="options-grid" id="typeGrid">
+        <label class="opt-card" onclick="selectType(this,15000)">
+          <input type="radio" name="stype" value="15000">
+          <div class="opt-check">✓</div>
+          <div class="opt-icon">🚀</div>
+          <div class="opt-name">Лендинг</div>
+          <div class="opt-desc">Одностраничный сайт для рекламы продукта или услуги. Максимальная конверсия.</div>
+          <div class="opt-price">от 15 000 ₸ · 3–5 дней</div>
+        </label>
+        <label class="opt-card" onclick="selectType(this,35000)">
+          <input type="radio" name="stype" value="35000">
+          <div class="opt-check">✓</div>
+          <div class="opt-icon">🏢</div>
+          <div class="opt-name">Корпоративный</div>
+          <div class="opt-desc">Многостраничный сайт компании с каталогом услуг, командой и контактами.</div>
+          <div class="opt-price">от 35 000 ₸ · 10–14 дней</div>
+        </label>
+        <label class="opt-card" onclick="selectType(this,55000)">
+          <input type="radio" name="stype" value="55000">
+          <div class="opt-check">✓</div>
+          <div class="opt-icon">🛒</div>
+          <div class="opt-name">Интернет-магазин</div>
+          <div class="opt-desc">Каталог товаров, корзина, оплата, личный кабинет, управление заказами.</div>
+          <div class="opt-price">от 55 000 ₸ · 21–30 дней</div>
+        </label>
+        <label class="opt-card" onclick="selectType(this,90000)">
+          <input type="radio" name="stype" value="90000">
+          <div class="opt-check">✓</div>
+          <div class="opt-icon">⚙️</div>
+          <div class="opt-name">Веб-приложение</div>
+          <div class="opt-desc">Сложный портал, SaaS, дашборд, кабинеты пользователя/администратора.</div>
+          <div class="opt-price">от 90 000 ₸ · 30–60 дней</div>
+        </label>
+      </div>
+
+      <div class="slider-wrap">
+        <div class="slider-label">
+          <span>Количество страниц / разделов</span>
+          <div class="slider-value" id="pagesVal">5</div>
+        </div>
+        <input type="range" id="pagesSlider" min="1" max="30" value="5" oninput="updatePages(this.value)">
+      </div>
+
+      <div class="wizard-btns">
+        <span class="price-preview">Базовая стоимость: <strong id="prevPrice1">—</strong></span>
+        <button class="btn-next-step" id="nextBtn1" onclick="goStep(2)" disabled>
+          Далее: Функции →
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 2: Features -->
+    <div class="step-panel" id="step2">
+      <div class="step-title">Какие функции нужны?</div>
+      <div class="step-subtitle">Отметьте необходимые дополнения — они будут добавлены к базовой стоимости</div>
+      <div class="features-grid" id="featGrid">
+        <label class="feat-item" onclick="toggleFeat(this,8000)">
+          <input type="checkbox" value="8000">
+          <div class="feat-cb">✓</div>
+          <div class="feat-text">
+            <div class="feat-name">🔍 SEO-оптимизация</div>
+            <div class="feat-price">+8 000 ₸</div>
+          </div>
+        </label>
+        <label class="feat-item" onclick="toggleFeat(this,12000)">
+          <input type="checkbox" value="12000">
+          <div class="feat-cb">✓</div>
+          <div class="feat-text">
+            <div class="feat-name">📊 CRM интеграция</div>
+            <div class="feat-price">+12 000 ₸</div>
+          </div>
+        </label>
+        <label class="feat-item" onclick="toggleFeat(this,15000)">
+          <input type="checkbox" value="15000">
+          <div class="feat-cb">✓</div>
+          <div class="feat-text">
+            <div class="feat-name">👤 Личный кабинет</div>
+            <div class="feat-price">+15 000 ₸</div>
+          </div>
+        </label>
+        <label class="feat-item" onclick="toggleFeat(this,5000)">
+          <input type="checkbox" value="5000">
+          <div class="feat-cb">✓</div>
+          <div class="feat-text">
+            <div class="feat-name">💬 Онлайн-чат</div>
+            <div class="feat-price">+5 000 ₸</div>
+          </div>
+        </label>
+        <label class="feat-item" onclick="toggleFeat(this,10000)">
+          <input type="checkbox" value="10000">
+          <div class="feat-cb">✓</div>
+          <div class="feat-text">
+            <div class="feat-name">🌍 Мультиязычность</div>
+            <div class="feat-price">+10 000 ₸</div>
+          </div>
+        </label>
+        <label class="feat-item" onclick="toggleFeat(this,7000)">
+          <input type="checkbox" value="7000">
+          <div class="feat-cb">✓</div>
+          <div class="feat-text">
+            <div class="feat-name">📱 PWA / Мобильное приложение</div>
+            <div class="feat-price">+7 000 ₸</div>
+          </div>
+        </label>
+        <label class="feat-item" onclick="toggleFeat(this,9000)">
+          <input type="checkbox" value="9000">
+          <div class="feat-cb">✓</div>
+          <div class="feat-text">
+            <div class="feat-name">💳 Онлайн-оплата</div>
+            <div class="feat-price">+9 000 ₸</div>
+          </div>
+        </label>
+        <label class="feat-item" onclick="toggleFeat(this,6000)">
+          <input type="checkbox" value="6000">
+          <div class="feat-cb">✓</div>
+          <div class="feat-text">
+            <div class="feat-name">📰 Блог / Новости</div>
+            <div class="feat-price">+6 000 ₸</div>
+          </div>
+        </label>
+        <label class="feat-item" onclick="toggleFeat(this,11000)">
+          <input type="checkbox" value="11000">
+          <div class="feat-cb">✓</div>
+          <div class="feat-text">
+            <div class="feat-name">🤖 AI-интеграция</div>
+            <div class="feat-price">+11 000 ₸</div>
+          </div>
+        </label>
+        <label class="feat-item" onclick="toggleFeat(this,4000)">
+          <input type="checkbox" value="4000">
+          <div class="feat-cb">✓</div>
+          <div class="feat-text">
+            <div class="feat-name">📧 Email-рассылки</div>
+            <div class="feat-price">+4 000 ₸</div>
+          </div>
+        </label>
+      </div>
+      <div class="wizard-btns">
+        <button class="btn-back-step" onclick="goStep(1)">← Назад</button>
+        <span class="price-preview">Сейчас: <strong id="prevPrice2">—</strong></span>
+        <button class="btn-next-step" onclick="goStep(3)">Далее: Сроки →</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: Urgency -->
+    <div class="step-panel" id="step3">
+      <div class="step-title">Когда нужен сайт?</div>
+      <div class="step-subtitle">Срочность влияет на итоговую стоимость — чем быстрее, тем выше приоритет в очереди</div>
+      <div class="urgency-wrap" id="urgWrap">
+        <div class="urg-btn selected" onclick="selectUrg(this,1.0)">
+          <div class="urg-icon">🌿</div>
+          <div class="urg-label">Стандарт</div>
+          <div class="urg-time">Обычные сроки</div>
+          <div class="urg-mult">× 1.0 — базовая цена</div>
+        </div>
+        <div class="urg-btn" onclick="selectUrg(this,1.3)">
+          <div class="urg-icon">⚡</div>
+          <div class="urg-label">Ускоренный</div>
+          <div class="urg-time">На 30–40% быстрее</div>
+          <div class="urg-mult">× 1.3 — +30%</div>
+        </div>
+        <div class="urg-btn" onclick="selectUrg(this,1.6)">
+          <div class="urg-icon">🔥</div>
+          <div class="urg-label">Экспресс</div>
+          <div class="urg-time">В 2× быстрее</div>
+          <div class="urg-mult">× 1.6 — +60%</div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:28px">
+        <div class="step-subtitle" style="margin-bottom:14px;text-align:left">Предпочтительный способ связи</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap" id="contactPref">
+          <div class="urg-btn" style="flex:0 1 140px;padding:14px" onclick="selectContact(this,'telegram')">
+            <div class="urg-icon" style="font-size:22px">📱</div>
+            <div class="urg-label" style="font-size:13px">Telegram</div>
+          </div>
+          <div class="urg-btn" style="flex:0 1 140px;padding:14px" onclick="selectContact(this,'whatsapp')">
+            <div class="urg-icon" style="font-size:22px">💬</div>
+            <div class="urg-label" style="font-size:13px">WhatsApp</div>
+          </div>
+          <div class="urg-btn" style="flex:0 1 140px;padding:14px" onclick="selectContact(this,'phone')">
+            <div class="urg-icon" style="font-size:22px">📞</div>
+            <div class="urg-label" style="font-size:13px">Звонок</div>
+          </div>
+          <div class="urg-btn" style="flex:0 1 140px;padding:14px" onclick="selectContact(this,'email')">
+            <div class="urg-icon" style="font-size:22px">✉️</div>
+            <div class="urg-label" style="font-size:13px">Email</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="wizard-btns">
+        <button class="btn-back-step" onclick="goStep(2)">← Назад</button>
+        <span class="price-preview">Итого: <strong id="prevPrice3">—</strong></span>
+        <button class="btn-next-step" onclick="goStep(4)">Далее: Итог →</button>
+      </div>
+    </div>
+
+    <!-- STEP 4: Summary + Contact -->
+    <div class="step-panel" id="step4">
+      <div class="step-title">Ваша смета и заявка</div>
+      <div class="step-subtitle">Проверьте расчёт и оставьте контакты — мы свяжемся в течение 15 минут</div>
+
+      <div class="summary-box" id="summaryBox">
+        <h3>📋 Смета проекта</h3>
+        <div id="summaryRows"></div>
+      </div>
+
+      <div class="contact-form">
+        <div class="form-group">
+          <label>Ваше имя *</label>
+          <input type="text" id="cName" placeholder="Алексей Иванов" />
+        </div>
+        <div class="form-group">
+          <label>Телефон *</label>
+          <input type="tel" id="cPhone" placeholder="+7 (999) 000-00-00" />
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="cEmail" placeholder="email@company.ru" />
+        </div>
+        <div class="form-group">
+          <label>Название компании / проекта</label>
+          <input type="text" id="cCompany" placeholder="ООО «Ромашка»" />
+        </div>
+        <div class="form-group full">
+          <label>Расскажите о проекте (необязательно)</label>
+          <textarea id="cComment" placeholder="Что планируете, есть ли примеры сайтов, которые нравятся..."></textarea>
+        </div>
+      </div>
+
+      <div class="wizard-btns">
+        <button class="btn-back-step" onclick="goStep(3)">← Назад</button>
+        <button class="btn-next-step" onclick="submitCalc()">✦ Получить предложение</button>
+      </div>
+    </div>
+
+    <!-- Success -->
+    <div class="success-panel" id="successPanel">
+      <div class="success-icon">🎉</div>
+      <h2>Заявка отправлена!</h2>
+      <p>Спасибо! Мы получили вашу смету и свяжемся с вами в течение <strong>15 минут</strong>. Проверьте телефон.</p>
+      <a href="index.html" class="btn-home">← Вернуться на главную</a>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <a href="index.html" class="btn-back-home">← На главную</a>
+  <p>© 2026 SiteCode · <a href="about.html">О нас</a> · <a href="blog.html">Блог</a></p>
+</footer>
+
+<button id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Наверх">↑</button>
+
+<script>
+  // Particles
+  const container = document.getElementById('particles');
+  const starData = [];
+  for (let i = 0; i < 150; i++) {
+    const p = document.createElement('div'); p.className = 'particle';
+    const size = Math.random()*3.5+0.8, bright = Math.random(), speed = Math.random()*.22+.03;
+    p.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;opacity:${0.1+Math.random()*.5};background:${bright>.7?'#a8e8ff':bright>.4?'#ffffff':'#c8f0ff'};animation-duration:${Math.random()*4+2}s;animation-delay:${Math.random()*6}s;`;
+    container.appendChild(p); starData.push({el:p,speed});
+  }
+  const prog = document.getElementById('scroll-progress');
+  const btt = document.getElementById('btt');
+  const hdr = document.querySelector('header');
+  window.addEventListener('scroll',()=>{
+    const sy=window.scrollY;
+    starData.forEach(d=>{d.el.style.transform=`translateY(${-sy*d.speed}px)`;});
+    prog.style.width=Math.min(sy/(document.documentElement.scrollHeight-window.innerHeight)*100,100)+'%';
+    hdr.style.boxShadow=sy>40?'0 4px 40px #00d4ff12':'none';
+    sy>400?btt.classList.add('visible'):btt.classList.remove('visible');
+  },{passive:true});
+
+  // Mobile menu
+  const menuBtn=document.getElementById('menuBtn'),mobileMenu=document.getElementById('mobileMenu'),menuOverlay=document.getElementById('menuOverlay');
+  menuBtn.addEventListener('click',()=>{menuBtn.classList.toggle('open');mobileMenu.classList.toggle('open');menuOverlay.classList.toggle('open');});
+  menuOverlay.addEventListener('click',()=>{menuBtn.classList.remove('open');mobileMenu.classList.remove('open');menuOverlay.classList.remove('open');});
+
+  // Comet
+  function launchComet(){
+    const c=document.createElement('div');c.className='comet-obj';
+    const x=Math.random()*window.innerWidth*.5-200,y=Math.random()*window.innerHeight*.65;
+    const len=140+Math.random()*220,dur=(1.4+Math.random()*1.3).toFixed(2);
+    c.style.cssText=`left:${x}px;top:${y}px;width:${len}px;animation:comet-shoot ${dur}s ease-in forwards;`;
+    document.body.appendChild(c);setTimeout(()=>c.remove(),(parseFloat(dur)+.4)*1000);
+    setTimeout(launchComet,5000+Math.random()*8000);
+  }
+  setTimeout(launchComet,2000);
+
+  // Toast
+  function showToast(icon, text, dur=3000){
+    const t=document.createElement('div');t.className='toast';t.textContent=icon+' '+text;
+    document.getElementById('toasts').appendChild(t);
+    requestAnimationFrame(()=>{requestAnimationFrame(()=>{t.classList.add('show');});});
+    setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),400);},dur);
+  }
+
+  // Wizard state
+  let state={type:0,pages:5,features:[],urgency:1.0,contact:'telegram'};
+
+  function calcTotal(){
+    const pageAdd=Math.max(0,state.pages-5)*800;
+    const featSum=state.features.reduce((a,b)=>a+b,0);
+    return Math.round((state.type+pageAdd+featSum)*state.urgency);
+  }
+
+  function fmt(n){return n.toLocaleString('ru-RU')+'₸';}
+
+  function updatePreview(){
+    const t=calcTotal();
+    const disp=state.type>0?fmt(t):'—';
+    const el2=document.getElementById('prevPrice2');
+    const el3=document.getElementById('prevPrice3');
+    if(el2)el2.textContent=disp;
+    if(el3)el3.textContent=disp;
+  }
+
+  // Step 1
+  function selectType(card, price){
+    document.querySelectorAll('#typeGrid .opt-card').forEach(c=>c.classList.remove('selected'));
+    card.classList.add('selected');
+    state.type=price;
+    const pageAdd=Math.max(0,state.pages-5)*800;
+    document.getElementById('prevPrice1').textContent=fmt(price+pageAdd);
+    document.getElementById('nextBtn1').disabled=false;
+    updatePreview();
+  }
+
+  function updatePages(v){
+    state.pages=parseInt(v);
+    document.getElementById('pagesVal').textContent=v;
+    if(state.type>0){
+      const pageAdd=Math.max(0,state.pages-5)*800;
+      document.getElementById('prevPrice1').textContent=fmt(state.type+pageAdd);
+    }
+    updatePreview();
+  }
+
+  // Step 2
+  function toggleFeat(item, price){
+    item.classList.toggle('checked');
+    if(item.classList.contains('checked')){
+      state.features.push(price);
+    } else {
+      const idx=state.features.indexOf(price);
+      if(idx>-1)state.features.splice(idx,1);
+    }
+    updatePreview();
+  }
+
+  // Step 3
+  function selectUrg(btn, mult){
+    document.querySelectorAll('#urgWrap .urg-btn').forEach(b=>b.classList.remove('selected'));
+    btn.classList.add('selected');
+    state.urgency=mult;
+    updatePreview();
+    document.getElementById('prevPrice3').textContent=fmt(calcTotal());
+  }
+
+  function selectContact(btn, type){
+    document.querySelectorAll('#contactPref .urg-btn').forEach(b=>b.classList.remove('selected'));
+    btn.classList.add('selected');
+    state.contact=type;
+  }
+
+  // Step navigation
+  function goStep(num){
+    if(num===4) buildSummary();
+    for(let i=1;i<=4;i++){
+      const panel=document.getElementById('step'+i);
+      const ind=document.getElementById('si'+i);
+      panel.classList.toggle('active',i===num);
+      ind.classList.toggle('active',i===num);
+      ind.classList.toggle('done',i<num);
+    }
+    for(let i=1;i<=3;i++){
+      document.getElementById('sl'+i).classList.toggle('done',i<num);
+    }
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function buildSummary(){
+    const typeNames={15000:'Лендинг',35000:'Корпоративный сайт',55000:'Интернет-магазин',90000:'Веб-приложение'};
+    const urgNames={1.0:'Стандарт (×1.0)',1.3:'Ускоренный (×1.3)',1.6:'Экспресс (×1.6)'};
+    const featNames=[
+      [8000,'SEO-оптимизация'],[12000,'CRM интеграция'],[15000,'Личный кабинет'],
+      [5000,'Онлайн-чат'],[10000,'Мультиязычность'],[7000,'PWA'],
+      [9000,'Онлайн-оплата'],[6000,'Блог / Новости'],[11000,'AI-интеграция'],[4000,'Email-рассылки']
+    ];
+    const pageAdd=Math.max(0,state.pages-5)*800;
+    let html='';
+    html+=`<div class="summary-row"><span class="summary-label">Тип сайта</span><span class="s-val">${typeNames[state.type]||'—'}</span></div>`;
+    html+=`<div class="summary-row"><span class="summary-label">Базовая стоимость</span><span class="s-val">${fmt(state.type)}</span></div>`;
+    if(pageAdd>0)html+=`<div class="summary-row"><span class="summary-label">Доп. страницы (${state.pages}шт)</span><span class="s-val">+${fmt(pageAdd)}</span></div>`;
+    if(state.features.length>0){
+      const usedFeats=featNames.filter(f=>state.features.includes(f[0]));
+      usedFeats.forEach(f=>{html+=`<div class="summary-row"><span class="summary-label">${f[1]}</span><span class="s-val">+${fmt(f[0])}</span></div>`;});
+    }
+    const urg=state.urgency;
+    const urgBadge=urg===1.0?'badge-ok':'badge-urg';
+    html+=`<div class="summary-row"><span class="summary-label">Срочность</span><span class="s-val"><span class="badge-urg ${urgBadge}">${urgNames[urg]}</span></span></div>`;
+    html+=`<div class="summary-row total"><span class="summary-label">Итого</span><span class="s-val">${fmt(calcTotal())}</span></div>`;
+    document.getElementById('summaryRows').innerHTML=html;
+  }
+
+  // Submit
+  function submitCalc(){
+    const name=document.getElementById('cName').value.trim();
+    const phone=document.getElementById('cPhone').value.trim();
+    if(!name){showToast('⚠️','Пожалуйста, укажите ваше имя');return;}
+    if(!phone||phone.length<6){showToast('⚠️','Введите корректный номер телефона');return;}
+    const payload={
+      name, phone,
+      email:document.getElementById('cEmail').value.trim(),
+      company:document.getElementById('cCompany').value.trim(),
+      comment:document.getElementById('cComment').value.trim(),
+      projectType:state.type,
+      pages:state.pages,
+      features:state.features,
+      urgency:state.urgency,
+      contactPref:state.contact,
+      totalPrice:calcTotal(),
+      timestamp:new Date().toISOString()
+    };
+    console.log('SiteCode calc submission:', payload);
+    // Ready for webhook: fetch('/api/lead', {method:'POST',body:JSON.stringify(payload)})
+    document.getElementById('step4').style.display='none';
+    document.getElementById('successPanel').classList.add('visible');
+    showToast('🎉','Заявка отправлена! Ждите звонка.',5000);
+  }
+
+  // Init preview
+  updatePreview();
+</script>
+</body>
+</html>

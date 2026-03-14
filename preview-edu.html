@@ -1,0 +1,559 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduPlatform — Образовательная LMS-платформа</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --navy:#022140;
+  --steel:#265077;
+  --slate:#494B68;
+  --teal:#1E4258;
+  --mint:#2D5F5D;
+  --bg:#011829;
+  --bg2:#031c35;
+  --bg3:#0a2540;
+  --bdr:#1d3a55;
+  --txt:#7fa8c4;
+  --light:#b8d0df;
+  --white:#ddeaf2;
+  --glow:rgba(38,80,119,.35);
+  --mintglow:rgba(45,95,93,.4)
+}
+body{font-family:Inter,sans-serif;background:var(--bg);color:var(--light);overflow-x:hidden}
+
+/* Demo banner */
+.dbanner{position:fixed;top:0;left:0;right:0;z-index:9999;background:linear-gradient(90deg,var(--navy),var(--steel));color:#fff;padding:9px 24px;display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:700}
+.dbanner a{color:#fff;text-decoration:none;background:rgba(255,255,255,.15);padding:5px 14px;border-radius:6px;margin-left:8px;font-size:12px;border:1px solid rgba(255,255,255,.2);transition:background .2s}
+.dbanner a:hover{background:rgba(255,255,255,.25)}
+
+/* Header */
+header{position:fixed;top:40px;left:0;right:0;z-index:1000;transition:all .3s}
+header.sc{background:rgba(1,24,41,.96);backdrop-filter:blur(18px);border-bottom:1px solid var(--bdr);box-shadow:0 2px 30px rgba(0,0,0,.4)}
+.hdr{max-width:1280px;margin:0 auto;padding:0 5%;display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{font-size:19px;font-weight:800;color:var(--white);text-decoration:none;display:flex;align-items:center;gap:10px;letter-spacing:-.3px}
+.logo-ic{width:36px;height:36px;background:linear-gradient(135deg,var(--mint),var(--steel));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 3px 14px var(--mintglow)}
+nav ul{display:flex;gap:28px;list-style:none}
+nav a{color:var(--txt);text-decoration:none;font-size:14px;font-weight:500;transition:color .2s}
+nav a:hover{color:var(--white)}
+.hcta{padding:9px 20px;background:linear-gradient(135deg,var(--mint),#1a4d4b);border-radius:9px;color:#fff!important;font-weight:700!important;box-shadow:0 4px 16px var(--mintglow);transition:all .2s!important}
+.hcta:hover{transform:translateY(-1px);box-shadow:0 7px 22px var(--mintglow)!important}
+
+/* Hero */
+.hero{padding:140px 5% 90px;position:relative;overflow:hidden;background:var(--bg)}
+.hero-glow{position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:1000px;height:600px;background:radial-gradient(ellipse,rgba(38,80,119,.2) 0%,transparent 68%);pointer-events:none}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(38,80,119,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(38,80,119,.06) 1px,transparent 1px);background-size:52px 52px;pointer-events:none}
+.hi{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center;position:relative}
+.badge2{display:inline-flex;align-items:center;gap:7px;background:rgba(45,95,93,.18);border:1px solid rgba(45,95,93,.4);color:#4ecdc4;padding:6px 14px;border-radius:7px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:20px}
+h1{font-family:'DM Serif Display',serif;font-size:clamp(2.1rem,4.8vw,3.8rem);font-weight:400;line-height:1.12;color:var(--white);margin-bottom:16px}
+h1 em{color:#4ecdc4;font-style:italic}
+.hsub{font-size:15px;color:var(--txt);line-height:1.78;margin-bottom:28px;max-width:480px}
+.hbtns{display:flex;gap:12px;flex-wrap:wrap}
+.btn1{padding:13px 26px;background:linear-gradient(135deg,var(--mint),#1a4d4b);border-radius:10px;color:#fff;font-weight:700;font-size:14px;text-decoration:none;border:none;cursor:pointer;font-family:inherit;transition:all .28s;letter-spacing:.02em}
+.btn1:hover{transform:translateY(-2px);box-shadow:0 8px 26px var(--mintglow)}
+.btn2{padding:13px 26px;border:1.5px solid rgba(38,80,119,.5);border-radius:10px;color:var(--light);font-weight:600;font-size:14px;background:rgba(38,80,119,.1);cursor:pointer;font-family:inherit;transition:all .28s;text-decoration:none;display:inline-block}
+.btn2:hover{background:rgba(38,80,119,.22);border-color:var(--steel);color:var(--white)}
+.stats-line{display:flex;gap:28px;margin-top:32px;padding-top:24px;border-top:1px solid var(--bdr)}
+.sl{text-align:center}
+.sl .n{font-family:'DM Serif Display',serif;font-size:26px;font-weight:400;color:var(--white);display:block}
+.sl .l{font-size:11px;color:var(--txt);margin-top:3px;letter-spacing:.04em}
+
+/* Course preview card */
+.course-preview{background:rgba(10,37,64,.82);border:1px solid var(--bdr);border-radius:18px;overflow:hidden;box-shadow:0 18px 56px rgba(0,0,0,.45);backdrop-filter:blur(10px)}
+.vp{height:162px;background:linear-gradient(135deg,var(--teal),#0d3558);display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer;overflow:hidden}
+.vp::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 40%,rgba(45,95,93,.3),transparent 60%)}
+.vp:hover .pp{transform:scale(1.12)}
+.pp{width:54px;height:54px;background:linear-gradient(135deg,var(--mint),#1a4d4b);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;transition:transform .22s;box-shadow:0 6px 20px var(--mintglow);position:relative}
+.vptime{position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,.6);color:#fff;font-size:11px;padding:3px 8px;border-radius:5px;backdrop-filter:blur(4px)}
+.cp-body{padding:18px 20px}
+.cpt{font-size:14px;font-weight:700;color:var(--white);margin-bottom:14px}
+.prgs{margin-bottom:10px}
+.prg-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.prg-l{font-size:12px;color:var(--txt)}
+.prg-p{font-size:12px;font-weight:700;color:#4ecdc4}
+.prg-bar{height:5px;background:var(--bg);border-radius:3px;overflow:hidden}
+.prg-fill{height:100%;background:linear-gradient(90deg,var(--mint),#4ecdc4);border-radius:3px;transition:width 1.2s ease;width:0}
+
+/* Trust bar */
+.trust{background:var(--bg2);border-top:1px solid var(--bdr);border-bottom:1px solid var(--bdr);padding:18px 5%}
+.trust-in{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.trust-item{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--light)}
+.trust-item span{font-size:17px}
+.trust-item strong{color:var(--white)}
+.trust-sep{color:var(--bdr);font-size:20px}
+
+/* Courses section */
+.courses-wrap{max-width:1280px;margin:0 auto;padding:72px 5%}
+.sec-hdr{margin-bottom:32px}
+.sec-hdr h2{font-family:'DM Serif Display',serif;font-size:2rem;color:var(--white);margin-bottom:7px}
+.sec-hdr p{font-size:14px;color:var(--txt)}
+.courses-layout{display:grid;grid-template-columns:280px 1fr;gap:24px}
+.sidebar{display:flex;flex-direction:column;gap:8px}
+.sc-card{background:var(--bg3);border:1.5px solid var(--bdr);border-radius:14px;padding:16px;cursor:pointer;transition:all .22s}
+.sc-card.act{border-color:var(--mint);background:rgba(45,95,93,.12);box-shadow:0 0 24px rgba(45,95,93,.18)}
+.sc-card:hover:not(.act){border-color:var(--steel);background:rgba(38,80,119,.1)}
+.sc-icon{font-size:26px;margin-bottom:8px}
+.sc-name{font-size:14px;font-weight:700;color:var(--white);margin-bottom:4px}
+.sc-meta{font-size:12px;color:var(--txt);margin-bottom:9px}
+.sc-lvl{display:inline-block;padding:2px 9px;border-radius:5px;font-size:11px;font-weight:700}
+.lvl-beg{background:rgba(45,95,93,.2);color:#4ecdc4}
+.lvl-mid{background:rgba(38,80,119,.25);color:#6ec6e8}
+.lvl-adv{background:rgba(73,75,104,.3);color:#a9abdf}
+.course-details{display:none;animation:fadein .3s ease}
+.course-details.act{display:block}
+@keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.cd-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;gap:12px}
+.cd-title{font-family:'DM Serif Display',serif;font-size:1.7rem;color:var(--white);line-height:1.2}
+.cd-price-box{text-align:right;flex-shrink:0}
+.cd-price{font-size:27px;font-weight:800;color:#4ecdc4;display:block}
+.cd-price-old{font-size:13px;color:var(--txt);text-decoration:line-through}
+.ctabs{display:flex;background:var(--bg3);border-radius:11px;border:1px solid var(--bdr);overflow:hidden;margin-bottom:22px}
+.ctab{flex:1;padding:11px 8px;text-align:center;font-size:13px;font-weight:600;cursor:pointer;color:var(--txt);transition:all .2s;border-right:1px solid var(--bdr)}
+.ctab:last-child{border:none}
+.ctab.act{background:linear-gradient(135deg,var(--mint),#1a4d4b);color:#fff}
+.cpanel{display:none}.cpanel.act{display:block}
+.curr-list{list-style:none}
+.curr-list li{padding:12px 14px;background:var(--bg3);border-radius:10px;margin-bottom:8px;border:1px solid var(--bdr);display:flex;align-items:center;gap:12px;font-size:14px;color:var(--light);transition:border-color .2s}
+.curr-list li:hover{border-color:var(--steel)}
+.curr-list li::before{content:'▶';color:var(--mint);font-size:9px;flex-shrink:0;opacity:.8}
+.curr-list .locked{opacity:.6}
+.curr-list .locked::before{content:'🔒';font-size:12px;opacity:1}
+.about-txt{font-size:15px;color:var(--light);line-height:1.82;margin-bottom:18px}
+.about-feats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.af{background:var(--bg3);border:1px solid var(--bdr);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--light)}
+.af span{font-size:17px}
+
+/* Quiz */
+.quiz-sect{background:var(--bg3);border:1px solid var(--bdr);border-radius:16px;padding:24px;max-width:520px}
+.quiz-q{font-size:16px;font-weight:700;color:var(--white);margin-bottom:18px;line-height:1.5}
+.qopts{display:flex;flex-direction:column;gap:9px}
+.qopt{padding:12px 16px;border:1.5px solid var(--bdr);border-radius:10px;cursor:pointer;font-size:14px;transition:all .2s;background:rgba(38,80,119,.08);color:var(--light)}
+.qopt:hover:not(.locked){border-color:var(--steel);background:rgba(38,80,119,.18);color:var(--white)}
+.qopt.right{background:rgba(45,95,93,.16);border-color:var(--mint);color:#4ecdc4}
+.qopt.wrong{background:rgba(127,29,29,.12);border-color:#ef4444;color:#fca5a5}
+.quiz-res{display:none;margin-top:14px;padding:12px 16px;border-radius:10px;font-weight:600;font-size:14px}
+.quiz-res.show{display:block}
+.quiz-res.ok{background:rgba(45,95,93,.16);border:1px solid var(--mint);color:#4ecdc4}
+.quiz-res.fail{background:rgba(127,29,29,.12);border:1px solid #ef4444;color:#fca5a5}
+
+/* Reviews */
+.rev-card{background:var(--bg3);border:1px solid var(--bdr);border-radius:14px;padding:16px;margin-bottom:10px;transition:border-color .22s}
+.rev-card:hover{border-color:var(--steel)}
+.rc-top{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.rc-av{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--mint),var(--steel));display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;color:#fff;flex-shrink:0}
+.rc-nm{font-size:14px;font-weight:700;color:var(--white)}
+.rc-stars{color:#f5a623;font-size:13px;margin-top:1px}
+.rc-text{font-size:13px;color:var(--txt);line-height:1.7}
+.enroll-bar{margin-top:20px;padding:18px 0 0;border-top:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.ecnt{font-size:13px;color:var(--txt)}
+.ecnt b{color:#4ecdc4}
+
+/* Instructors */
+.instructors{padding:70px 5%;background:var(--bg2)}
+.section-wrap{max-width:1280px;margin:0 auto}
+.section-hdr{text-align:center;margin-bottom:40px}
+.section-hdr h2{font-family:'DM Serif Display',serif;font-size:2rem;color:var(--white);margin-bottom:8px}
+.section-hdr p{font-size:15px;color:var(--txt)}
+.instr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.instr-card{background:var(--bg3);border:1px solid var(--bdr);border-radius:16px;padding:26px;text-align:center;transition:all .25s}
+.instr-card:hover{border-color:var(--steel);transform:translateY(-4px);box-shadow:0 14px 40px rgba(0,0,0,.35)}
+.instr-av{width:74px;height:74px;border-radius:50%;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:32px}
+.instr-name{font-size:16px;font-weight:700;color:var(--white);margin-bottom:4px}
+.instr-spec{font-size:13px;color:var(--txt);margin-bottom:12px;line-height:1.5}
+.instr-meta{display:flex;justify-content:center;gap:18px}
+.im{font-size:13px;color:var(--light)}
+.im b{color:#4ecdc4}
+
+/* Certificate */
+.cert-sect{padding:72px 5%}
+.cert-wrap{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.cert-txt h2{font-family:'DM Serif Display',serif;font-size:2rem;color:var(--white);margin-bottom:14px}
+.cert-txt p{font-size:15px;color:var(--txt);line-height:1.78;margin-bottom:22px}
+.cert-pts{list-style:none;display:flex;flex-direction:column;gap:11px}
+.cert-pts li{display:flex;align-items:center;gap:11px;font-size:14px;color:var(--light)}
+.cert-pts li::before{content:'✓';width:22px;height:22px;min-width:22px;border-radius:50%;background:rgba(45,95,93,.2);border:1px solid var(--mint);color:#4ecdc4;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900}
+.cert-mock{background:var(--bg3);border:2px solid var(--bdr);border-radius:20px;padding:34px 30px;text-align:center;position:relative;overflow:hidden}
+.cert-mock::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(38,80,119,.1),rgba(45,95,93,.06));pointer-events:none}
+.cert-corner{position:absolute;width:58px;height:58px;top:18px;left:18px;border-top:2px solid var(--mint);border-left:2px solid var(--mint);border-radius:4px 0 0 0}
+.cert-corner.br{top:auto;left:auto;bottom:18px;right:18px;border-top:none;border-left:none;border-bottom:2px solid var(--mint);border-right:2px solid var(--mint);border-radius:0 0 4px 0}
+.cert-logo{font-family:'DM Serif Display',serif;font-size:22px;color:var(--white);margin-bottom:4px}
+.cert-sub{font-size:10px;text-transform:uppercase;letter-spacing:2.5px;color:var(--txt);margin-bottom:22px}
+.cert-body-txt{font-size:12px;color:var(--txt);margin-bottom:10px}
+.cert-name{font-family:'DM Serif Display',serif;font-size:1.5rem;font-style:italic;color:var(--white);margin-bottom:6px}
+.cert-course{font-size:13px;color:var(--txt);margin-bottom:20px;line-height:1.6}
+.cert-seal{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--mint),var(--steel));margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 4px 16px var(--mintglow)}
+.cert-id{font-size:11px;color:var(--txt)}
+
+/* Scroll reveal */
+.rev{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+.rev.vis{opacity:1;transform:translateY(0)}
+
+/* Footer */
+footer{background:var(--navy);border-top:1px solid var(--bdr);padding:46px 5% 58px;text-align:center}
+.flinks{display:flex;justify-content:center;gap:24px;margin-bottom:18px;flex-wrap:wrap}
+.flinks a{color:var(--txt);text-decoration:none;font-size:14px;transition:color .2s}
+.flinks a:hover{color:var(--white)}
+.fbot{font-size:13px;color:#2a4a62;margin-top:8px}
+
+@media(max-width:960px){
+  .hi,.courses-layout,.cert-wrap{grid-template-columns:1fr}
+  .instr-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:600px){
+  .instr-grid{grid-template-columns:1fr}
+  .trust-sep{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="dbanner">
+  <div>🎓 Демо: <strong>EduPlatform</strong> — образовательная LMS-платформа</div>
+  <div><a href="catalog.html">← Каталог</a><a href="index.html">Заказать</a></div>
+</div>
+
+<header id="hdr">
+  <div class="hdr">
+    <a href="#" class="logo"><div class="logo-ic">🎓</div>EduPlatform</a>
+    <nav><ul>
+      <li><a href="#">Курсы</a></li>
+      <li><a href="#">Вебинары</a></li>
+      <li><a href="#">Преподаватели</a></li>
+      <li><a href="#">Сертификаты</a></li>
+      <li><a href="#" class="hcta">Начать бесплатно</a></li>
+    </ul></nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-grid"></div>
+  <div class="hi">
+    <div>
+      <div class="badge2">★ Топ-1 LMS платформа 2025–2026</div>
+      <h1>Учитесь у лучших.<br><em>Растите быстрее.</em></h1>
+      <p class="hsub">120+ онлайн-курсов от практикующих экспертов. Живые сессии, сертификаты и поддержка ментора — в каждом курсе.</p>
+      <div class="hbtns">
+        <button class="btn1" onclick="document.getElementById('courses-sect').scrollIntoView({behavior:'smooth'})">Выбрать курс →</button>
+        <button class="btn2" onclick="alert('Пробный урок: нажмите ▶ на превью справа')">Бесплатный урок</button>
+      </div>
+      <div class="stats-line" id="cnt">
+        <div class="sl"><span class="n" data-val="42000" data-sfx="+">0+</span><span class="l">студентов</span></div>
+        <div class="sl"><span class="n" data-val="120" data-sfx="+">0+</span><span class="l">курсов</span></div>
+        <div class="sl"><span class="n" data-val="98" data-sfx="%">0%</span><span class="l">завершают</span></div>
+        <div class="sl"><span class="n" data-val="4.9" data-sfx="" data-dec="1">0</span><span class="l">рейтинг ★</span></div>
+      </div>
+    </div>
+    <div class="course-preview rev" id="cprev">
+      <div class="vp" onclick="alert('▶ Воспроизведение: Введение в веб-разработку — Урок 1 (12:34)')">
+        <div class="pp">▶</div>
+        <div class="vptime">12:34</div>
+      </div>
+      <div class="cp-body">
+        <div class="cpt">Веб-разработка с нуля — Прогресс студента</div>
+        <div class="prgs">
+          <div class="prg-row"><span class="prg-l">HTML &amp; CSS</span><span class="prg-p">95%</span></div>
+          <div class="prg-bar"><div class="prg-fill" data-w="95"></div></div>
+        </div>
+        <div class="prgs">
+          <div class="prg-row"><span class="prg-l">JavaScript</span><span class="prg-p">72%</span></div>
+          <div class="prg-bar"><div class="prg-fill" data-w="72"></div></div>
+        </div>
+        <div class="prgs">
+          <div class="prg-row"><span class="prg-l">React</span><span class="prg-p">38%</span></div>
+          <div class="prg-bar"><div class="prg-fill" data-w="38"></div></div>
+        </div>
+        <div class="prgs">
+          <div class="prg-row"><span class="prg-l">Node.js</span><span class="prg-p">14%</span></div>
+          <div class="prg-bar"><div class="prg-fill" data-w="14"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST BAR -->
+<div class="trust rev">
+  <div class="trust-in">
+    <div class="trust-item"><span>🎓</span><div><strong>120+</strong> курсов</div></div>
+    <div class="trust-sep">|</div>
+    <div class="trust-item"><span>🏆</span><div>Сертификат <strong>гос. образца</strong></div></div>
+    <div class="trust-sep">|</div>
+    <div class="trust-item"><span>💬</span><div>Ментор <strong>24/7</strong></div></div>
+    <div class="trust-sep">|</div>
+    <div class="trust-item"><span>♾️</span><div><strong>Пожизненный</strong> доступ</div></div>
+    <div class="trust-sep">|</div>
+    <div class="trust-item"><span>💳</span><div>Рассрочка <strong>0%</strong></div></div>
+  </div>
+</div>
+
+<!-- COURSES -->
+<div id="courses-sect">
+  <div class="courses-wrap rev">
+    <div class="sec-hdr">
+      <h2>Каталог курсов</h2>
+      <p>Выберите направление и начните обучение уже сегодня</p>
+    </div>
+    <div class="courses-layout">
+      <div class="sidebar">
+        <div class="sc-card act" onclick="showCourse('web',this)"><div class="sc-icon">💻</div><div class="sc-name">Веб-разработка</div><div class="sc-meta">84 урока · 6 мес</div><div class="sc-lvl lvl-beg">С нуля</div></div>
+        <div class="sc-card" onclick="showCourse('design',this)"><div class="sc-icon">🎨</div><div class="sc-name">UI/UX Дизайн</div><div class="sc-meta">56 уроков · 4 мес</div><div class="sc-lvl lvl-mid">Средний</div></div>
+        <div class="sc-card" onclick="showCourse('data',this)"><div class="sc-icon">📊</div><div class="sc-name">Data Science</div><div class="sc-meta">96 уроков · 9 мес</div><div class="sc-lvl lvl-adv">Продвинутый</div></div>
+        <div class="sc-card" onclick="showCourse('ml',this)"><div class="sc-icon">🤖</div><div class="sc-name">Machine Learning</div><div class="sc-meta">72 урока · 7 мес</div><div class="sc-lvl lvl-adv">Продвинутый</div></div>
+        <div class="sc-card" onclick="showCourse('pm',this)"><div class="sc-icon">📋</div><div class="sc-name">Product Management</div><div class="sc-meta">48 уроков · 3 мес</div><div class="sc-lvl lvl-mid">Средний</div></div>
+      </div>
+      <div>
+        <!-- WEB -->
+        <div id="cd-web" class="course-details act">
+          <div class="cd-top">
+            <div class="cd-title">💻 Веб-разработка с нуля</div>
+            <div class="cd-price-box"><span class="cd-price">14 900 ₸</span><span class="cd-price-old">24 900 ₸</span></div>
+          </div>
+          <div class="ctabs">
+            <div class="ctab act" onclick="showCtab('web','prog',this)">Программа</div>
+            <div class="ctab" onclick="showCtab('web','about',this)">О курсе</div>
+            <div class="ctab" onclick="showCtab('web','quiz',this)">Тест</div>
+            <div class="ctab" onclick="showCtab('web','revs',this)">Отзывы</div>
+          </div>
+          <div id="cp-web-prog" class="cpanel act">
+            <ul class="curr-list">
+              <li>Основы HTML5 и семантика</li>
+              <li>CSS3: Flexbox, Grid, анимации</li>
+              <li>JavaScript с нуля до async/await</li>
+              <li>React: компоненты, хуки, SPA</li>
+              <li>Node.js и Express: REST API</li>
+              <li class="locked">PostgreSQL: проектирование БД</li>
+              <li class="locked">Git, CI/CD, деплой на VPS</li>
+              <li class="locked">Финальный проект + код-ревью</li>
+            </ul>
+          </div>
+          <div id="cp-web-about" class="cpanel">
+            <div class="about-txt">Полный путь от новичка до junior-разработчика. Практика с первого урока: 50+ реальных заданий, код-ревью от ментора, помощь в трудоустройстве. Сертификат после защиты финального проекта.</div>
+            <div class="about-feats">
+              <div class="af"><span>🎥</span>84 видеоурока</div>
+              <div class="af"><span>💬</span>Живые Q&amp;A сессии</div>
+              <div class="af"><span>🏅</span>Сертификат гос. образца</div>
+              <div class="af"><span>♾️</span>Пожизненный доступ</div>
+              <div class="af"><span>👔</span>Помощь с трудоустройством</div>
+              <div class="af"><span>📱</span>Мобильное приложение</div>
+            </div>
+          </div>
+          <div id="cp-web-quiz" class="cpanel">
+            <div class="quiz-sect" id="qz">
+              <div class="quiz-q" id="qq">Загрузка...</div>
+              <div class="qopts" id="qo"></div>
+              <div class="quiz-res" id="qr"></div>
+              <button class="btn2" style="margin-top:14px;font-size:13px" onclick="nextQ()">Следующий вопрос →</button>
+            </div>
+          </div>
+          <div id="cp-web-revs" class="cpanel">
+            <div class="rev-card"><div class="rc-top"><div class="rc-av">А</div><div><div class="rc-nm">Алекс К.</div><div class="rc-stars">★★★★★</div></div></div><div class="rc-text">"Лучший курс по веб-разработке! Устроился через 4 месяца после старта. Ментор всегда на связи, задания реальные из продакшна."</div></div>
+            <div class="rev-card"><div class="rc-top"><div class="rc-av">М</div><div><div class="rc-nm">Мария В.</div><div class="rc-stars">★★★★★</div></div></div><div class="rc-text">"Отличная структура и прекрасный ментор. Теперь работаю в product-компании. Сертификат признан работодателями."</div></div>
+            <div class="rev-card"><div class="rc-top"><div class="rc-av">Д</div><div><div class="rc-nm">Дмитрий Н.</div><div class="rc-stars">★★★★☆</div></div></div><div class="rc-text">"Очень структурированный материал. Каждая тема объяснена понятным языком с реальными примерами."</div></div>
+          </div>
+          <div class="enroll-bar">
+            <span class="ecnt">🔥 <b id="ec">247</b> человек записались на этой неделе</span>
+            <button class="btn1" onclick="alert('Запись на курс: Веб-разработка с нуля')">Записаться на курс</button>
+          </div>
+        </div>
+        <!-- DESIGN -->
+        <div id="cd-design" class="course-details">
+          <div class="cd-top"><div class="cd-title">🎨 UI/UX Дизайн</div><div class="cd-price-box"><span class="cd-price">11 900 ₸</span><span class="cd-price-old">18 900 ₸</span></div></div>
+          <ul class="curr-list"><li>Основы визуальной коммуникации</li><li>Figma: компоненты и прототипы</li><li>User Research и карты пути</li><li>Дизайн-системы и токены</li><li class="locked">Прототипирование и тестирование</li></ul>
+          <div class="enroll-bar"><span class="ecnt">🔥 <b>183</b> записались</span><button class="btn1" onclick="alert('Запись: UI/UX Дизайн')">Записаться</button></div>
+        </div>
+        <!-- DATA -->
+        <div id="cd-data" class="course-details">
+          <div class="cd-top"><div class="cd-title">📊 Data Science</div><div class="cd-price-box"><span class="cd-price">19 900 ₸</span></div></div>
+          <ul class="curr-list"><li>Python: NumPy, Pandas, Matplotlib</li><li>Статистика и теория вероятностей</li><li>SQL и работа с большими данными</li><li>ML: sklearn, модели, метрики</li><li class="locked">Deep Learning — основы</li><li class="locked">Дашборды и визуализация данных</li></ul>
+          <div class="enroll-bar"><span class="ecnt">🔥 <b>312</b> записались</span><button class="btn1" onclick="alert('Запись: Data Science')">Записаться</button></div>
+        </div>
+        <!-- ML -->
+        <div id="cd-ml" class="course-details">
+          <div class="cd-top"><div class="cd-title">🤖 Machine Learning</div><div class="cd-price-box"><span class="cd-price">24 900 ₸</span></div></div>
+          <ul class="curr-list"><li>Глубокое обучение, нейросети</li><li>TensorFlow / PyTorch с нуля</li><li>NLP: обработка текста и BERT</li><li>Computer Vision и детекция объектов</li><li class="locked">Reinforcement Learning</li><li class="locked">MLOps и деплой моделей</li></ul>
+          <div class="enroll-bar"><span class="ecnt">🔥 <b>98</b> записались</span><button class="btn1" onclick="alert('Запись: Machine Learning')">Записаться</button></div>
+        </div>
+        <!-- PM -->
+        <div id="cd-pm" class="course-details">
+          <div class="cd-top"><div class="cd-title">📋 Product Management</div><div class="cd-price-box"><span class="cd-price">16 900 ₸</span></div></div>
+          <ul class="curr-list"><li>Роль и зоны ответственности PM</li><li>Метрики и аналитика продукта</li><li>Agile, Scrum, Kanban на практике</li><li>Приоритизация: RICE, MoSCoW</li><li class="locked">Запуск и масштабирование</li></ul>
+          <div class="enroll-bar"><span class="ecnt">🔥 <b>156</b> записались</span><button class="btn1" onclick="alert('Запись: Product Management')">Записаться</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- INSTRUCTORS -->
+<section class="instructors rev">
+  <div class="section-wrap">
+    <div class="section-hdr">
+      <h2>Наши преподаватели</h2>
+      <p>Практикующие специалисты с реальным опытом в индустрии</p>
+    </div>
+    <div class="instr-grid">
+      <div class="instr-card">
+        <div class="instr-av" style="background:linear-gradient(135deg,#1E4258,#265077)">👨‍💻</div>
+        <div class="instr-name">Андрей Соколов</div>
+        <div class="instr-spec">Senior Frontend Engineer @ Яндекс<br>8 лет опыта</div>
+        <div class="instr-meta"><div class="im">★ <b>4.97</b></div><div class="im"><b>3 200</b> студентов</div></div>
+      </div>
+      <div class="instr-card">
+        <div class="instr-av" style="background:linear-gradient(135deg,#2D5F5D,#1E4258)">👩‍🎨</div>
+        <div class="instr-name">Елена Волкова</div>
+        <div class="instr-spec">Lead UX Designer @ Ozon<br>10 лет опыта</div>
+        <div class="instr-meta"><div class="im">★ <b>4.96</b></div><div class="im"><b>2 800</b> студентов</div></div>
+      </div>
+      <div class="instr-card">
+        <div class="instr-av" style="background:linear-gradient(135deg,#494B68,#265077)">👨‍🔬</div>
+        <div class="instr-name">Михаил Козлов</div>
+        <div class="instr-spec">Data Scientist @ Sber · PhD<br>12 лет опыта</div>
+        <div class="instr-meta"><div class="im">★ <b>4.99</b></div><div class="im"><b>4 100</b> студентов</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CERTIFICATE -->
+<section class="cert-sect rev">
+  <div class="cert-wrap">
+    <div class="cert-txt">
+      <h2>Сертификаты, которые ценят работодатели</h2>
+      <p>По завершении каждого курса вы получаете именной сертификат с уникальным ID. Работодатели могут проверить подлинность онлайн в один клик.</p>
+      <ul class="cert-pts">
+        <li>Принимается в 500+ компаниях России и СНГ</li>
+        <li>Уникальный QR-код для верификации</li>
+        <li>Подпись куратора и руководителя программы</li>
+        <li>PDF и физическая версия на выбор</li>
+        <li>Публикация в LinkedIn и HH.ru</li>
+      </ul>
+      <button class="btn1" style="margin-top:26px" onclick="alert('Ваш сертификат будет готов после прохождения финального проекта')">Получить сертификат</button>
+    </div>
+    <div class="cert-mock">
+      <div class="cert-corner"></div>
+      <div class="cert-corner br"></div>
+      <div class="cert-logo">EduPlatform</div>
+      <div class="cert-sub">Сертификат об окончании</div>
+      <div class="cert-body-txt">Настоящим подтверждается, что</div>
+      <div class="cert-name">Александр Иванов</div>
+      <div class="cert-course">успешно завершил курс<br><strong style="color:var(--white)">«Веб-разработка с нуля»</strong></div>
+      <div class="cert-seal">🏅</div>
+      <div class="cert-id">ID: EDU-2026-18472 · Март 2026</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo" style="justify-content:center;margin-bottom:18px"><div class="logo-ic">🎓</div>EduPlatform</div>
+  <div class="flinks">
+    <a href="#">Курсы</a>
+    <a href="#">Вебинары</a>
+    <a href="#">Преподаватели</a>
+    <a href="#">Блог</a>
+    <a href="#">Сертификаты</a>
+    <a href="#">Поддержка</a>
+  </div>
+  <div class="fbot">© 2026 EduPlatform — Образование без границ</div>
+</footer>
+
+<script>
+// Sticky header
+window.addEventListener('scroll', function(){
+  document.getElementById('hdr').classList.toggle('sc', scrollY > 60);
+});
+
+// Scroll reveal + counters + progress bars
+var cntDone = false;
+var observer = new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if(e.isIntersecting){
+      e.target.classList.add('vis');
+      if(e.target.id === 'cnt' && !cntDone){ cntDone = true; animateCounters(); }
+      e.target.querySelectorAll('.prg-fill').forEach(function(b){ b.style.width = b.dataset.w + '%'; });
+      observer.unobserve(e.target);
+    }
+  });
+}, {threshold: 0.15});
+document.querySelectorAll('.rev').forEach(function(el){ observer.observe(el); });
+observer.observe(document.getElementById('cnt'));
+
+function animateCounters(){
+  document.querySelectorAll('.stats-line .n[data-val]').forEach(function(el){
+    var to = parseFloat(el.dataset.val), sfx = el.dataset.sfx || '', dec = parseInt(el.dataset.dec) || 0, cur = 0;
+    var iv = setInterval(function(){
+      cur = Math.min(cur + to / 60, to);
+      el.textContent = (dec ? cur.toFixed(dec) : Math.round(cur)) + sfx;
+      if(cur >= to) clearInterval(iv);
+    }, 20);
+  });
+}
+
+function showCourse(id, el){
+  document.querySelectorAll('.sc-card').forEach(function(c){ c.classList.remove('act'); });
+  document.querySelectorAll('.course-details').forEach(function(c){ c.classList.remove('act'); });
+  el.classList.add('act');
+  document.getElementById('cd-' + id).classList.add('act');
+}
+
+function showCtab(cid, tab, el){
+  el.closest('.course-details').querySelectorAll('.ctab').forEach(function(t){ t.classList.remove('act'); });
+  el.closest('.course-details').querySelectorAll('.cpanel').forEach(function(p){ p.classList.remove('act'); });
+  el.classList.add('act');
+  document.getElementById('cp-' + cid + '-' + tab).classList.add('act');
+  if(tab === 'quiz') initQuiz();
+}
+
+// Quiz
+var qs = [
+  {q:'Что такое CSS Flexbox?', opts:['Система 2D-вёрстки','Одномерная система раскладки','База данных','Язык программирования'], right:1},
+  {q:'Чем отличается let от var в JavaScript?', opts:['Ничем','let имеет блочную область видимости','var всегда const','let устарел в ES6'], right:1},
+  {q:'Что возвращает Array.map()?', opts:['Сортирует массив','Возвращает первый элемент','Новый массив с результатами функции','Удаляет дубликаты'], right:2},
+  {q:'Что такое REST API?', opts:['СУБД','Архитектурный стиль веб-сервисов','JavaScript-фреймворк','Протокол шифрования'], right:1},
+];
+var qi = 0, locked = false;
+
+function initQuiz(){ qi = 0; locked = false; renderQ(); }
+function renderQ(){
+  if(qi >= qs.length){
+    document.getElementById('qz').innerHTML = '<div style="text-align:center;color:#4ecdc4;font-size:17px;padding:28px">🎉 Тест завершён! Отличная работа!</div>';
+    return;
+  }
+  locked = false;
+  var q = qs[qi];
+  document.getElementById('qq').textContent = (qi+1) + '/' + qs.length + '. ' + q.q;
+  document.getElementById('qr').className = 'quiz-res';
+  document.getElementById('qr').textContent = '';
+  document.getElementById('qo').innerHTML = q.opts.map(function(o,i){
+    return '<div class="qopt" onclick="checkQ('+i+')">'+o+'</div>';
+  }).join('');
+}
+function checkQ(i){
+  if(locked) return; locked = true;
+  var q = qs[qi];
+  var opts = document.querySelectorAll('.qopt');
+  opts.forEach(function(o){ o.classList.add('locked'); });
+  opts[i].classList.add(i === q.right ? 'right' : 'wrong');
+  opts[q.right].classList.add('right');
+  var r = document.getElementById('qr');
+  r.className = 'quiz-res show ' + (i === q.right ? 'ok' : 'fail');
+  r.textContent = i === q.right ? '✅ Верно! Отличная работа.' : '❌ Неверно. Правильный вариант выделен выше.';
+}
+function nextQ(){ qi++; renderQ(); }
+
+// Live enrollment counter
+setInterval(function(){
+  var ec = document.getElementById('ec');
+  if(ec) ec.textContent = Math.floor(230 + Math.random() * 40);
+}, 5000);
+
+// Init quiz on load
+initQuiz();
+</script>
+</body>
+</html>
