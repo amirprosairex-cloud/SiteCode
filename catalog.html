@@ -1203,6 +1203,9 @@
 <div class="br-gate-ov" id="brGate">
   <div class="br-gate-box">
     <button class="br-gate-close" onclick="closeBoardGate()">&#10005;</button>
+
+    <!-- SCREEN 1: Tiers -->
+    <div id="brTiersScreen">
     <span class="br-gate-lbl">◆ Board Room</span>
     <h2>Хотите сложный проект? Откройте Board Room</h2>
     <p>Board Room — закрытая зона SiteCode для заявок на крупную разработку. Корпоративные сайты, enterprise e-commerce, веб-приложения — от 90 000 ₸. Доступен начиная со 2-го тарифа (Стандарт).</p>
@@ -1242,6 +1245,23 @@
           <li>🔄 Поддержка 12 месяцев</li>
         </ul>
         <button class="br-tier-btn go" onclick="showBrEmailForm()">У меня есть доступ →</button>
+      </div>
+
+    </div>
+
+    </div>
+
+    <!-- SCREEN 2: Email check -->
+    <div id="brEmailScreen" style="display:none">
+      <span class="br-gate-lbl">&#9670; Board Room</span>
+      <h2>&#1042;&#1074;&#1077;&#1076;&#1080;&#1090;&#1077; &#1074;&#1072;&#1096; email</h2>
+      <p style="color:#8299b9;font-size:14px;margin-bottom:24px">&#1042;&#1074;&#1077;&#1076;&#1080;&#1090;&#1077; email &#1082;&#1086;&#1090;&#1086;&#1088;&#1099;&#1081; &#1074;&#1099; &#1091;&#1082;&#1072;&#1079;&#1072;&#1083;&#1080; &#1087;&#1088;&#1080; &#1088;&#1077;&#1075;&#1080;&#1089;&#1090;&#1088;&#1072;&#1094;&#1080;&#1080;.</p>
+      <div style="display:flex;flex-direction:column;gap:12px;max-width:360px;margin:0 auto">
+        <input id="brCheckEmail" type="email" placeholder="your@email.com" style="padding:14px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:#eef2f7;font-size:15px;outline:none;font-family:inherit;width:100%;box-sizing:border-box" onkeydown="if(event.key==='Enter')checkBrEmail()">
+        <button class="br-tier-btn go" onclick="checkBrEmail()" style="width:100%;justify-content:center">&#1042;&#1086;&#1081;&#1090;&#1080; &#1074; Board Room &#8594;</button>
+        <div id="brCheckStatus" style="display:none;font-size:13px;text-align:center;padding:8px 0"></div>
+        <div id="brNoAccess" style="display:none;font-size:13px;color:#8299b9;text-align:center">&#1053;&#1077;&#1090; &#1076;&#1086;&#1089;&#1090;&#1091;&#1087;&#1072;? <a href="index.html#contact" style="color:#00d4ff;text-decoration:none">&#1057;&#1074;&#1103;&#1078;&#1080;&#1090;&#1077;&#1089;&#1100; &#1089; &#1085;&#1072;&#1084;&#1080; &#8594;</a></div>
+        <button onclick="showBrTiers()" style="background:none;border:none;color:#8299b9;font-size:13px;cursor:pointer;font-family:inherit;margin-top:4px">&#8592; &#1053;&#1072;&#1079;&#1072;&#1076;</button>
       </div>
     </div>
   </div>

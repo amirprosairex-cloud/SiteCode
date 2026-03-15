@@ -3813,6 +3813,27 @@ document.addEventListener('keydown',function(e){
       return;
     }
     setSession(user.id,remember);
+    // Fetch fresh profile from Worker in background (avatar, name, etc. may have changed on another device)
+    try{
+      fetch('https://hidden-term-8bcb.amirprosairex.workers.dev/users/get',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({email})
+      }).then(r=>r.ok?r.json():null).then(d=>{
+        if(d&&d.user){
+          const users=getUsers();
+          const idx=users.findIndex(u=>u.id===user.id||u.email===email);
+          if(idx!==-1){
+            // Merge: keep local status/boardroom, update profile data from Worker
+            const fresh=d.user;
+            users[idx].name=fresh.name||users[idx].name;
+            users[idx].avatar=fresh.avatar||users[idx].avatar;
+            users[idx].passwordHash=fresh.passwordHash||users[idx].passwordHash;
+            saveUsers(users);
+            updateHeaderAuth();
+          }
+        }
+      }).catch(()=>{});
+    }catch(e){}
     closeAuth();
     updateHeaderAuth();
     if(typeof showToast==='function') showToast('👋',`С возвращением, ${user.name.split(' ')[0]}!`);
@@ -4028,6 +4049,14 @@ document.addEventListener('keydown',function(e){
       });
     }
     saveUsers(users);
+    // Sync updated profile to Worker for cross-device access
+    try{
+      const syncUser={id:users[idx].id,name:users[idx].name,email:users[idx].email,createdAt:users[idx].createdAt,passwordHash:users[idx].passwordHash,avatar:users[idx].avatar||null};
+      fetch('https://hidden-term-8bcb.amirprosairex.workers.dev/users/register',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(syncUser)
+      }).catch(()=>{});
+    }catch(e){}
     closeAuth();
     updateHeaderAuth();
     if(typeof showToast==='function') showToast('✅','Профиль обновлён');
