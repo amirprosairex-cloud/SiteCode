@@ -115,7 +115,7 @@
       background-clip: text;
     }
 
-    nav { display: flex; align-items: center; gap: 36px; }
+    nav { position: absolute; left: 50%; transform: translateX(-45%); display: flex; align-items: center; gap: 36px; }
     nav a {
       color: var(--text-muted); text-decoration: none;
       font-size: 14px; font-weight: 500; transition: color .25s;
@@ -627,22 +627,20 @@
     .toast.show { transform: translateX(0); opacity: 1; }
     .toast-icon { font-size: 18px; }
 
-    /* ─── COOKIE ─── */
+    /* ─── COOKIE BAR ─── */
     #cookie-bar {
       position: fixed; bottom: 0; left: 0; right: 0; z-index: 500;
       background: var(--bg-card); border-top: 1px solid var(--border);
-      padding: 18px 40px; display: flex; align-items: center;
-      justify-content: space-between; gap: 20px; flex-wrap: wrap;
+      padding: 16px 40px; display: flex; align-items: center;
+      justify-content: space-between; gap: 16px; flex-wrap: wrap;
       transform: translateY(100%); transition: transform .5s;
     }
     #cookie-bar.visible { transform: translateY(0); }
-    #cookie-bar p { font-size: 13px; color: var(--text-muted); max-width: 700px; line-height: 1.6; }
-    #cookie-bar a { color: var(--cyan); }
-    .cookie-btns { display: flex; gap: 12px; flex-shrink: 0; }
-    .btn-cookie { padding: 9px 22px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; transition: all .2s; }
-    .btn-cookie-ok { background: var(--grad); color: #fff; border: none; }
-    .btn-cookie-no { background: transparent; border: 1px solid var(--border); color: var(--text-muted); }
-    .btn-cookie-no:hover { border-color: var(--cyan); color: var(--cyan); }
+    #cookie-bar p { font-size: 13px; color: var(--text-muted); line-height: 1.6; flex: 1; }
+    #cookie-bar a { color: var(--cyan); text-decoration: none; font-weight: 600; }
+    #cookie-bar a:hover { text-decoration: underline; }
+    .btn-cookie-ok { padding: 9px 26px; border-radius: 8px; background: var(--grad); color: #fff; font-size: 13px; font-weight: 700; border: none; cursor: pointer; font-family: inherit; transition: opacity .2s, box-shadow .2s; box-shadow: 0 4px 16px #00d4ff25; white-space: nowrap; }
+    .btn-cookie-ok:hover { opacity: .85; box-shadow: 0 6px 24px #00d4ff45; }
 
     /* ─── TYPER ─── */
     .typer-cursor { color: var(--cyan); font-weight: 300; animation: blink 1s step-end infinite; }
@@ -972,7 +970,9 @@
       .hero-stats { gap: 28px; }
       .footer-top { grid-template-columns: 1fr; }
       footer { padding: 40px 20px 24px; }
-      #cookie-bar { padding: 18px 20px; }
+      .cookie-modal { padding: 28px 22px; }
+      .btn-cookie-row { flex-direction: column; }
+      #cookie-bar { padding: 14px 20px; }
       #btt { bottom: 20px; right: 20px; }
     }
   </style>
@@ -998,9 +998,13 @@
     <a href="catalog.html">Каталог</a>
     <a href="#packages">Тарифы</a>
     <a href="#calc">Калькулятор</a>
-    <a href="#contact" class="btn-nav">Заказать сайт</a>
+    <a href="about.html">О нас</a>
+    <a href="blog.html">Блог</a>
   </nav>
-  <button class="btn-profile" id="profileBtn" onclick="openAuth()">👤 Войти</button>
+  <div style="display:flex;align-items:center;gap:12px">
+    <a href="#contact" class="btn-nav">Заказать сайт</a>
+    <button class="btn-profile" id="profileBtn" onclick="openAuth()">👤 Войти</button>
+  </div>
   <button class="hamburger" id="menuBtn" aria-label="Меню">
     <span></span><span></span><span></span>
   </button>
@@ -1012,6 +1016,8 @@
   <a href="catalog.html" onclick="closeMenu()">Каталог</a>
   <a href="#packages" onclick="closeMenu()">Тарифы</a>
   <a href="#calc" onclick="closeMenu()">Калькулятор</a>
+  <a href="about.html" onclick="closeMenu()">О нас</a>
+  <a href="blog.html" onclick="closeMenu()">Блог</a>
   <a href="#contact" class="btn-nav" onclick="closeMenu()">Заказать сайт</a>
   <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.08)">
     <a href="#" id="mobileAuthBtn" onclick="closeMenu();openAuth();return false;" style="color:#00d4ff">👤 Войти в аккаунт</a>
@@ -1496,7 +1502,7 @@
   <p>Оставьте заявку — и мы свяжемся с вами в течение 30 минут для бесплатной консультации.</p>
   <div class="cta-btns">
     <button class="btn-primary" onclick="openFormModal()" style="border:none;cursor:pointer;font-family:inherit;font-size:16px">📝 Оставить заявку</button>
-    <a href="tel:+79991234567" class="btn-outline">📞 Позвонить</a>
+    <a href="tel:+77789697305" class="btn-outline">📞 Позвонить</a>
   </div>
 </section>
 
@@ -1510,10 +1516,8 @@
       </a>
       <p>Создаём сайты, которые работают на вас. Профессиональная разработка, честные цены, реальный результат.</p>
       <div class="footer-socials">
-        <a class="social-btn" href="#" title="Telegram">✈</a>
-        <a class="social-btn" href="#" title="VK">V</a>
-        <a class="social-btn" href="#" title="YouTube">▶</a>
-        <a class="social-btn" href="#" title="WhatsApp">W</a>
+        <a class="social-btn" href="https://t.me/S1teCode" target="_blank" rel="noopener" title="Telegram-канал">✈</a>
+        <a class="social-btn" href="https://www.instagram.com/s1te_code?igsh=bXF4d2EzM3gwcHhl" target="_blank" rel="noopener" title="Instagram">📷</a>
       </div>
     </div>
     <div class="footer-col">
@@ -1539,11 +1543,11 @@
     <div class="footer-col">
       <h5>Контакты</h5>
       <ul>
-        <li><a href="tel:+79991234567">+7 (999) 123-45-67</a></li>
-        <li><a href="mailto:info@sitecode.ru">info@sitecode.ru</a></li>
-        <li><a href="#">Telegram</a></li>
-        <li><a href="#">WhatsApp</a></li>
-        <li><a href="#">Москва, Россия</a></li>
+        <li><a href="tel:+77789697305">+7 778 969 7305</a></li>
+        <li><a href="tel:+77751372731">+7 775 137 2731</a></li>
+        <li><a href="mailto:Ss1teC0de@gmail.com">Ss1teC0de@gmail.com</a></li>
+        <li><a href="https://t.me/Luminosik" target="_blank" rel="noopener">@Luminosik</a></li>
+        <li><a href="https://t.me/sssancho1ll" target="_blank" rel="noopener">@sssancho1ll</a></li>
       </ul>
     </div>
   </div>
@@ -1559,13 +1563,10 @@
 <!-- ─── TOASTS ─── -->
 <div id="toasts"></div>
 
-<!-- ─── COOKIE ─── -->
+<!-- ─── COOKIE BAR ─── -->
 <div id="cookie-bar">
-  <p>🍪 Мы используем cookies для улучшения работы сайта. <a href="#">Подробнее</a></p>
-  <div class="cookie-btns">
-    <button class="btn-cookie btn-cookie-no" onclick="closeCookie(false)">Только нужные</button>
-    <button class="btn-cookie btn-cookie-ok" onclick="closeCookie(true)">Принять все</button>
-  </div>
+  <p>🍪 Мы используем cookies для улучшения работы сайта. <a href="cookies.html" target="_blank">Подробнее</a></p>
+  <button class="btn-cookie-ok" onclick="acceptCookies()">Принять</button>
 </div>
 
 <!-- ─── FORM MODAL ─── -->
@@ -1774,7 +1775,7 @@
     a.addEventListener('click', e => { e.preventDefault(); openFormModal(); });
   });
 
-  // ===== FORM SUBMIT (simulate – replace with real backend/webhook) =====
+  // ===== FORM SUBMIT =====
   function submitForm(e) {
     e.preventDefault();
     const name = document.getElementById('fName');
@@ -1784,15 +1785,36 @@
     if (!name.value.trim()) { name.classList.add('error'); ok = false; }
     if (!phone.value.trim()) { phone.classList.add('error'); ok = false; }
     if (!ok) { showToast('⚠️', 'Заполните обязательные поля'); return; }
-    // Build payload (ready for Telegram bot / webhook)
-    const payload = {
+
+    const lead = {
+      id: Date.now(),
       name: name.value.trim(),
       phone: phone.value.trim(),
       budget: document.getElementById('fBudget').value,
       comment: document.getElementById('fComment').value.trim(),
-      timestamp: new Date().toISOString()
+      date: new Date().toLocaleString('ru-RU')
     };
-    console.log('📨 Lead:', JSON.stringify(payload, null, 2));
+
+    // Save to localStorage
+    try {
+      const leads = JSON.parse(localStorage.getItem('sc_leads') || '[]');
+      leads.unshift(lead);
+      localStorage.setItem('sc_leads', JSON.stringify(leads));
+      // Update tab badge
+      const tab = document.getElementById('admLeadsTab');
+      if (tab) tab.textContent = '📬 Заявки (' + leads.length + ')';
+    } catch(err) {}
+
+    // Send to Telegram if configured
+    try {
+      const cfg = admGetCfg();
+      if (cfg.tgToken && cfg.tgChatid) {
+        const text = `📬 Новая заявка с сайта!%0A%0A👤 Имя: ${encodeURIComponent(lead.name)}%0A📞 Телефон: ${encodeURIComponent(lead.phone)}%0A💰 Бюджет: ${encodeURIComponent(lead.budget)}%0A💬 Комментарий: ${encodeURIComponent(lead.comment || '—')}%0A🕐 Время: ${encodeURIComponent(lead.date)}`;
+        fetch(`https://api.telegram.org/bot${cfg.tgToken}/sendMessage?chat_id=${cfg.tgChatid}&text=${text}`)
+          .catch(() => {});
+      }
+    } catch(err) {}
+
     // Show success
     document.getElementById('contactForm').style.display = 'none';
     document.getElementById('formSuccess').style.display = 'block';
@@ -1812,13 +1834,13 @@
 
   // ===== COOKIE =====
   if (!localStorage.getItem('sc_cookie')) {
-    setTimeout(() => document.getElementById('cookie-bar').classList.add('visible'), 2500);
+    setTimeout(() => document.getElementById('cookie-bar').classList.add('visible'), 2000);
   }
-  function closeCookie(ok) {
-    localStorage.setItem('sc_cookie', ok ? 'all' : 'min');
+  function acceptCookies() {
+    localStorage.setItem('sc_cookie', 'all');
     document.getElementById('cookie-bar').classList.remove('visible');
-    if (ok) showToast('🍪', 'Cookies сохранены. Спасибо!');
   }
+  function closeCookie(ok) { acceptCookies(); }
 
   // ===== COMET =====
   function createComet(options = {}) {
@@ -2036,6 +2058,7 @@
         <button class="adm-tab" onclick="admTab(this,'pane-design')">🎨 Дизайн</button>
         <button class="adm-tab" onclick="admTab(this,'pane-security')">🔒 Безопасность</button>
         <button class="adm-tab" onclick="admTab(this,'pane-users')">👥 Пользователи</button>
+        <button class="adm-tab" onclick="admTab(this,'pane-leads')" id="admLeadsTab">📬 Заявки</button>
       </div>
       <div class="adm-body">
 
@@ -2190,19 +2213,19 @@
           <div class="adm-grid">
             <div class="adm-field">
               <label>Телефон</label>
-              <input id="cf-phone" value="+7 (999) 123-45-67">
+              <input id="cf-phone" value="+7 778 969 7305">
             </div>
             <div class="adm-field">
               <label>Email</label>
-              <input id="cf-email" value="hello@sitecode.ru" type="email">
+              <input id="cf-email" value="Ss1teC0de@gmail.com" type="email">
             </div>
             <div class="adm-field">
               <label>WhatsApp (номер без +)</label>
-              <input id="cf-wa" value="79991234567">
+              <input id="cf-wa" value="">
             </div>
             <div class="adm-field">
               <label>Telegram (username без @)</label>
-              <input id="cf-tg" value="sitecode_team">
+              <input id="cf-tg" value="S1teCode">
             </div>
             <div class="adm-field" style="grid-column:1/-1">
               <label>Адрес офиса</label>
@@ -2214,7 +2237,7 @@
             </div>
             <div class="adm-field">
               <label>Ссылка кнопки «Позвонить»</label>
-              <input id="cf-tel-href" value="tel:+79991234567">
+              <input id="cf-tel-href" value="tel:+77789697305">
             </div>
           </div>
 
@@ -2222,7 +2245,7 @@
           <div class="adm-grid">
             <div class="adm-field">
               <label>Куда слать заявки (mailto)</label>
-              <input id="cf-form-email" value="sales@sitecode.ru" type="email">
+              <input id="cf-form-email" value="Ss1teC0de@gmail.com" type="email">
               <div class="adm-hint">Используется в href=mailto: при сабмите формы. Для реальной отправки подключите бэкенд или сервис (Formspree, Telegram Bot и т.д.)</div>
             </div>
             <div class="adm-field">
@@ -2394,6 +2417,16 @@
           <div id="admUsersEmpty" style="display:none;color:#385a78;font-size:13px;padding:20px 0">Нет зарегистрированных пользователей.</div>
         </div>
 
+        <!-- ── LEADS ── -->
+        <div class="adm-pane" id="pane-leads">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+            <div class="adm-sh" style="margin:0">📬 Входящие заявки</div>
+            <button onclick="admClearLeads()" style="padding:6px 14px;background:rgba(255,85,102,.1);border:1px solid rgba(255,85,102,.25);border-radius:10px;color:#ff5566;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">🗑 Очистить всё</button>
+          </div>
+          <div id="admLeadsList" style="display:flex;flex-direction:column;gap:10px"></div>
+          <div id="admLeadsEmpty" style="display:none;color:#385a78;font-size:13px;padding:20px 0">Заявок пока нет.</div>
+        </div>
+
       </div><!-- /adm-body -->
     </div><!-- /admMain -->
   </div><!-- /adm-shell -->
@@ -2420,9 +2453,9 @@ const ADM_DEFAULTS = {
   pkg2name:'Бизнес',pkg2price:'45 000',pkg2desc:'Для среднего бизнеса с амбициями',
   pkg3name:'Премиум',pkg3price:'90 000',pkg3desc:'Для крупных проектов и e-commerce',
   ctaH:'Готовы запустить ваш сайт?',ctaP:'Оставьте заявку — и мы свяжемся с вами в течение 30 минут для бесплатной консультации.',
-  phone:'+7 (999) 123-45-67',email:'hello@sitecode.ru',wa:'79991234567',tg:'sitecode_team',
-  addr:'Москва, ул. Примерная, д. 1',hours:'Пн–Пт: 9:00 – 20:00',telHref:'tel:+79991234567',
-  formEmail:'sales@sitecode.ru',tgToken:'',tgChatid:'',
+  phone:'+7 778 969 7305',email:'Ss1teC0de@gmail.com',wa:'',tg:'S1teCode',
+  addr:'Москва, ул. Примерная, д. 1',hours:'Пн–Пт: 9:00 – 20:00',telHref:'tel:+77789697305',
+  formEmail:'Ss1teC0de@gmail.com',tgToken:'',tgChatid:'',
   pageTitle:'SiteCode — Разработка сайтов',metaDesc:'SiteCode — профессиональная разработка сайтов.',metaKw:'разработка сайтов, создание сайта',ogImg:'',ga:'',ym:'',
   colorCyan:'#00d4ff',colorBg:'#060f1e',
   particles:true,grid:true,comets:true,counters:true,welcomeToast:true
@@ -2512,14 +2545,31 @@ function admRenderUsers(){
       const st=u.status||'standard';
       const sc=STATUS_CFG[st]||STATUS_CFG.standard;
       const statusBadge=`<span style="padding:2px 9px;border-radius:6px;background:${sc.bg};border:1px solid ${sc.border};color:${sc.color};font-size:10px;font-weight:800">${sc.label}</span>`;
+      const brBadge=u.boardroom?'<span style="padding:2px 9px;border-radius:6px;background:rgba(231,200,137,.12);border:1px solid rgba(231,200,137,.3);color:#e7c889;font-size:10px;font-weight:800">◆ Board Room</span>':'';
       const selectOpts=Object.entries(STATUS_CFG).map(([k,v])=>`<option value="${k}"${st===k?' selected':''}>${v.label}</option>`).join('');
+      const brBtnStyle=u.boardroom
+        ? 'padding:5px 10px;border-radius:8px;background:rgba(231,200,137,.12);border:1px solid rgba(231,200,137,.3);color:#e7c889;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit'
+        : 'padding:5px 10px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#93a2b7;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit';
+      const brBtnText=u.boardroom?'◆ Отозвать BR':'◆ Выдать BR';
       const row=document.createElement('div');
       row.style.cssText='display:flex;align-items:center;gap:12px;padding:12px 14px;background:#1a2535;border:1px solid #283244;border-radius:12px;flex-wrap:wrap';
-      row.innerHTML=`<div style="width:40px;height:40px;border-radius:50%;background:${col};display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:#fff;flex-shrink:0">${u.avatar?`<img src="${u.avatar}" style="width:40px;height:40px;border-radius:50%;object-fit:cover">`:initials}</div><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:800;color:#eef2f7;display:flex;align-items:center;gap:6px;flex-wrap:wrap">${u.name} ${tfa} ${statusBadge}</div><div style="font-size:11px;color:#93a2b7;margin-top:1px">${u.email}</div><div style="font-size:10px;color:#4a6a8a;margin-top:2px">Зарегистрирован: ${dateStr}</div></div><div style="display:flex;align-items:center;gap:6px;flex-shrink:0"><select id="st_${u.id}" style="padding:5px 8px;border-radius:8px;background:#0f1826;border:1px solid #283244;color:#eef2f7;font-size:11px;font-family:inherit;cursor:pointer">${selectOpts}</select><button onclick="admSetUserStatus('${u.id}')" style="padding:5px 10px;border-radius:8px;background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.25);color:#00d4ff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">Применить</button><button onclick="admDeleteUser('${u.id}')" style="padding:5px 10px;border-radius:8px;background:rgba(255,85,102,.08);border:1px solid rgba(255,85,102,.2);color:#ff5566;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">Удалить</button></div>`;
+      row.innerHTML=`<div style="width:40px;height:40px;border-radius:50%;background:${col};display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:#fff;flex-shrink:0">${u.avatar?`<img src="${u.avatar}" style="width:40px;height:40px;border-radius:50%;object-fit:cover">`:initials}</div><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:800;color:#eef2f7;display:flex;align-items:center;gap:6px;flex-wrap:wrap">${u.name} ${tfa} ${statusBadge} ${brBadge}</div><div style="font-size:11px;color:#93a2b7;margin-top:1px">${u.email}</div><div style="font-size:10px;color:#4a6a8a;margin-top:2px">Зарегистрирован: ${dateStr}</div></div><div style="display:flex;align-items:center;gap:6px;flex-shrink:0;flex-wrap:wrap"><select id="st_${u.id}" style="padding:5px 8px;border-radius:8px;background:#0f1826;border:1px solid #283244;color:#eef2f7;font-size:11px;font-family:inherit;cursor:pointer">${selectOpts}</select><button onclick="admSetUserStatus('${u.id}')" style="padding:5px 10px;border-radius:8px;background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.25);color:#00d4ff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">Применить</button><button onclick="admToggleBoardroom('${u.id}')" style="${brBtnStyle}">${brBtnText}</button><button onclick="admDeleteUser('${u.id}')" style="padding:5px 10px;border-radius:8px;background:rgba(255,85,102,.08);border:1px solid rgba(255,85,102,.2);color:#ff5566;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">Удалить</button></div>`;
       list.appendChild(row);
     });
   }catch(e){}
 }
+window.admToggleBoardroom=function(id){
+  try{
+    let users=JSON.parse(localStorage.getItem('sc_users')||'[]');
+    const idx=users.findIndex(u=>u.id===id);
+    if(idx===-1)return;
+    users[idx].boardroom=!users[idx].boardroom;
+    localStorage.setItem('sc_users',JSON.stringify(users));
+    admRenderUsers();
+    const msg=users[idx].boardroom?'✅ Board Room доступ выдан':'🔒 Board Room доступ отозван';
+    if(typeof showToast==='function') showToast(users[idx].boardroom?'◆':'🔒', msg);
+  }catch(e){}
+};
 window.admSetUserStatus=function(id){
   try{
     const sel=document.getElementById('st_'+id);
@@ -2546,6 +2596,52 @@ window.admDeleteUser=function(id){
   }catch(e){}
 };
 
+function admRenderLeads(){
+  try{
+    const leads=JSON.parse(localStorage.getItem('sc_leads')||'[]');
+    const list=document.getElementById('admLeadsList');
+    const empty=document.getElementById('admLeadsEmpty');
+    if(!list)return;
+    list.innerHTML='';
+    if(!leads.length){empty.style.display='';list.style.display='none';return;}
+    empty.style.display='none';list.style.display='flex';
+    leads.forEach(lead=>{
+      const row=document.createElement('div');
+      row.style.cssText='padding:14px 16px;background:#1a2535;border:1px solid #283244;border-radius:12px;display:flex;flex-direction:column;gap:6px';
+      row.innerHTML=`
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+          <div style="font-size:14px;font-weight:800;color:#eef2f7">👤 ${lead.name}</div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-size:11px;color:#4a6a8a">${lead.date}</span>
+            <button onclick="admDeleteLead(${lead.id})" style="padding:3px 9px;border-radius:7px;background:rgba(255,85,102,.08);border:1px solid rgba(255,85,102,.2);color:#ff5566;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">Удалить</button>
+          </div>
+        </div>
+        <div style="font-size:13px;color:#9fd5ff">📞 ${lead.phone}</div>
+        <div style="font-size:12px;color:#7ba3c0">💰 Бюджет: ${lead.budget||'—'}</div>
+        ${lead.comment?`<div style="font-size:12px;color:#7ba3c0">💬 ${lead.comment}</div>`:''}
+      `;
+      list.appendChild(row);
+    });
+  }catch(e){}
+}
+window.admDeleteLead=function(id){
+  try{
+    let leads=JSON.parse(localStorage.getItem('sc_leads')||'[]');
+    leads=leads.filter(l=>l.id!==id);
+    localStorage.setItem('sc_leads',JSON.stringify(leads));
+    admRenderLeads();
+    const tab=document.getElementById('admLeadsTab');
+    if(tab) tab.textContent=leads.length?'📬 Заявки ('+leads.length+')':'📬 Заявки';
+  }catch(e){}
+};
+window.admClearLeads=function(){
+  if(!confirm('Удалить все заявки?'))return;
+  localStorage.removeItem('sc_leads');
+  admRenderLeads();
+  const tab=document.getElementById('admLeadsTab');
+  if(tab) tab.textContent='📬 Заявки';
+};
+
 window.checkAdmPwd = function(){
   const v = document.getElementById('admPwdInput').value;
   const err = document.getElementById('admPwdErr');
@@ -2556,6 +2652,7 @@ window.checkAdmPwd = function(){
 // ── Tabs ──
 window.admTab = function(btn, paneId){
   if(paneId==='pane-users') admRenderUsers();
+  if(paneId==='pane-leads') admRenderLeads();
   document.querySelectorAll('.adm-tab').forEach(t=>t.classList.remove('act'));
   document.querySelectorAll('.adm-pane').forEach(p=>p.classList.remove('act'));
   btn.classList.add('act');

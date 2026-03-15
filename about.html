@@ -23,7 +23,8 @@
     .logo{display:flex;align-items:center;gap:12px;text-decoration:none}
     .logo-icon{width:44px;height:44px;background:var(--grad);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#fff;box-shadow:0 0 20px #00d4ff55}
     .logo-text{font-size:22px;font-weight:800;letter-spacing:-.5px;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-    nav{display:flex;align-items:center;gap:32px}
+    nav{position:absolute;left:50%;transform:translateX(-40%);display:flex;align-items:center;gap:32px}
+    .header-right{display:flex;align-items:center;gap:16px}
     nav a{color:var(--text-muted);text-decoration:none;font-size:14px;font-weight:500;transition:color .25s}
     nav a:hover,nav a.active{color:var(--cyan)}
     .btn-nav{padding:10px 24px;border-radius:8px;background:var(--grad);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 0 16px #00d4ff40;transition:opacity .25s}
@@ -156,11 +157,13 @@
     <a href="index.html#packages">Тарифы</a>
     <a href="about.html" class="active">О нас</a>
     <a href="blog.html">Блог</a>
-    <a href="index.html#contact" class="btn-nav">Заказать сайт</a>
   </nav>
-  <button class="hamburger" id="menuBtn" aria-label="Меню">
-    <span></span><span></span><span></span>
-  </button>
+  <div class="header-right">
+    <a href="index.html#contact" class="btn-nav">Заказать сайт</a>
+    <button class="hamburger" id="menuBtn" aria-label="Меню">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
 </header>
 
 <div class="menu-overlay" id="menuOverlay"></div>
@@ -215,41 +218,33 @@
     <div class="tl-item">
       <div class="tl-dot">🌱</div>
       <div class="tl-body">
-        <div class="tl-year">2021 — Старт</div>
+        <div class="tl-year">2023 — Начало</div>
         <h4>Основание SiteCode</h4>
-        <p>Трое разработчиков из Москвы решили делать сайты по-другому: с фокусом на конверсию, а не только на дизайн. Первые 4 проекта, первые результаты.</p>
+        <p>Несколько разработчиков из Астаны решили делать сайты на заказ. Без громких заявлений — просто хотелось делать качественную работу и честно зарабатывать.</p>
       </div>
     </div>
     <div class="tl-item">
-      <div class="tl-dot">🚀</div>
+      <div class="tl-dot">✏️</div>
       <div class="tl-body">
-        <div class="tl-year">2022 — Рост</div>
-        <h4>Первые крупные клиенты</h4>
-        <p>Расширили команду до 8 человек. Запустили 40+ проектов, среди которых первый E-commerce с оборотом 50 млн/год. Открыли направление SEO.</p>
+        <div class="tl-year">2024 — Рост</div>
+        <h4>Первые постоянные клиенты</h4>
+        <p>Запустили первые серёзные проекты: лендинги, корпоративные сайты, небольшие магазины. Начали получать повторные заказы и рекомендации.</p>
       </div>
     </div>
     <div class="tl-item">
       <div class="tl-dot">⚡</div>
       <div class="tl-body">
-        <div class="tl-year">2023 — Масштаб</div>
-        <h4>100 проектов и собственный стек</h4>
-        <p>Разработали собственный шаблонный фреймворк для быстрого запуска проектов. Сократили время разработки лендинга с 7 до 3 дней.</p>
-      </div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-dot">🏆</div>
-      <div class="tl-body">
-        <div class="tl-year">2024 — Признание</div>
-        <h4>Лидер рейтинга веб-студий</h4>
-        <p>Вошли в топ-20 веб-студий России по версии Ruward. 150 проектов, средняя оценка клиентов 4.9/5. Запустили собственный блог и YouTube-канал.</p>
+        <div class="tl-year">2024–2025 — Развитие</div>
+        <h4>Расширяем возможности</h4>
+        <p>Добавили в стек AI-инструменты, ускорили запуск проектов. Стали брать более сложные задачи: интернет-магазины, веб-приложения, SEO-продвижение.</p>
       </div>
     </div>
     <div class="tl-item">
       <div class="tl-dot">🌟</div>
       <div class="tl-body">
         <div class="tl-year">2025–2026 — Сейчас</div>
-        <h4>AI-powered разработка</h4>
-        <p>Интегрировали AI-инструменты в рабочий процесс. Теперь MVP лендинга готов за 24 часа. Команда — 18 человек. Работаем на Россию и СНГ.</p>
+        <h4>Работаем и растём</h4>
+        <p>Небольшая, но стабильная команда. Берёмся за проекты по всему Казахстану и СНГ. Каждый проект — это честная работа и желание дать клиенту реальный результат.</p>
       </div>
     </div>
   </div>
@@ -261,91 +256,25 @@
   <div class="section-sub">Результаты, которыми мы гордимся</div>
   <div class="stats-grid">
     <div class="stat-big">
-      <div class="stat-big-num" data-target="150" data-suffix="+">0</div>
+      <div class="stat-big-num" data-target="30" data-suffix="+">0</div>
       <div class="stat-big-label">Проектов запущено</div>
     </div>
     <div class="stat-big">
-      <div class="stat-big-num" data-target="18" data-suffix="">0</div>
+      <div class="stat-big-num" data-target="5" data-suffix="">0</div>
       <div class="stat-big-label">Человек в команде</div>
     </div>
     <div class="stat-big">
-      <div class="stat-big-num" data-target="5" data-suffix=" лет">0</div>
+      <div class="stat-big-num" data-target="2" data-suffix=" года">0</div>
       <div class="stat-big-label">На рынке</div>
     </div>
     <div class="stat-big">
-      <div class="stat-big-num" data-target="98" data-suffix="%">0</div>
-      <div class="stat-big-label">Рекомендуют нас</div>
-    </div>
-    <div class="stat-big">
-      <div class="stat-big-num" data-target="4" data-suffix=".9 ★">0</div>
+      <div class="stat-big-num" data-target="4" data-suffix=".8 ★">0</div>
       <div class="stat-big-label">Средняя оценка</div>
     </div>
   </div>
 </section>
 
-<!-- TEAM -->
-<section>
-  <div class="section-title">Наша <span class="accent">команда</span></div>
-  <div class="section-sub">Профессионалы, которые создают ваши проекты</div>
-  <div class="team-grid">
-    <div class="team-card">
-      <div class="team-avatar-wrap">
-        <div class="team-avatar">А</div>
-        <span class="team-status"></span>
-      </div>
-      <h4>Алексей Дронов</h4>
-      <div class="team-role">CEO & Lead Developer</div>
-      <p>10 лет в веб-разработке. Специализация — высоконагруженные системы и архитектура. Писал код для стартапов из Y Combinator.</p>
-      <div class="team-skills">
-        <span class="skill-badge">React</span>
-        <span class="skill-badge">Node.js</span>
-        <span class="skill-badge">AWS</span>
-      </div>
-    </div>
-    <div class="team-card">
-      <div class="team-avatar-wrap">
-        <div class="team-avatar" style="background:linear-gradient(135deg,#ff79c6,#bd93f9)">М</div>
-        <span class="team-status"></span>
-      </div>
-      <h4>Мария Сорокина</h4>
-      <div class="team-role">Head of Design</div>
-      <p>8 лет в UX/UI. Работала с крупными ритейлерами и банками. Создаёт интерфейсы, которые конвертируют, а не просто выглядят красиво.</p>
-      <div class="team-skills">
-        <span class="skill-badge">Figma</span>
-        <span class="skill-badge">UX Research</span>
-        <span class="skill-badge">A/B Testing</span>
-      </div>
-    </div>
-    <div class="team-card">
-      <div class="team-avatar-wrap">
-        <div class="team-avatar" style="background:linear-gradient(135deg,#50fa7b,#0077b6)">Д</div>
-        <span class="team-status"></span>
-      </div>
-      <h4>Дмитрий Ларин</h4>
-      <div class="team-role">Backend Engineer</div>
-      <p>Python & Go разработчик. Строит API, которые держат нагрузку миллионов запросов. Фанат чистого кода и TDD.</p>
-      <div class="team-skills">
-        <span class="skill-badge">Python</span>
-        <span class="skill-badge">FastAPI</span>
-        <span class="skill-badge">Docker</span>
-      </div>
-    </div>
-    <div class="team-card">
-      <div class="team-avatar-wrap">
-        <div class="team-avatar" style="background:linear-gradient(135deg,#ffb86c,#ff5555)">К</div>
-        <span class="team-status"></span>
-      </div>
-      <h4>Кирилл Фёдоров</h4>
-      <div class="team-role">SEO & Marketing Lead</div>
-      <p>Специалист по техническому SEO и контент-маркетингу. Вывел 40+ сайтов в топ-5 Яндекса. Автор блога с 30 000 читателей.</p>
-      <div class="team-skills">
-        <span class="skill-badge">SEO</span>
-        <span class="skill-badge">Analytics</span>
-        <span class="skill-badge">Content</span>
-      </div>
-    </div>
-  </div>
-</section>
+
 
 <!-- FAQ -->
 <section style="background:var(--bg-dark)">
@@ -416,6 +345,15 @@
 
 <footer>
   <a href="index.html" class="btn-back">← На главную</a>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center">
+    <div style="display:flex;gap:10px">
+      <a href="https://t.me/S1teCode" target="_blank" rel="noopener" title="Telegram-канал" style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,0.15);color:#fff;text-decoration:none;font-size:16px">✈</a>
+      <a href="https://www.instagram.com/s1te_code?igsh=bXF4d2EzM3gwcHhl" target="_blank" rel="noopener" title="Instagram" style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,0.15);color:#fff;text-decoration:none;font-size:16px">📷</a>
+    </div>
+    <p style="font-size:12px;color:var(--text-muted)">
+      <a href="tel:+77789697305">+7 778 969 7305</a> · <a href="tel:+77751372731">+7 775 137 2731</a> · <a href="mailto:Ss1teC0de@gmail.com">Ss1teC0de@gmail.com</a> · <a href="https://t.me/Luminosik" target="_blank" rel="noopener">@Luminosik</a> · <a href="https://t.me/sssancho1ll" target="_blank" rel="noopener">@sssancho1ll</a>
+    </p>
+  </div>
   <p>© 2026 SiteCode · <a href="blog.html">Блог</a> · <a href="index.html#contact">Контакты</a></p>
 </footer>
 

@@ -88,8 +88,9 @@
     .blog-grid { max-width:1200px; margin:0 auto; padding:0 60px 100px; display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); gap:28px; position:relative; z-index:1; }
     .blog-card { background:radial-gradient(circle at top right,rgba(0,212,255,.08),transparent 28%),linear-gradient(180deg,rgba(16,31,56,.95),rgba(8,20,36,.93)); border:1px solid var(--border); border-radius:20px; overflow:hidden; transition:transform .3s,box-shadow .3s,border-color .3s; display:flex; flex-direction:column; }
     .blog-card:hover { transform:translateY(-6px); box-shadow:0 24px 60px #00d4ff15; border-color:#00d4ff55; }
-    .blog-card-img { height:200px; display:flex; align-items:center; justify-content:center; font-size:60px; position:relative; overflow:hidden; }
-    .blog-card-img::after { content:attr(data-num); position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:80px; opacity:.07; font-weight:900; }
+    .blog-card-img { height:200px; position:relative; overflow:hidden; }
+    .blog-card-img img { width:100%; height:100%; object-fit:cover; display:block; transition:transform .5s ease; }
+    .blog-card:hover .blog-card-img img { transform:scale(1.07); }
     .card-img-1 { background:linear-gradient(135deg,#0a1628,#0e2a50); }
     .card-img-2 { background:linear-gradient(135deg,#0d1a30,#102240); }
     .card-img-3 { background:linear-gradient(135deg,#091422,#0c1e38); }
@@ -104,6 +105,7 @@
     .blog-tag.design { color:#ff79c6; background:#ff79c615; border-color:#ff79c640; }
     .blog-tag.seo { color:#50fa7b; background:#50fa7b10; border-color:#50fa7b30; }
     .blog-tag.perf { color:#ffb86c; background:#ffb86c10; border-color:#ffb86c30; }
+    .blog-tag.biz { color:#ffd700; background:#ffd70010; border-color:#ffd70030; }
     .blog-date { font-size:12px; color:var(--text-muted); }
     .blog-read { margin-left:auto; font-size:12px; color:var(--text-muted); }
     .blog-card h3 { font-size:18px; font-weight:800; margin-bottom:10px; line-height:1.3; }
@@ -160,6 +162,7 @@
       .featured-img { height:220px; }
       .featured-body { padding:28px 24px; }
       footer { padding:32px 20px; }
+      .social-promo-grid { grid-template-columns:1fr !important; }
     }
     @media(max-width:600px) {
       .blog-grid { grid-template-columns:1fr; }
@@ -203,26 +206,52 @@
 <div class="page-hero">
   <div class="page-hero-glow"></div>
   <h1>Блог <span class="accent">SiteCode</span></h1>
-  <p>Статьи о разработке, дизайне, SEO и технологиях. Полезно для бизнеса и разработчиков.</p>
+  <p>Интересные факты о веб-разработке, дизайне, SEO и бизнесе. Подписывайтесь на наш <a href="https://www.instagram.com/s1te_code?igsh=bXF4d2EzM3gwcHhl" target="_blank" rel="noopener" style="color:var(--cyan);text-decoration:none;font-weight:700">Instagram @s1te_code</a> и <a href="https://t.me/S1teCode" target="_blank" rel="noopener" style="color:var(--cyan);text-decoration:none;font-weight:700">Telegram @S1teCode</a></p>
+</div>
+
+<!-- SOCIAL PROMO -->
+<div style="max-width:1200px;margin:0 auto;padding:0 60px 40px;position:relative;z-index:1">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+    <a href="https://www.instagram.com/s1te_code?igsh=bXF4d2EzM3gwcHhl" target="_blank" rel="noopener" style="text-decoration:none;display:block;padding:28px 32px;border-radius:22px;background:linear-gradient(135deg,rgba(131,58,180,.25),rgba(253,29,29,.18),rgba(252,176,69,.18));border:1px solid rgba(255,120,120,.25);transition:transform .3s,box-shadow .3s" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 20px 50px rgba(253,29,29,.2)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">
+        <div style="width:50px;height:50px;border-radius:14px;background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">📸</div>
+        <div>
+          <div style="font-size:18px;font-weight:900;color:#fff">Instagram</div>
+          <div style="font-size:13px;color:#ffaaaa;font-weight:600">@s1te_code</div>
+        </div>
+        <div style="margin-left:auto;padding:6px 14px;border-radius:999px;background:linear-gradient(135deg,#833ab4,#fd1d1d);color:#fff;font-size:12px;font-weight:800">Подписаться</div>
+      </div>
+      <p style="font-size:14px;color:#e8d0ff;line-height:1.7">Рилсы с закулисья, фишки по дизайну и разработке, анонсы вакансий и спецпредложения для подписчиков. ✨</p>
+    </a>
+    <a href="https://t.me/S1teCode" target="_blank" rel="noopener" style="text-decoration:none;display:block;padding:28px 32px;border-radius:22px;background:linear-gradient(135deg,rgba(0,136,204,.25),rgba(0,212,255,.15));border:1px solid rgba(0,180,255,.25);transition:transform .3s,box-shadow .3s" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 20px 50px rgba(0,212,255,.2)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">
+        <div style="width:50px;height:50px;border-radius:14px;background:linear-gradient(135deg,#0088cc,#00d4ff);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">✈️</div>
+        <div>
+          <div style="font-size:18px;font-weight:900;color:#fff">Telegram</div>
+          <div style="font-size:13px;color:#7be8ff;font-weight:600">@S1teCode</div>
+        </div>
+        <div style="margin-left:auto;padding:6px 14px;border-radius:999px;background:linear-gradient(135deg,#0088cc,#00d4ff);color:#fff;font-size:12px;font-weight:800">Подписаться</div>
+      </div>
+      <p style="font-size:14px;color:#c8f0ff;line-height:1.7">Оперативные новости, анонсы акций, жизнь команды и полезные ссылки для бизнеса онлайн. 🚀</p>
+    </a>
+  </div>
 </div>
 
 <!-- FEATURED -->
 <div class="blog-featured">
-  <div class="featured-card" data-cat="js">
-    <div class="featured-img">
-      <span>⚡</span>
-      <div class="featured-badge">⭐ Топ статья</div>
+  <div class="featured-card" data-cat="perf">
+    <div class="featured-img" style="padding:0;">
+      <img src="https://picsum.photos/seed/performance/800/320" alt="Скорость загрузки" style="width:100%;height:100%;object-fit:cover;opacity:0.7">
+      <div class="featured-badge">💡 Факт недели</div>
     </div>
     <div class="featured-body">
       <div class="blog-meta">
-        <span class="blog-tag js">JavaScript</span>
-        <span class="blog-tag perf">Performance</span>
-        <span class="blog-date">10 марта 2026</span>
-        <span class="blog-read">⏱ 8 мин</span>
+        <span class="blog-tag perf">Цифры</span>
+        <span class="blog-tag js">UX</span>
+        <span class="blog-date">2026</span>
       </div>
-      <h2>Web Vitals 2026: как добиться 100/100 в Lighthouse за один день</h2>
-      <p>Разбираем LCP, CLS, INP по шагам. Реальные кейсы из наших проектов — от 45 до 98 баллов за одну оптимизацию. Инструменты, метрики, код.</p>
-      <a href="#" class="btn-primary" style="display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:10px;font-size:14px;width:max-content">Читать статью →</a>
+      <h2>53% пользователей уходят, если сайт грузится дольше 3 секунд</h2>
+      <p>Исследование Google: каждая лишняя секунда загрузки снижает конверсию на 7%. Amazon подсчитал — +100 мс загрузки = минус $1.6 млрд выручки в год. Именно поэтому скорость — один из главных приоритетов в каждом нашем проекте.</p>
     </div>
   </div>
 </div>
@@ -230,172 +259,127 @@
 <!-- TOOLBAR -->
 <div class="blog-toolbar">
   <div class="blog-search">
-    <input type="text" id="searchInput" placeholder="Поиск по статьям..." oninput="filterBlog()">
+    <input type="text" id="searchInput" placeholder="Поиск по фактам..." oninput="filterBlog()">
     <span class="blog-search-icon">🔍</span>
   </div>
   <div class="blog-cats">
     <button class="blog-cat active" onclick="setCat(this,'all')">Все</button>
-    <button class="blog-cat" onclick="setCat(this,'js')">JavaScript</button>
-    <button class="blog-cat" onclick="setCat(this,'py')">Python</button>
+    <button class="blog-cat" onclick="setCat(this,'js')">Разработка</button>
     <button class="blog-cat" onclick="setCat(this,'design')">Дизайн</button>
     <button class="blog-cat" onclick="setCat(this,'seo')">SEO</button>
-    <button class="blog-cat" onclick="setCat(this,'perf')">Производительность</button>
+    <button class="blog-cat" onclick="setCat(this,'perf')">Цифры</button>
+    <button class="blog-cat" onclick="setCat(this,'biz')">Бизнес</button>
   </div>
 </div>
 
 <!-- BLOG GRID -->
 <div class="blog-grid" id="blogGrid">
 
-  <article class="blog-card" data-cat="js">
-    <div class="blog-card-img card-img-1">💡</div>
+  <article class="blog-card" data-cat="perf">
+    <div class="blog-card-img card-img-1"><img src="https://picsum.photos/seed/speed/600/200" alt="Скорость сайта" loading="lazy"></div>
     <div class="blog-card-body">
       <div class="blog-meta">
-        <span class="blog-tag js">JavaScript</span>
-        <span class="blog-date">7 марта 2026</span>
-        <span class="blog-read">⏱ 6 мин</span>
+        <span class="blog-tag perf">Цифра</span>
+        <span class="blog-date">Факт</span>
       </div>
-      <h3>React Server Components: что это и зачем вашему проекту</h3>
-      <p>Полный гайд по RSC в Next.js 15. Разбираем когда использовать, как перейти с client components, и какой прирост скорости вы получите.</p>
-      <div class="blog-card-footer">
-        <div class="blog-author"><div class="blog-avatar">А</div><span class="blog-author-name">Алексей Дронов</span></div>
-        <a href="#" class="btn-read">Читать →</a>
-      </div>
-    </div>
-  </article>
-
-  <article class="blog-card" data-cat="py">
-    <div class="blog-card-img card-img-2">🐍</div>
-    <div class="blog-card-body">
-      <div class="blog-meta">
-        <span class="blog-tag py">Python</span>
-        <span class="blog-date">5 марта 2026</span>
-        <span class="blog-read">⏱ 10 мин</span>
-      </div>
-      <h3>FastAPI vs Django REST: что выбрать для backend в 2026</h3>
-      <p>Сравниваем два самых популярных Python-фреймворка для API. Производительность, ORM, документация, деплой. Наш выбор с обоснованием.</p>
-      <div class="blog-card-footer">
-        <div class="blog-author"><div class="blog-avatar">Д</div><span class="blog-author-name">Дмитрий Ларин</span></div>
-        <a href="#" class="btn-read">Читать →</a>
-      </div>
+      <h3>Сайт, грузящийся за 1 сек, конвертирует в 3× лучше</h3>
+      <p>Portent исследовали 10 000 лендингов: конверсия при загрузке 1 сек — 32%, при 5 сек — всего 9%. Скорость — не опция, это деньги.</p>
     </div>
   </article>
 
   <article class="blog-card" data-cat="design">
-    <div class="blog-card-img card-img-3">🎨</div>
+    <div class="blog-card-img card-img-2"><img src="https://picsum.photos/seed/mobile/600/200" alt="Мобильный дизайн" loading="lazy"></div>
     <div class="blog-card-body">
       <div class="blog-meta">
         <span class="blog-tag design">Дизайн</span>
-        <span class="blog-date">3 марта 2026</span>
-        <span class="blog-read">⏱ 5 мин</span>
+        <span class="blog-date">Факт</span>
       </div>
-      <h3>Glassmorphism 2.0 — тренды UI/UX которые повышают конверсию</h3>
-      <p>Разбираем какие визуальные решения реально влияют на поведение пользователей, а не просто «красиво выглядят». Данные из 50+ A/B тестов.</p>
-      <div class="blog-card-footer">
-        <div class="blog-author"><div class="blog-avatar">М</div><span class="blog-author-name">Мария Сорокина</span></div>
-        <a href="#" class="btn-read">Читать →</a>
-      </div>
+      <h3>78% казахстанцев выходят в сеть со смартфона</h3>
+      <p>По данным Stat Counter 2025: в Казахстане мобильный трафик уже вдвое превышает десктопный. Мобильный дизайн — не тренд, а необходимость.</p>
     </div>
   </article>
 
   <article class="blog-card" data-cat="seo">
-    <div class="blog-card-img card-img-4">📈</div>
+    <div class="blog-card-img card-img-3"><img src="https://picsum.photos/seed/search/600/200" alt="SEO поиск" loading="lazy"></div>
     <div class="blog-card-body">
       <div class="blog-meta">
         <span class="blog-tag seo">SEO</span>
-        <span class="blog-date">28 февраля 2026</span>
-        <span class="blog-read">⏱ 7 мин</span>
+        <span class="blog-date">Факт</span>
       </div>
-      <h3>Семантическое ядро в 2026: нейронные сети vs ручной сбор</h3>
-      <p>Как мы собирали семантику для 3 проектов с помощью GPT-4 и KeyCollector. Разница в時間, качестве кластеризации и трудозатратах.</p>
-      <div class="blog-card-footer">
-        <div class="blog-author"><div class="blog-avatar">К</div><span class="blog-author-name">Кирилл Фёдоров</span></div>
-        <a href="#" class="btn-read">Читать →</a>
-      </div>
+      <h3>75% пользователей не смотрят дальше первой страницы поиска</h3>
+      <p>Попасть в ТОП-10 Yandex или Google — значит получать клиентов. Мы прорабатываем SEO-структуру ещё на этапе дизайна, а не после запуска.</p>
     </div>
   </article>
 
-  <article class="blog-card" data-cat="perf">
-    <div class="blog-card-img card-img-5">⚡</div>
+  <article class="blog-card" data-cat="biz">
+    <div class="blog-card-img card-img-4"><img src="https://picsum.photos/seed/business/600/200" alt="Бизнес сайт" loading="lazy"></div>
     <div class="blog-card-body">
       <div class="blog-meta">
-        <span class="blog-tag perf">Производительность</span>
-        <span class="blog-date">22 февраля 2026</span>
-        <span class="blog-read">⏱ 9 мин</span>
+        <span class="blog-tag biz">Бизнес</span>
+        <span class="blog-date">Факт</span>
       </div>
-      <h3>PostgreSQL: 10 запросов которые тормозят вашу базу данных</h3>
-      <p>Реальные примеры медленных SQL-запросов из продакшена, как мы их нашли с помощью pg_stat_statements и как оптимизировали.</p>
-      <div class="blog-card-footer">
-        <div class="blog-author"><div class="blog-avatar">А</div><span class="blog-author-name">Андрей Козлов</span></div>
-        <a href="#" class="btn-read">Читать →</a>
-      </div>
-    </div>
-  </article>
-
-  <article class="blog-card" data-cat="js">
-    <div class="blog-card-img card-img-6">🔷</div>
-    <div class="blog-card-body">
-      <div class="blog-meta">
-        <span class="blog-tag js">TypeScript</span>
-        <span class="blog-date">18 февраля 2026</span>
-        <span class="blog-read">⏱ 12 мин</span>
-      </div>
-      <h3>TypeScript 5.4: новые фичи которые изменят ваш код</h3>
-      <p>Обзор самых важных обновлений: NoInfer utility type, улучшения narrowing в closures, новый синтаксис для satisfies. Примеры и паттерны.</p>
-      <div class="blog-card-footer">
-        <div class="blog-author"><div class="blog-avatar">С</div><span class="blog-author-name">Сергей Новиков</span></div>
-        <a href="#" class="btn-read">Читать →</a>
-      </div>
+      <h3>Сайт окупается в среднем за 4–6 месяцев</h3>
+      <p>Даже простой лендинг приносит клиентов годами. Компании без сайта теряют до 40% потенциальных клиентов ещё до первого контакта.</p>
     </div>
   </article>
 
   <article class="blog-card" data-cat="design">
-    <div class="blog-card-img card-img-1">📱</div>
+    <div class="blog-card-img card-img-5"><img src="https://picsum.photos/seed/design/600/200" alt="Дизайн и цвет" loading="lazy"></div>
     <div class="blog-card-body">
       <div class="blog-meta">
-        <span class="blog-tag design">Mobile-first</span>
-        <span class="blog-date">14 февраля 2026</span>
-        <span class="blog-read">⏱ 6 мин</span>
+        <span class="blog-tag design">Дизайн</span>
+        <span class="blog-date">Факт</span>
       </div>
-      <h3>Mobile-first в 2026: почему десктопный дизайн убивает конверсию</h3>
-      <p>67% трафика — мобильные. Разбираем 5 грубых ошибок при адаптации сайтов и как их исправить за 1 рабочий день без редизайна.</p>
-      <div class="blog-card-footer">
-        <div class="blog-author"><div class="blog-avatar">М</div><span class="blog-author-name">Мария Сорокина</span></div>
-        <a href="#" class="btn-read">Читать →</a>
-      </div>
+      <h3>Цвет влияет на решение о покупке больше, чем текст</h3>
+      <p>Кнопка покупки оранжевого цвета конвертирует на 32% лучше зелёной. Цвет, шрифт, размер — мы тестируем эти параметры, прежде чем сдать проект.</p>
     </div>
   </article>
 
   <article class="blog-card" data-cat="seo">
-    <div class="blog-card-img card-img-2">🤖</div>
+    <div class="blog-card-img card-img-6"><img src="https://picsum.photos/seed/artificial/600/200" alt="AI и SEO" loading="lazy"></div>
     <div class="blog-card-body">
       <div class="blog-meta">
         <span class="blog-tag seo">SEO + AI</span>
-        <span class="blog-date">10 февраля 2026</span>
-        <span class="blog-read">⏱ 8 мин</span>
+        <span class="blog-date">Факт</span>
       </div>
-      <h3>AI-SEO: как Yandex и Google учитывают нейронный контент</h3>
-      <p>Будут ли сайты с GPT-текстами падать в выдаче? История эксперимента: 3 сайта, 90 дней, 400 статей. Результаты, выводы, рекомендации.</p>
-      <div class="blog-card-footer">
-        <div class="blog-author"><div class="blog-avatar">К</div><span class="blog-author-name">Кирилл Фёдоров</span></div>
-        <a href="#" class="btn-read">Читать →</a>
-      </div>
+      <h3>AI-тексты ранжируются наравне с ручными — если они полезны</h3>
+      <p>Google подтвердил: главное — качество контента, а не способ создания. Мы грамотно сочетаем AI и SEO-экспертизу в каждом проекте.</p>
     </div>
   </article>
 
-  <article class="blog-card" data-cat="py">
-    <div class="blog-card-img card-img-3">🐳</div>
+  <article class="blog-card" data-cat="js">
+    <div class="blog-card-img card-img-1"><img src="https://picsum.photos/seed/coding/600/200" alt="Разработка React" loading="lazy"></div>
     <div class="blog-card-body">
       <div class="blog-meta">
-        <span class="blog-tag py">Docker</span>
-        <span class="blog-date">5 февраля 2026</span>
-        <span class="blog-read">⏱ 11 мин</span>
+        <span class="blog-tag js">Разработка</span>
+        <span class="blog-date">Факт</span>
       </div>
-      <h3>Docker + Python: production-ready контейнеризация за 1 час</h3>
-      <p>Пошаговое руководство: Dockerfile, multi-stage builds, docker-compose для dev и prod, healthcheck, ротация логов. Копируйте и используйте.</p>
-      <div class="blog-card-footer">
-        <div class="blog-author"><div class="blog-avatar">Д</div><span class="blog-author-name">Дмитрий Ларин</span></div>
-        <a href="#" class="btn-read">Читать →</a>
+      <h3>React занимает 43% вакансий фронтенд-разработчиков</h3>
+      <p>Наиболее востребованный фреймворк в 2026 — Next.js. Мы выбираем технологии под задачу, а не по моде — это влияет на скорость и стоимость поддержки.</p>
+    </div>
+  </article>
+
+  <article class="blog-card" data-cat="biz">
+    <div class="blog-card-img card-img-2"><img src="https://picsum.photos/seed/ecommerce/600/200" alt="E-commerce рост" loading="lazy"></div>
+    <div class="blog-card-body">
+      <div class="blog-meta">
+        <span class="blog-tag biz">Бизнес</span>
+        <span class="blog-date">Факт</span>
       </div>
+      <h3>Интернет-магазины в Казахстане растут на 38% в год</h3>
+      <p>E-commerce в Казахстане — один из самых быстрорастущих сегментов. Мы делаем магазины, которые продают, а не просто красиво выглядят.</p>
+    </div>
+  </article>
+
+  <article class="blog-card" data-cat="js">
+    <div class="blog-card-img card-img-3"><img src="https://picsum.photos/seed/nextjs/600/200" alt="Next.js производительность" loading="lazy"></div>
+    <div class="blog-card-body">
+      <div class="blog-meta">
+        <span class="blog-tag js">Разработка</span>
+        <span class="blog-date">Факт</span>
+      </div>
+      <h3>Next.js 15 быстрее Gatsby в 3 раза по метрике LCP</h3>
+      <p>Server Components + стриминг делают сайты молниеносными без жертв функциональностью. Мы перешли на этот стек в 2025 и не сожалеем.</p>
     </div>
   </article>
 
@@ -411,6 +395,15 @@
 
 <footer>
   <a href="index.html" class="btn-back">← На главную</a>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center">
+    <div style="display:flex;gap:10px">
+      <a href="https://t.me/S1teCode" target="_blank" rel="noopener" title="Telegram-канал" style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,0.15);color:#fff;text-decoration:none;font-size:16px">✈</a>
+      <a href="https://www.instagram.com/s1te_code?igsh=bXF4d2EzM3gwcHhl" target="_blank" rel="noopener" title="Instagram" style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,0.15);color:#fff;text-decoration:none;font-size:16px">📷</a>
+    </div>
+    <p style="font-size:12px;color:var(--text-muted)">
+      <a href="tel:+77789697305">+7 778 969 7305</a> · <a href="tel:+77751372731">+7 775 137 2731</a> · <a href="mailto:Ss1teC0de@gmail.com">Ss1teC0de@gmail.com</a> · <a href="https://t.me/Luminosik" target="_blank" rel="noopener">@Luminosik</a> · <a href="https://t.me/sssancho1ll" target="_blank" rel="noopener">@sssancho1ll</a>
+    </p>
+  </div>
   <p>© 2026 SiteCode · <a href="#">Реклама в блоге</a> · <a href="index.html#contact">Заказать сайт</a></p>
 </footer>
 

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Политика cookies — SiteCode</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg-deep: #060f1e; --bg-dark: #0a1628; --bg-card: #0e1f38; --bg-card2: #112341;
+      --cyan: #00d4ff; --cyan-mid: #00aadd; --blue: #0077b6;
+      --grad: linear-gradient(135deg,#00d4ff 0%,#0099cc 50%,#0066aa 100%);
+      --text: #e8f4fd; --text-muted: #7ba3c0; --border: #1a3050;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(circle at top left, rgba(0,212,255,.14), transparent 28%),
+                  linear-gradient(180deg, #06101d 0%, #081526 36%, #071221 100%);
+      color: var(--text); overflow-x: hidden; min-height: 100vh;
+    }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-dark); }
+    ::-webkit-scrollbar-thumb { background: var(--cyan-mid); border-radius: 3px; }
+
+    /* HEADER */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 60px; background: rgba(6,15,30,.92); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo { display:flex; align-items:center; gap:12px; text-decoration:none; }
+    .logo-icon { width:40px; height:40px; background:var(--grad); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:900; color:#fff; box-shadow:0 0 16px #00d4ff44; }
+    .logo-text { font-size:20px; font-weight:800; background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .btn-back { display:inline-flex; align-items:center; gap:8px; padding:9px 20px; border-radius:8px; border:1.5px solid rgba(0,212,255,.3); color:var(--cyan); font-size:13px; font-weight:600; text-decoration:none; transition:background .2s; }
+    .btn-back:hover { background:rgba(0,212,255,.1); }
+
+    /* HERO */
+    .page-hero {
+      text-align:center; padding:70px 24px 50px; position:relative;
+    }
+    .page-hero-glow { position:absolute; width:500px; height:300px; background:#00d4ff; filter:blur(120px); opacity:.08; top:-60px; left:50%; transform:translateX(-50%); pointer-events:none; }
+    .page-hero h1 { font-size: clamp(30px,4vw,52px); font-weight:900; letter-spacing:-1.5px; margin-bottom:12px; }
+    .page-hero .accent { background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .page-hero p { color:var(--text-muted); font-size:15px; max-width:520px; margin:0 auto; line-height:1.7; }
+    .page-hero .upd { display:inline-block; margin-top:16px; font-size:12px; padding:4px 14px; border-radius:999px; background:rgba(0,212,255,.1); border:1px solid rgba(0,212,255,.2); color:var(--cyan); font-weight:600; }
+
+    /* CONTENT */
+    .content { max-width: 780px; margin: 0 auto; padding: 0 24px 100px; }
+
+    /* COOKIE TYPES GRID */
+    .cookie-types { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px; margin:40px 0; }
+    .cookie-type-card {
+      padding:24px 20px; border-radius:16px; background:linear-gradient(160deg,rgba(14,31,56,.95),rgba(9,20,34,.93));
+      border:1px solid var(--border); position:relative; overflow:hidden;
+    }
+    .cookie-type-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--grad); }
+    .cookie-type-card.analytics::before { background:linear-gradient(90deg,#50fa7b,#00d4ff); }
+    .cookie-type-card.marketing::before { background:linear-gradient(90deg,#ff79c6,#bd93f9); }
+    .cookie-type-card.prefs::before { background:linear-gradient(90deg,#ffb86c,#ff79c6); }
+    .cookie-type-icon { font-size:28px; margin-bottom:12px; }
+    .cookie-type-name { font-size:15px; font-weight:800; margin-bottom:6px; }
+    .cookie-type-desc { font-size:12px; color:var(--text-muted); line-height:1.6; }
+    .cookie-badge { display:inline-flex; align-items:center; gap:5px; margin-top:10px; font-size:11px; font-weight:700; padding:3px 10px; border-radius:999px; }
+    .badge-required { background:rgba(0,212,255,.12); color:var(--cyan); border:1px solid rgba(0,212,255,.25); }
+    .badge-optional { background:rgba(80,250,123,.1); color:#50fa7b; border:1px solid rgba(80,250,123,.25); }
+
+    /* SECTIONS */
+    .section { margin-bottom:48px; }
+    .section-title { font-size:20px; font-weight:800; margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; }
+    .section-title .num { width:30px; height:30px; border-radius:8px; background:var(--grad); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:900; color:#fff; flex-shrink:0; }
+    .section p { font-size:14px; color:var(--text-muted); line-height:1.8; margin-bottom:14px; }
+    .section p:last-child { margin-bottom:0; }
+    .section p strong { color:var(--text); }
+
+    /* TABLE */
+    .cookie-table { width:100%; border-collapse:collapse; margin:20px 0; font-size:13px; }
+    .cookie-table th { text-align:left; padding:10px 14px; background:rgba(0,212,255,.07); color:var(--cyan); font-size:12px; font-weight:700; letter-spacing:.3px; border-bottom:1px solid var(--border); }
+    .cookie-table td { padding:12px 14px; border-bottom:1px solid var(--border); color:var(--text-muted); vertical-align:top; line-height:1.5; }
+    .cookie-table tr:last-child td { border-bottom:none; }
+    .cookie-table tr:hover td { background:rgba(255,255,255,.02); }
+    .cookie-table .name { color:var(--text); font-weight:600; font-size:12px; font-family:monospace; }
+    .tag-req { padding:2px 8px; border-radius:999px; font-size:10px; font-weight:700; background:rgba(0,212,255,.1); color:var(--cyan); border:1px solid rgba(0,212,255,.2); }
+    .tag-opt { padding:2px 8px; border-radius:999px; font-size:10px; font-weight:700; background:rgba(80,250,123,.08); color:#50fa7b; border:1px solid rgba(80,250,123,.2); }
+    .tag-mkt { padding:2px 8px; border-radius:999px; font-size:10px; font-weight:700; background:rgba(255,121,198,.08); color:#ff79c6; border:1px solid rgba(255,121,198,.2); }
+
+    /* RESET BLOCK */
+    .reset-block {
+      padding:24px 28px; border-radius:16px;
+      background:linear-gradient(160deg,rgba(0,212,255,.07),rgba(0,119,182,.05));
+      border:1px solid rgba(0,212,255,.18); margin-top:40px;
+      display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap;
+    }
+    .reset-block p { font-size:14px; color:var(--text-muted); line-height:1.6; flex:1; }
+    .reset-block p strong { color:var(--text); }
+    .btn-reset { padding:11px 24px; border-radius:10px; background:var(--grad); color:#fff; font-size:13px; font-weight:700; border:none; cursor:pointer; font-family:inherit; transition:opacity .2s,box-shadow .2s; box-shadow:0 4px 16px #00d4ff25; white-space:nowrap; }
+    .btn-reset:hover { opacity:.88; box-shadow:0 6px 24px #00d4ff40; }
+
+    /* CONTACT */
+    .contact-block { padding:24px 28px; border-radius:16px; background:rgba(14,31,56,.8); border:1px solid var(--border); margin-top:16px; }
+    .contact-block a { color:var(--cyan); text-decoration:none; font-weight:600; }
+    .contact-block a:hover { text-decoration:underline; }
+
+    /* FOOTER */
+    footer { background:var(--bg-dark); border-top:1px solid var(--border); padding:28px 60px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+    footer p { font-size:12px; color:var(--text-muted); }
+    footer a { color:var(--cyan); text-decoration:none; }
+
+    @media(max-width:700px) {
+      header { padding:16px 20px; }
+      .content { padding:0 16px 80px; }
+      .reset-block { flex-direction:column; }
+      footer { padding:24px 20px; flex-direction:column; align-items:center; text-align:center; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo">
+    <div class="logo-icon">{/}</div>
+    <span class="logo-text">SiteCode</span>
+  </a>
+  <a href="javascript:history.back()" class="btn-back">← Назад</a>
+</header>
+
+<!-- HERO -->
+<div class="page-hero">
+  <div class="page-hero-glow"></div>
+  <h1>Политика <span class="accent">Cookies</span></h1>
+  <p>Как и зачем мы используем cookies, какие данные собираем и как вы можете управлять своими настройками.</p>
+  <span class="upd">📅 Обновлено: 15 марта 2026</span>
+</div>
+
+<div class="content">
+
+  <!-- TYPE CARDS -->
+  <div class="cookie-types">
+    <div class="cookie-type-card">
+      <div class="cookie-type-icon">🔒</div>
+      <div class="cookie-type-name">Необходимые</div>
+      <div class="cookie-type-desc">Обеспечивают базовую работу сайта: авторизацию, безопасность сессии, корзину.</div>
+      <span class="cookie-badge badge-required">Всегда активны</span>
+    </div>
+    <div class="cookie-type-card analytics">
+      <div class="cookie-type-icon">📊</div>
+      <div class="cookie-type-name">Аналитика</div>
+      <div class="cookie-type-desc">Помогают нам понять поведение посетителей и улучшить сайт. Данные анонимны.</div>
+      <span class="cookie-badge badge-optional">По согласию</span>
+    </div>
+    <div class="cookie-type-card marketing">
+      <div class="cookie-type-icon">🎯</div>
+      <div class="cookie-type-name">Маркетинг</div>
+      <div class="cookie-type-desc">Персонализированная реклама и отслеживание эффективности рекламных кампаний.</div>
+      <span class="cookie-badge badge-optional">По согласию</span>
+    </div>
+    <div class="cookie-type-card prefs">
+      <div class="cookie-type-icon">⚙️</div>
+      <div class="cookie-type-name">Настройки</div>
+      <div class="cookie-type-desc">Запоминают ваши предпочтения: язык, тему, параметры отображения.</div>
+      <span class="cookie-badge badge-required">Всегда активны</span>
+    </div>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="section">
+    <div class="section-title"><span class="num">1</span> Что такое cookies?</div>
+    <p>Cookies — это небольшие текстовые файлы, которые сохраняются в вашем браузере при посещении веб-сайтов. Они помогают сайту «запомнить» вас между сеансами и делают работу с сайтом удобнее.</p>
+    <p>Мы используем <strong>localStorage</strong> и сессионные данные браузера для хранения ваших настроек. Никакие персональные данные не передаются третьим лицам без вашего согласия.</p>
+  </div>
+
+  <!-- SECTION 2 — TABLE -->
+  <div class="section">
+    <div class="section-title"><span class="num">2</span> Какие cookies мы используем</div>
+    <p>Ниже перечислены все ключи данных, которые могут быть сохранены в вашем браузере при использовании нашего сайта:</p>
+    <table class="cookie-table">
+      <thead>
+        <tr>
+          <th>Название</th>
+          <th>Тип</th>
+          <th>Срок</th>
+          <th>Описание</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="name">sc_cookie</td>
+          <td><span class="tag-req">Необходимые</span></td>
+          <td>1 год</td>
+          <td>Хранит ваш выбор настроек cookies (принято / отклонено)</td>
+        </tr>
+        <tr>
+          <td class="name">sc_session</td>
+          <td><span class="tag-req">Необходимые</span></td>
+          <td>Сессия</td>
+          <td>Идентификатор авторизованной сессии пользователя</td>
+        </tr>
+        <tr>
+          <td class="name">sc_users</td>
+          <td><span class="tag-req">Необходимые</span></td>
+          <td>Бессрочно</td>
+          <td>Зашифрованные данные аккаунтов (email, имя) в localStorage</td>
+        </tr>
+        <tr>
+          <td class="name">sc_leads</td>
+          <td><span class="tag-req">Необходимые</span></td>
+          <td>До удаления</td>
+          <td>Временное хранение данных заявок до синхронизации с сервером</td>
+        </tr>
+        <tr>
+          <td class="name">_ga, _gid</td>
+          <td><span class="tag-opt">Аналитика</span></td>
+          <td>2 года / 24 ч</td>
+          <td>Google Analytics — анонимная статистика посещений (при согласии)</td>
+        </tr>
+        <tr>
+          <td class="name">_fbp</td>
+          <td><span class="tag-mkt">Маркетинг</span></td>
+          <td>90 дней</td>
+          <td>Facebook Pixel — отслеживание конверсий рекламы (при согласии)</td>
+        </tr>
+        <tr>
+          <td class="name">br_access</td>
+          <td><span class="tag-req">Необходимые</span></td>
+          <td>Сессия</td>
+          <td>Флаг доступа к разделу Board Room для авторизованных пользователей</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section">
+    <div class="section-title"><span class="num">3</span> Хранение и безопасность</div>
+    <p>Все данные хранятся локально в вашем браузере (<strong>localStorage / sessionStorage</strong>). Мы не передаём персональные данные третьим лицам без вашего явного согласия.</p>
+    <p>Пароли пользователей хэшируются алгоритмом <strong>SHA-256</strong> перед сохранением в localStorage. Мы рекомендуем не использовать один пароль на нескольких сайтах.</p>
+    <p>Если вы используете общий или чужой компьютер, нажмите «Выйти» после завершения работы и очистите cookies браузера.</p>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section">
+    <div class="section-title"><span class="num">4</span> Изменения в политике</div>
+    <p>Мы можем обновлять данную политику в связи с изменениями в законодательстве или в работе сайта. Дата последнего обновления указана вверху страницы.</p>
+    <p>При существенных изменениях мы уведомим вас через баннер на сайте или по email (если вы зарегистрированы).</p>
+  </div>
+
+  <!-- SECTION 5 — CONTACT -->
+  <div class="section">
+    <div class="section-title"><span class="num">5</span> Свяжитесь с нами</div>
+    <p>Если у вас есть вопросы о нашей политике использования cookies:</p>
+    <div class="contact-block">
+      <p style="font-size:14px;color:var(--text-muted);line-height:1.9">
+        📧 Email: <a href="mailto:Ss1teC0de@gmail.com">Ss1teC0de@gmail.com</a><br>
+        ✈️ Telegram: <a href="https://t.me/S1teCode" target="_blank" rel="noopener">@S1teCode</a><br>
+        📱 Телефон: <a href="tel:+77789697305">+7 778 969 7305</a><br>
+        📍 Казахстан, Астана
+      </p>
+    </div>
+  </div>
+
+</div><!-- /content -->
+
+<footer>
+  <a href="index.html">← На главную</a>
+  <p>© 2026 SiteCode · <a href="privacy.html">Политика конфиденциальности</a> · <a href="terms.html">Условия использования</a></p>
+</footer>
+
+<script>
+  function resetCookies() {
+    localStorage.removeItem('sc_cookie');
+    if (confirm('Настройки cookies сброшены. Перейти на главную страницу для повторного выбора?')) {
+      window.location.href = 'index.html';
+    }
+  }
+</script>
+</body>
+</html>

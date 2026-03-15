@@ -108,30 +108,63 @@ a{text-decoration:none;color:inherit}
 </style>
 </head>
 <body>
-<!-- LOCK SCREEN (shown by default, hidden via JS if access granted) -->
+<!-- LOCK SCREEN -->
 <div id="brLock" style="position:fixed;inset:0;background:radial-gradient(circle at 62% 18%,rgba(0,212,255,.09),transparent 28%),#0a0d12;display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;color:#eef2f7;padding:24px;text-align:center;z-index:99999">
-  <div style="max-width:480px">
-    <div style="font-size:52px;margin-bottom:22px;line-height:1;filter:drop-shadow(0 0 18px rgba(0,212,255,.3))">🔒</div>
+
+  <!-- STATE 1: not logged in -->
+  <div id="brStateGuest" style="max-width:480px;display:none">
+    <div style="font-size:52px;margin-bottom:22px;line-height:1">🔒</div>
     <p style="font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#00d4ff;margin-bottom:14px">Private Board Room</p>
-    <h1 style="font-size:clamp(28px,6vw,46px);line-height:1.02;letter-spacing:-2px;font-weight:900;margin-bottom:16px">Закрытый доступ</h1>
-    <p style="font-size:15px;line-height:1.8;color:#8299b9;margin-bottom:32px">Board Room — закрытая зона для подачи расширенных брифов на крупные и сложные проекты. Доступен только в составе тарифа <strong style="color:#eef2f7">Corporate Standard</strong>.</p>
+    <h1 style="font-size:clamp(26px,5vw,42px);line-height:1.05;letter-spacing:-2px;font-weight:900;margin-bottom:16px">Нужна регистрация</h1>
+    <p style="font-size:15px;line-height:1.8;color:#8299b9;margin-bottom:32px">Board Room — закрытая зона. Сначала <strong style="color:#eef2f7">зарегистрируйтесь</strong> на сайте, затем запросите доступ у администратора.</p>
     <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-      <a href="catalog.html" style="padding:14px 28px;border-radius:14px;background:linear-gradient(135deg,#00c8f0,#0066d6);color:#fff;font-size:14px;font-weight:800;text-decoration:none;box-shadow:0 0 28px rgba(0,212,255,.30)">Перейти в каталог</a>
-      <a href="index.html" style="padding:14px 28px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);color:#8299b9;font-size:14px;font-weight:700;text-decoration:none">← Назад</a>
+      <a href="index.html#register" onclick="sessionStorage.setItem('br_redirect','1')" style="padding:14px 28px;border-radius:14px;background:linear-gradient(135deg,#00c8f0,#0066d6);color:#fff;font-size:14px;font-weight:800;text-decoration:none;box-shadow:0 0 28px rgba(0,212,255,.30)">Зарегистрироваться</a>
+      <a href="index.html" style="padding:14px 28px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);color:#8299b9;font-size:14px;font-weight:700;text-decoration:none">← Войти</a>
     </div>
   </div>
+
+  <!-- STATE 2: logged in, no access -->
+  <div id="brStateNoAccess" style="max-width:480px;display:none">
+    <div style="font-size:52px;margin-bottom:22px;line-height:1">🛡️</div>
+    <p style="font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#e7c889;margin-bottom:14px">Board Room — Закрытый доступ</p>
+    <h1 style="font-size:clamp(26px,5vw,42px);line-height:1.05;letter-spacing:-2px;font-weight:900;margin-bottom:16px">Доступ не выдан</h1>
+    <p id="brUserHello" style="font-size:15px;line-height:1.8;color:#8299b9;margin-bottom:32px">Ваш аккаунт зарегистрирован, но доступ в Board Room ещё не выдан. Обратитесь к администратору — он активирует доступ после подтверждения.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <a href="https://t.me/S1teCode" target="_blank" style="padding:14px 28px;border-radius:14px;background:linear-gradient(135deg,#e7c889,#b78c44);color:#111;font-size:14px;font-weight:800;text-decoration:none">Написать администратору</a>
+      <a href="index.html" style="padding:14px 28px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);color:#8299b9;font-size:14px;font-weight:700;text-decoration:none">← На главную</a>
+    </div>
+  </div>
+
 </div>
 <script>
 (function(){
+  // Admin override
   if(localStorage.getItem('br_access')==='1'){document.getElementById('brLock').style.display='none';return;}
   try{
     const id=sessionStorage.getItem('sc_session')||localStorage.getItem('sc_session');
-    if(id){
-      const users=JSON.parse(localStorage.getItem('sc_users')||'[]');
-      const u=users.find(x=>x.id===id);
-      if(u&&(u.status==='premium'||u.status==='vip')){document.getElementById('brLock').style.display='none';}
+    if(!id){
+      // Not logged in — show registration prompt
+      document.getElementById('brStateGuest').style.display='';
+      return;
     }
-  }catch(e){}
+    const users=JSON.parse(localStorage.getItem('sc_users')||'[]');
+    const u=users.find(x=>x.id===id);
+    if(!u){
+      document.getElementById('brStateGuest').style.display='';
+      return;
+    }
+    if(u.boardroom===true){
+      // Access granted!
+      document.getElementById('brLock').style.display='none';
+      return;
+    }
+    // Logged in but no boardroom access
+    document.getElementById('brStateNoAccess').style.display='';
+    const el=document.getElementById('brUserHello');
+    if(el&&u.name) el.innerHTML=`Привет, <strong style="color:#eef2f7">${u.name}</strong>! Ваш аккаунт зарегистрирован, но доступ в Board Room ещё не выдан. Обратитесь к администратору — он активирует доступ после подтверждения.`;
+  }catch(e){
+    document.getElementById('brStateGuest').style.display='';
+  }
 })();
 </script>
 <div class="board-grid"></div>
