@@ -369,7 +369,7 @@ let toastTimer;
 function showToast(text){toast.textContent=text;toast.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove('show'),3200);}
 document.getElementById('leadForm').addEventListener('submit',event=>{event.preventDefault();const payload={name:document.getElementById('corpName').value.trim(),contact:document.getElementById('corpContact').value.trim(),company:document.getElementById('corpCompany').value.trim(),need:document.getElementById('corpNeed').value.trim(),source:'Corporate Standard preview',createdAt:new Date().toISOString()};console.log('Corporate lead:',payload);showToast('Заявка принята. Corporate Standard можно развить под ваш сектор.');event.target.reset();});
 const sectionLinks=[...document.querySelectorAll('.nav a[href^="#"]')];
-const sections=sectionLinks.map(link=>document.querySelector(link.getAttribute('href'))).filter(Boolean);
+const sections=sectionLinks.map(link=>{const h=link.getAttribute('href');try{return h&&h.length>1?document.querySelector(h):null;}catch(e){return null;}}).filter(Boolean);
 const activeObserver=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(!entry.isIntersecting)return;sectionLinks.forEach(link=>link.classList.toggle('active',link.getAttribute('href')==='#'+entry.target.id));});},{threshold:.48});
 sections.forEach(section=>activeObserver.observe(section));
 </script>
