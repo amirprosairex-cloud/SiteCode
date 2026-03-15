@@ -3,7 +3,7 @@
 <head>
   <link rel="icon" href="img/favicon.png?v=2" type="image/png">
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>SiteCode — Разработка сайтов</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -511,10 +511,11 @@
     .footer-bottom a { color: var(--cyan); text-decoration: none; }
 
     /* ─── STARFIELD + COMET ─── */
-    .particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; contain: strict; }
     .particle {
       position: absolute; border-radius: 50%;
       background: #ffffff;
+      will-change: transform, opacity;
       animation: twinkle ease-in-out infinite;
     }
     @keyframes twinkle {
@@ -827,6 +828,15 @@
       width: 100%; height: 190px; overflow: hidden;
       position: relative;
     }
+    .live-thumb-idx {
+      width: 100%; height: 190px; overflow: hidden; position: relative;
+      border-top: none; background: #03070d;
+    }
+    .live-thumb-idx iframe {
+      width: 1380px; height: 900px; border: none; display: block;
+      transform: scale(0.255); transform-origin: top left;
+      pointer-events: none; filter: saturate(.94) contrast(1.04);
+    }
     /* Mock internals */
     .mock-nav {
       height: 28px; display: flex; align-items: center;
@@ -960,21 +970,48 @@
       header { padding: 16px 24px; }
       nav { display: none; }
       .hamburger { display: flex; }
-      section { padding: 80px 24px; }
+      section { padding: 64px 20px; }
       .footer-top { grid-template-columns: 1fr 1fr; }
       footer { padding: 48px 24px 28px; }
       .calc-body { grid-template-columns: 1fr; }
       .calc-left { border-right: none; border-bottom: 1px solid var(--border); }
-      .hero-code { max-width: 100%; }
+      .hero-code { display: none; }
+      .hero { padding: 110px 20px 60px; text-align: center; }
+      .hero-btns { justify-content: center; }
+      .hero p { margin: 0 auto 36px; }
+      .catalog-grid { grid-template-columns: 1fr !important; }
+      .packages-grid { grid-template-columns: 1fr; }
+      .services-grid { grid-template-columns: 1fr; }
+      .process-steps { grid-template-columns: 1fr 1fr; }
+      .portfolio-grid { grid-template-columns: 1fr; }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .live-thumb-idx { display: none; }
     }
     @media (max-width: 600px) {
-      .hero-stats { gap: 28px; }
+      .hero-stats { gap: 20px; flex-wrap: wrap; }
+      .hero-stats .stat { min-width: 80px; }
       .footer-top { grid-template-columns: 1fr; }
       footer { padding: 40px 20px 24px; }
       .cookie-modal { padding: 28px 22px; }
       .btn-cookie-row { flex-direction: column; }
-      #cookie-bar { padding: 14px 20px; }
-      #btt { bottom: 20px; right: 20px; }
+      #cookie-bar { padding: 14px 16px; gap: 10px; flex-wrap: wrap; }
+      #btt { bottom: 20px; right: 16px; width: 40px; height: 40px; font-size: 16px; }
+      .section-title { font-size: clamp(24px, 7vw, 36px); letter-spacing: -0.5px; }
+      .hero h1 { font-size: clamp(32px, 9vw, 56px); }
+      .pkg-price { font-size: 36px; }
+      .pkg-card { padding: 28px 20px; }
+      .service-card { padding: 24px 18px; }
+      .process-steps { grid-template-columns: 1fr; }
+      nav { pointer-events: none; }
+      .hero-badge { font-size: 11px; padding: 5px 12px; }
+      .cat-card { border-radius: 14px; }
+      .cat-footer { flex-direction: column; gap: 12px; align-items: flex-start; }
+      .cat-footer-btns, .cat-footer > div:last-child { width: 100%; display: flex; gap: 8px; flex-wrap: wrap; }
+      .btn-cat, .btn-preview, .btn-boardroom { flex: 1; text-align: center; justify-content: center; }
+    }
+    @media (hover: none) {
+      .service-card:hover, .pkg-card:hover, .cat-card:hover { transform: none; box-shadow: none; }
+      .btn-primary:hover, .btn-outline:hover { transform: none; }
     }
   </style>
 </head>
@@ -1131,22 +1168,8 @@
           <div class="b-dots"><span></span><span></span><span></span></div>
           <div class="b-url">sitecode.ru/landing-business</div>
         </div>
-        <div class="site-mock sm-land">
-          <div class="mock-nav">
-            <div class="mock-logo"></div>
-            <div class="mock-nav-link"></div><div class="mock-nav-link"></div><div class="mock-nav-link"></div>
-            <div class="mock-nav-btn"></div>
-          </div>
-          <div class="mock-hero">
-            <div class="mock-h" style="width:90%"></div>
-            <div class="mock-h sm"></div>
-            <div class="mock-h xs"></div>
-            <div class="mock-h xxs"></div>
-            <div class="mock-btn-row"><div class="mock-btn"></div><div class="mock-btn"></div></div>
-          </div>
-          <div class="mock-cards">
-            <div class="mock-card"></div><div class="mock-card"></div><div class="mock-card"></div>
-          </div>
+        <div class="live-thumb-idx">
+          <iframe src="preview-landing.html" title="Business Landing preview" loading="lazy" tabindex="-1" aria-hidden="true"></iframe>
         </div>
       </div>
       <div class="cat-body">
@@ -1155,7 +1178,10 @@
         <p>Конверсионный одностраничник для продвижения товара или услуги. Включает hero-блок, преимущества, отзывы и форму заявки.</p>
         <div class="cat-footer">
           <div><div class="cat-price">15 000 ₸</div><div class="cat-price-sub">срок: 3–5 дней</div></div>
-          <a href="#contact" class="btn-cat">Заказать</a>
+          <div style="display:flex;gap:8px">
+            <a href="preview-landing.html" target="_blank" class="btn-preview">👁 Превью</a>
+            <a href="#contact" class="btn-cat">Заказать</a>
+          </div>
         </div>
       </div>
     </div>
@@ -1167,23 +1193,8 @@
           <div class="b-dots"><span></span><span></span><span></span></div>
           <div class="b-url">sitecode.ru/corporate-standard</div>
         </div>
-        <div class="site-mock sm-corp">
-          <div class="mock-nav">
-            <div class="mock-logo"></div>
-            <div class="mock-nav-link"></div><div class="mock-nav-link"></div><div class="mock-nav-link"></div><div class="mock-nav-link"></div>
-            <div class="mock-nav-btn"></div>
-          </div>
-          <div class="mock-hero">
-            <div class="mock-h" style="width:75%"></div>
-            <div class="mock-h sm" style="width:55%"></div>
-            <div class="mock-h xs"></div>
-            <div class="mock-btn-row"><div class="mock-btn"></div></div>
-          </div>
-          <div class="mock-strip" style="width:80%"></div>
-          <div class="mock-strip" style="width:60%"></div>
-          <div class="mock-cards">
-            <div class="mock-card"></div><div class="mock-card"></div><div class="mock-card"></div>
-          </div>
+        <div class="live-thumb-idx">
+          <iframe src="preview-corp.html" title="Corporate Standard preview" loading="lazy" tabindex="-1" aria-hidden="true"></iframe>
         </div>
       </div>
       <div class="cat-body">
@@ -1193,6 +1204,7 @@
         <div class="cat-footer">
           <div><div class="cat-price">35 000 ₸</div><div class="cat-price-sub">срок: 10–14 дней</div></div>
           <div style="display:flex;gap:8px">
+            <a href="preview-corp.html" target="_blank" class="btn-preview">👁 Превью</a>
             <a href="catalog.html" class="btn-boardroom">◆ Board Room</a>
             <a href="#contact" class="btn-cat">Заказать</a>
           </div>
@@ -1207,23 +1219,8 @@
           <div class="b-dots"><span></span><span></span><span></span></div>
           <div class="b-url">sitecode.ru/shop-pro</div>
         </div>
-        <div class="site-mock sm-shop">
-          <div class="mock-nav">
-            <div class="mock-logo"></div>
-            <div class="mock-nav-link"></div><div class="mock-nav-link"></div>
-            <div class="mock-nav-btn"></div>
-          </div>
-          <div class="mock-hero" style="padding:8px 10px 4px">
-            <div class="mock-h sm" style="width:50%"></div>
-            <div class="mock-h xs"></div>
-          </div>
-          <div class="mock-grid2">
-            <div class="mock-card"></div><div class="mock-card"></div><div class="mock-card"></div><div class="mock-card"></div>
-          </div>
-          <div class="mock-grid2">
-            <div class="mock-card"></div><div class="mock-card"></div><div class="mock-card"></div><div class="mock-card"></div>
-          </div>
-          <div class="mock-strip" style="width:40%"></div>
+        <div class="live-thumb-idx">
+          <iframe src="preview-shop.html" title="Shop Pro preview" loading="lazy" tabindex="-1" aria-hidden="true"></iframe>
         </div>
       </div>
       <div class="cat-body">
@@ -1256,7 +1253,7 @@
   <div class="packages-grid">
     <div class="pkg-card">
       <div class="pkg-name">Старт</div>
-      <div class="pkg-price"><span>от </span>15 000 ₸</div>
+      <div class="pkg-price"><span>от </span>5 000 ₸</div>
       <div class="pkg-desc">Для малого бизнеса и стартапов</div>
       <ul class="pkg-features">
         <li class="active"><span class="check">✓</span> До 5 страниц</li>
@@ -1272,7 +1269,7 @@
     <div class="pkg-card featured">
       <div class="pkg-badge">⭐ Популярный</div>
       <div class="pkg-name">Бизнес</div>
-      <div class="pkg-price"><span>от </span>45 000 ₸</div>
+      <div class="pkg-price"><span>от </span>15 000 ₸</div>
       <div class="pkg-desc">Для среднего бизнеса с амбициями</div>
       <ul class="pkg-features">
         <li class="active"><span class="check">✓</span> До 20 страниц</li>
@@ -1287,7 +1284,7 @@
     </div>
     <div class="pkg-card">
       <div class="pkg-name">Премиум</div>
-      <div class="pkg-price"><span>от </span>90 000 ₸</div>
+      <div class="pkg-price"><span>от </span>30 000 ₸</div>
       <div class="pkg-desc">Для крупных проектов и e-commerce</div>
       <ul class="pkg-features">
         <li class="active"><span class="check">✓</span> Без ограничений</li>
@@ -1609,12 +1606,14 @@
   // ===== STARFIELD WITH PARALLAX =====
   const container = document.getElementById('particles');
   const starData = [];
-  for (let i = 0; i < 180; i++) {
+  const isMobile = window.innerWidth <= 768 || ('ontouchstart' in window);
+  const starCount = isMobile ? 50 : 180;
+  for (let i = 0; i < starCount; i++) {
     const p = document.createElement('div');
     p.className = 'particle';
     const size = Math.random() * 3.5 + 0.8;
     const bright = Math.random();
-    const speed = Math.random() * 0.25 + 0.03;
+    const speed = isMobile ? 0 : (Math.random() * 0.25 + 0.03);
     p.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;opacity:${0.1+Math.random()*0.5};background:${bright>.7?'#a8e8ff':bright>.4?'#ffffff':'#c8f0ff'};animation-duration:${Math.random()*4+2}s;animation-delay:${Math.random()*6}s;`;
     container.appendChild(p);
     starData.push({ el: p, speed });
@@ -1624,13 +1623,20 @@
   const progressBar = document.getElementById('scroll-progress');
   const headerEl = document.querySelector('header');
   const bttEl = document.getElementById('btt');
+  let ticking = false;
   window.addEventListener('scroll', () => {
-    const sy = window.scrollY;
-    starData.forEach(d => { d.el.style.transform = `translateY(${-sy * d.speed}px)`; });
-    const pct = sy / (document.documentElement.scrollHeight - window.innerHeight);
-    progressBar.style.width = Math.min(pct * 100, 100) + '%';
-    headerEl.style.boxShadow = sy > 40 ? '0 4px 40px #00d4ff12' : 'none';
-    sy > 400 ? bttEl.classList.add('visible') : bttEl.classList.remove('visible');
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        const sy = window.scrollY;
+        if (!isMobile) { starData.forEach(d => { d.el.style.transform = `translateY(${-sy * d.speed}px)`; }); }
+        const pct = sy / (document.documentElement.scrollHeight - window.innerHeight);
+        progressBar.style.width = Math.min(pct * 100, 100) + '%';
+        headerEl.style.boxShadow = sy > 40 ? '0 4px 40px #00d4ff12' : 'none';
+        sy > 400 ? bttEl.classList.add('visible') : bttEl.classList.remove('visible');
+        ticking = false;
+      });
+      ticking = true;
+    }
   }, { passive: true });
 
   function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
@@ -1876,7 +1882,7 @@
     setTimeout(launchRandomComet, 3200 + Math.random() * 6200);
   }
 
-  setTimeout(launchRandomComet, 1200);
+  setTimeout(() => { if (!isMobile) launchRandomComet(); }, 1200);
 
   // ===== CATALOG FILTER =====
   function filterCat(btn, cat) {
@@ -2047,6 +2053,7 @@
           </div>
           <a class="adm-boardroom-link" href="admin.html" target="_blank">🛡️ Board Room Admin</a>
           <button class="adm-save-all" onclick="admSaveAll()">💾 Сохранить всё</button>
+          <button class="adm-save-all" style="background:linear-gradient(135deg,#1a4020,#2a7030);margin-left:6px" onclick="admExport()">📋 Экспорт для всех</button>
           <button class="adm-close" onclick="closeAdm()">✕</button>
         </div>
       </div>
@@ -2062,6 +2069,9 @@
         <button class="adm-tab" onclick="admTab(this,'pane-leads')" id="admLeadsTab">📬 Заявки</button>
       </div>
       <div class="adm-body">
+        <div style="background:rgba(255,180,0,.1);border:1px solid rgba(255,180,0,.3);border-radius:10px;padding:12px 16px;margin-bottom:18px;font-size:13px;color:#ffd060;line-height:1.6">
+          ⚠️ <strong>Изменения видны только вам</strong> — хранятся в вашем браузере. Чтобы все посетители увидели новые настройки: нажмите <strong>«Сохранить»</strong>, затем <strong>«📋 Экспорт»</strong> — скопируйте код и вставьте в <code style="background:#fff1;padding:1px 5px;border-radius:4px">ADM_DEFAULTS</code> в файле <code style="background:#fff1;padding:1px 5px;border-radius:4px">index.html</code>.
+        </div>
 
         <!-- ── HOME ── -->
         <div class="adm-pane act" id="pane-home">
@@ -2178,19 +2188,19 @@
             <div class="adm-pkg-card">
               <div class="adm-pkg-name">Тариф 1</div>
               <div class="adm-field"><label>Название</label><input id="pkg1-name" value="Старт"></div>
-              <div class="adm-field"><label>Цена (₸)</label><input id="pkg1-price" value="15 000" type="text"></div>
+              <div class="adm-field"><label>Цена (₸)</label><input id="pkg1-price" value="5 000" type="text"></div>
               <div class="adm-field"><label>Описание</label><input id="pkg1-desc" value="Для малого бизнеса и стартапов"></div>
             </div>
             <div class="adm-pkg-card" style="border-color:rgba(0,212,255,.3)">
               <div class="adm-pkg-name" style="color:#ffcc44">Тариф 2 (популярный)</div>
               <div class="adm-field"><label>Название</label><input id="pkg2-name" value="Бизнес"></div>
-              <div class="adm-field"><label>Цена (₸)</label><input id="pkg2-price" value="45 000" type="text"></div>
+              <div class="adm-field"><label>Цена (₸)</label><input id="pkg2-price" value="15 000" type="text"></div>
               <div class="adm-field"><label>Описание</label><input id="pkg2-desc" value="Для среднего бизнеса с амбициями"></div>
             </div>
             <div class="adm-pkg-card">
               <div class="adm-pkg-name">Тариф 3</div>
               <div class="adm-field"><label>Название</label><input id="pkg3-name" value="Премиум"></div>
-              <div class="adm-field"><label>Цена (₸)</label><input id="pkg3-price" value="90 000" type="text"></div>
+              <div class="adm-field"><label>Цена (₸)</label><input id="pkg3-price" value="30 000" type="text"></div>
               <div class="adm-field"><label>Описание</label><input id="pkg3-desc" value="Для крупных проектов и e-commerce"></div>
             </div>
           </div>
@@ -2450,9 +2460,9 @@ const ADM_DEFAULTS = {
   useApi:false,chatVisible:true,botname:'SiteCode AI',
   welcomeMsg:'Привет! Я помогу подобрать нужный сайт и отвечу на любые вопросы по разработке. Что вас интересует? 👋',
   botstatus:'Онлайн · отвечает мгновенно',chips:'💰 Сколько стоит сайт?|⏱ Сроки разработки|📦 Что входит в проект?|📞 Связаться с менеджером',
-  pkg1name:'Старт',pkg1price:'15 000',pkg1desc:'Для малого бизнеса и стартапов',
-  pkg2name:'Бизнес',pkg2price:'45 000',pkg2desc:'Для среднего бизнеса с амбициями',
-  pkg3name:'Премиум',pkg3price:'90 000',pkg3desc:'Для крупных проектов и e-commerce',
+  pkg1name:'Старт',pkg1price:'5 000',pkg1desc:'Для малого бизнеса и стартапов',
+  pkg2name:'Бизнес',pkg2price:'15 000',pkg2desc:'Для среднего бизнеса с амбициями',
+  pkg3name:'Премиум',pkg3price:'30 000',pkg3desc:'Для крупных проектов и e-commerce',
   ctaH:'Готовы запустить ваш сайт?',ctaP:'Оставьте заявку — и мы свяжемся с вами в течение 30 минут для бесплатной консультации.',
   phone:'+7 778 969 7305',email:'Ss1teC0de@gmail.com',wa:'',tg:'S1teCode',
   addr:'Москва, ул. Примерная, д. 1',hours:'Пн–Пт: 9:00 – 20:00',telHref:'tel:+77789697305',
@@ -2725,6 +2735,32 @@ function admReadFields(){
   Object.entries(chkMap).forEach(([id,key])=>{ const el=document.getElementById(id); if(el) c[key]=el.checked; });
   return c;
 }
+
+// ── Export config for source code ──
+window.admExport = function(){
+  const c = Object.assign({}, ADM_DEFAULTS, admReadFields());
+  const lines = Object.entries(c).map(([k,v]) => `  ${k}:${typeof v==='boolean'?v:typeof v==='string'?'\''+v.replace(/'/g,"\\'")+'\'':v}`).join(',\n');
+  const code = `const ADM_DEFAULTS = {\n${lines}\n};`;
+  // Show in modal
+  let mo = document.getElementById('admExportModal');
+  if(!mo){
+    mo = document.createElement('div');
+    mo.id = 'admExportModal';
+    mo.style.cssText = 'position:fixed;inset:0;z-index:9999;background:#00000099;display:flex;align-items:center;justify-content:center;padding:24px';
+    mo.innerHTML = `<div style="background:#0d1f38;border:1px solid #00d4ff44;border-radius:16px;padding:28px;max-width:700px;width:100%;max-height:80vh;display:flex;flex-direction:column;gap:14px">
+      <div style="font-size:16px;font-weight:800;color:#fff">📋 Экспорт настроек для всех посетителей</div>
+      <div style="font-size:13px;color:#7ba3c0;line-height:1.6">Скопируйте код ниже и вставьте в <code style="background:#fff1;padding:1px 5px;border-radius:4px">index.html</code>, заменив блок <code style="background:#fff1;padding:1px 5px;border-radius:4px">const ADM_DEFAULTS = {...}</code>. После этого все посетители увидят ваши настройки.</div>
+      <textarea id="admExportTA" style="flex:1;min-height:300px;background:#060f1e;border:1px solid #1a3050;border-radius:8px;padding:12px;color:#7be8ff;font-size:12px;font-family:monospace;resize:vertical" readonly></textarea>
+      <div style="display:flex;gap:10px">
+        <button onclick="document.getElementById('admExportTA').select();document.execCommand('copy');this.textContent='✅ Скопировано!';setTimeout(()=>this.textContent='📋 Копировать',2000)" style="padding:10px 20px;border-radius:8px;background:linear-gradient(135deg,#00d4ff,#0099cc);border:none;color:#fff;font-size:14px;font-weight:700;cursor:pointer">📋 Копировать</button>
+        <button onclick="document.getElementById('admExportModal').remove()" style="padding:10px 20px;border-radius:8px;background:#1a3050;border:none;color:#7ba3c0;font-size:14px;font-weight:600;cursor:pointer">Закрыть</button>
+      </div>
+    </div>`;
+    document.body.appendChild(mo);
+  }
+  document.getElementById('admExportTA').value = code;
+  mo.style.display = 'flex';
+};
 
 // ── Save all & apply ──
 window.admSaveAll = function(){
