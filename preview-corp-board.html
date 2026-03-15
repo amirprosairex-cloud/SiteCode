@@ -103,8 +103,8 @@ a{text-decoration:none;color:inherit}
 .ci-body a:hover{text-decoration:underline}
 .confidential-note{margin-top:14px;padding:16px;border-radius:16px;background:rgba(231,200,137,.05);border:1px solid rgba(231,200,137,.14);font-size:13px;color:var(--muted);line-height:1.7;display:flex;gap:12px;align-items:flex-start}
 .confidential-note::before{content:'🔒';flex-shrink:0;font-size:16px;margin-top:1px}
-@media(max-width:980px){.hero-grid,.deck,.form-shell,.contact-shell{grid-template-columns:1fr}.metrics,.board-line,.doc-grid,.roles-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:640px){.metrics,.board-line,.doc-grid,.roles-grid{grid-template-columns:1fr}.top{padding:14px}.intro,.vault,.big-panel,.side-stack,.form-panel,.contact-panel,.contact-form-wrap{padding:20px}.cform{grid-template-columns:1fr}.cform .full{grid-column:1}}
+@media(max-width:980px){.hero-grid,.deck,.form-shell,.contact-shell{grid-template-columns:1fr}.metrics,.board-line,.doc-grid,.roles-grid{grid-template-columns:1fr 1fr}#timelineGrid{grid-template-columns:1fr}}
+@media(max-width:640px){.metrics,.board-line,.doc-grid,.roles-grid{grid-template-columns:1fr}.top{padding:14px}.intro,.vault,.big-panel,.side-stack,.form-panel,.contact-panel,.contact-form-wrap{padding:20px}.cform{grid-template-columns:1fr}.cform .full{grid-column:1}#timelineGrid{grid-template-columns:1fr}.tl-item{margin-bottom:4px}}
 </style>
 </head>
 <body>
@@ -471,7 +471,7 @@ if(d.contacts){const c=d.contacts;const tg=(c.telegram||'').replace('@','');docu
 .br-chat-btn:hover{transform:scale(1.1);box-shadow:0 8px 36px rgba(0,212,255,.6)}
 .br-chat-dot{position:absolute;top:4px;right:4px;width:12px;height:12px;background:#44dd88;border-radius:50%;border:2px solid #091528;animation:chatDotPulse 2s infinite}
 @keyframes chatDotPulse{0%,100%{opacity:1}50%{opacity:.4}}
-@media(max-width:600px){.br-chat-fab{bottom:16px;right:16px}.br-chat-btn{width:50px;height:50px;font-size:22px}}
+@media(max-width:600px){.br-chat-fab{bottom:16px;right:16px}.br-chat-btn{width:50px;height:50px;font-size:22px}.br-chat-bubble{font-size:12px;padding:9px 12px}}
 </style>
 <div class="br-chat-fab" id="brChatFab">
   <div class="br-chat-bubble" id="brChatBubble">💬 Онлайн — ответим быстро!</div>
@@ -484,7 +484,7 @@ if(d.contacts){const c=d.contacts;const tg=(c.telegram||'').replace('@','');docu
 setTimeout(()=>{const b=document.getElementById('brChatBubble');if(b)b.style.display='none';},6000);
 window.openBrChat=function(){
   const menu=document.createElement('div');
-  menu.style.cssText='position:fixed;bottom:100px;right:28px;z-index:9001;background:linear-gradient(180deg,#0d2040,#091528);border:1px solid rgba(0,212,255,.3);border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:220px;box-shadow:0 12px 40px rgba(0,0,0,.5)';
+  menu.style.cssText='position:fixed;bottom:80px;right:16px;left:16px;z-index:9001;background:linear-gradient(180deg,#0d2040,#091528);border:1px solid rgba(0,212,255,.3);border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:0 12px 40px rgba(0,0,0,.5);max-width:320px;margin:0 auto';
   menu.innerHTML=`
     <div style="font-size:12px;color:#8299b9;font-weight:700;padding:0 4px;margin-bottom:2px">НАПИСАТЬ НАМ</div>
     <a href="https://t.me/Luminosik" target="_blank" style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.2);border-radius:12px;color:#eef2f7;text-decoration:none;font-size:14px;font-weight:600;transition:background .15s" onmouseover="this.style.background='rgba(0,212,255,.16)'" onmouseout="this.style.background='rgba(0,212,255,.08)'">
