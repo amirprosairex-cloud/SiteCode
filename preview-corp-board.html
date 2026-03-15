@@ -483,23 +483,56 @@ if(d.contacts){const c=d.contacts;const tg=(c.telegram||'').replace('@','');docu
 <script>
 setTimeout(()=>{const b=document.getElementById('brChatBubble');if(b)b.style.display='none';},6000);
 window.openBrChat=function(){
-  const menu=document.createElement('div');
-  menu.style.cssText='position:fixed;bottom:80px;right:16px;left:16px;z-index:9001;background:linear-gradient(180deg,#0d2040,#091528);border:1px solid rgba(0,212,255,.3);border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:0 12px 40px rgba(0,0,0,.5);max-width:320px;margin:0 auto';
-  menu.innerHTML=`
-    <div style="font-size:12px;color:#8299b9;font-weight:700;padding:0 4px;margin-bottom:2px">НАПИСАТЬ НАМ</div>
-    <a href="https://t.me/Luminosik" target="_blank" style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.2);border-radius:12px;color:#eef2f7;text-decoration:none;font-size:14px;font-weight:600;transition:background .15s" onmouseover="this.style.background='rgba(0,212,255,.16)'" onmouseout="this.style.background='rgba(0,212,255,.08)'">
-      <span style="font-size:20px">✈️</span><span>@Luminosik</span>
-    </a>
-    <a href="https://t.me/sssancho1ll" target="_blank" style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.2);border-radius:12px;color:#eef2f7;text-decoration:none;font-size:14px;font-weight:600;transition:background .15s" onmouseover="this.style.background='rgba(0,212,255,.16)'" onmouseout="this.style.background='rgba(0,212,255,.08)'">
-      <span style="font-size:20px">✈️</span><span>@sssancho1ll</span>
-    </a>
-    <a href="mailto:Ss1teC0de@gmail.com" style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:12px;color:#eef2f7;text-decoration:none;font-size:14px;font-weight:600;transition:background .15s" onmouseover="this.style.background='rgba(255,255,255,.08)'" onmouseout="this.style.background='rgba(255,255,255,.04)'">
-      <span style="font-size:20px">✉️</span><span>Email нам</span>
-    </a>
-    <button onclick="this.closest('div').remove()" style="margin-top:4px;background:none;border:none;color:#4a6a8a;font-size:12px;cursor:pointer;font-family:inherit;padding:4px">✕ Закрыть</button>
-  `;
-  document.body.appendChild(menu);
-  setTimeout(()=>document.addEventListener('click',function h(e){if(!menu.contains(e.target)&&e.target.className!=='br-chat-btn'){menu.remove();document.removeEventListener('click',h);}},true),100);
+  const isMob=window.innerWidth<=640;
+  // Remove existing menu if open
+  const existing=document.getElementById('brChatMenu');
+  if(existing){existing.remove();const bd=document.getElementById('brChatBackdrop');if(bd)bd.remove();return;}
+
+  const links=[
+    {href:'https://t.me/Luminosik',icon:'✈️',label:'@Luminosik',color:'rgba(0,212,255,.12)',border:'rgba(0,212,255,.25)'},
+    {href:'https://t.me/sssancho1ll',icon:'✈️',label:'@sssancho1ll',color:'rgba(0,212,255,.12)',border:'rgba(0,212,255,.25)'},
+    {href:'mailto:Ss1teC0de@gmail.com',icon:'✉️',label:'Email нам',color:'rgba(255,255,255,.05)',border:'rgba(255,255,255,.12)'}
+  ];
+
+  function close(){const m=document.getElementById('brChatMenu');const b=document.getElementById('brChatBackdrop');if(m){m.style.transform=isMob?'translateY(100%)':'scale(.95)';m.style.opacity='0';setTimeout(()=>{m.remove();if(b)b.remove();},200);}else if(b)b.remove();}
+
+  if(isMob){
+    // Full bottom-sheet on mobile
+    const backdrop=document.createElement('div');
+    backdrop.id='brChatBackdrop';
+    backdrop.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9000;backdrop-filter:blur(4px);animation:fadeIn .2s ease';
+    backdrop.onclick=close;
+    document.body.appendChild(backdrop);
+
+    const sheet=document.createElement('div');
+    sheet.id='brChatMenu';
+    sheet.style.cssText='position:fixed;bottom:0;left:0;right:0;z-index:9001;background:linear-gradient(180deg,#0e2244,#081428);border-radius:24px 24px 0 0;padding:24px 20px 36px;display:flex;flex-direction:column;gap:14px;box-shadow:0 -12px 60px rgba(0,0,0,.6);transform:translateY(0);transition:transform .2s ease,opacity .2s ease';
+    sheet.innerHTML=`
+      <div style="width:40px;height:4px;background:rgba(255,255,255,.2);border-radius:2px;margin:0 auto 8px"></div>
+      <div style="font-size:11px;letter-spacing:1.5px;color:#5a7a9a;font-weight:700;text-align:center;margin-bottom:4px">НАПИСАТЬ НАМ</div>
+      ${links.map(l=>`
+        <a href="${l.href}" target="_blank" style="display:flex;align-items:center;gap:14px;padding:16px 18px;background:${l.color};border:1px solid ${l.border};border-radius:16px;color:#eef2f7;text-decoration:none;font-size:17px;font-weight:600;-webkit-tap-highlight-color:transparent">
+          <span style="font-size:28px;flex-shrink:0">${l.icon}</span><span>${l.label}</span>
+        </a>`).join('')}
+      <button onclick="(${close.toString()})()" style="margin-top:6px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:14px;color:#7a9ab9;font-size:15px;cursor:pointer;font-family:inherit;padding:14px;font-weight:600">Закрыть</button>
+    `;
+    document.body.appendChild(sheet);
+  } else {
+    // Small popup on desktop
+    const menu=document.createElement('div');
+    menu.id='brChatMenu';
+    menu.style.cssText='position:fixed;bottom:100px;right:28px;z-index:9001;background:linear-gradient(180deg,#0d2040,#091528);border:1px solid rgba(0,212,255,.3);border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:220px;box-shadow:0 12px 40px rgba(0,0,0,.5);transform:scale(1);opacity:1;transition:transform .2s ease,opacity .2s ease';
+    menu.innerHTML=`
+      <div style="font-size:12px;color:#8299b9;font-weight:700;padding:0 4px;margin-bottom:2px">НАПИСАТЬ НАМ</div>
+      ${links.map(l=>`
+        <a href="${l.href}" target="_blank" style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:${l.color};border:1px solid ${l.border};border-radius:12px;color:#eef2f7;text-decoration:none;font-size:14px;font-weight:600">
+          <span style="font-size:20px">${l.icon}</span><span>${l.label}</span>
+        </a>`).join('')}
+      <button onclick="(${close.toString()})()" style="margin-top:4px;background:none;border:none;color:#4a6a8a;font-size:12px;cursor:pointer;font-family:inherit;padding:4px">✕ Закрыть</button>
+    `;
+    document.body.appendChild(menu);
+    setTimeout(()=>document.addEventListener('click',function h(e){if(!menu.contains(e.target)&&!e.target.closest('.br-chat-btn')){close();document.removeEventListener('click',h);}},true),100);
+  }
 };
 </script>
 </body>
