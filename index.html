@@ -2039,7 +2039,6 @@
         onkeydown="if(event.key==='Enter')checkAdmPwd()">
       <button class="adm-gate-btn" onclick="checkAdmPwd()">Войти →</button>
       <div class="adm-gate-err" id="admPwdErr">❌ Неверный пароль</div>
-      <div style="font-size:11px;color:rgba(147,162,183,.45);margin-top:4px">По умолчанию: <code style="color:rgba(147,162,183,.7)">sc2026</code></div>
     </div>
 
     <!-- MAIN PANEL (hidden until login) -->
@@ -2496,7 +2495,7 @@ const ADM_DEFAULTS = {
 
 function admGetCfg(){ try{ return Object.assign({},ADM_DEFAULTS,JSON.parse(localStorage.getItem(ADM_KEY)||'{}')); }catch(e){ return Object.assign({},ADM_DEFAULTS); } }
 function admSaveCfg(cfg){ localStorage.setItem(ADM_KEY,JSON.stringify(cfg)); }
-function admGetPwd(){ return localStorage.getItem(ADM_PWD_KEY)||'sc2026'; }
+function admGetPwd(){ return localStorage.getItem(ADM_PWD_KEY)||''; }
 
 // ── Open / close ──
 let admUnlocked = false;
