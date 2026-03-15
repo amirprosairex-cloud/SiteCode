@@ -3655,7 +3655,14 @@ document.addEventListener('keydown',function(e){
     if(btn){
       if(user){
         btn.className='btn-profile logged-in';
-        const avSrc=user.avatar?`<img src="${user.avatar}" style="width:29px;height:29px;border-radius:50%;object-fit:cover">`:`<div class="profile-avatar-sm" style="background:${avColor(user.name)}">${avInitials(user.name)}</div>`;
+        const isVip=user.status==='vip';
+        const isPremium=user.status==='premium';
+        let ringStyle='';
+        if(isVip) ringStyle='box-shadow:0 0 0 2px #e7c889,0 0 12px rgba(231,200,137,.5);border-radius:50%';
+        else if(isPremium) ringStyle='box-shadow:0 0 0 2px #00d4ff,0 0 12px rgba(0,212,255,.45);border-radius:50%';
+        const avSrc=user.avatar
+          ?`<img src="${user.avatar}" style="width:29px;height:29px;border-radius:50%;object-fit:cover;${ringStyle}">`
+          :`<div class="profile-avatar-sm" style="background:${avColor(user.name)};${ringStyle}">${avInitials(user.name)}</div>`;
         btn.innerHTML=avSrc+`<span>${user.name.split(' ')[0]}</span>`;
         btn.onclick=toggleProfileDrop;
       }else{
@@ -3959,14 +3966,31 @@ document.addEventListener('keydown',function(e){
     const user=getCurrentUser();
     if(!user){openAuth();return;}
     const ava=document.getElementById('pdAvatar');
+    // VIP = gold glow, Premium = diamond (cyan) glow
+    const isVip=user.status==='vip';
+    const isPremium=user.status==='premium';
+    let glowStyle='';
+    if(isVip) glowStyle='box-shadow:0 0 0 3px #e7c889,0 0 22px rgba(231,200,137,.6);border-radius:50%';
+    else if(isPremium) glowStyle='box-shadow:0 0 0 3px #00d4ff,0 0 22px rgba(0,212,255,.55);border-radius:50%';
     if(user.avatar){
       ava.style.background='transparent';
+      ava.style.cssText='width:48px;height:48px;border-radius:50%;overflow:hidden;'+glowStyle;
       ava.innerHTML=`<img src="${user.avatar}" style="width:48px;height:48px;border-radius:50%;object-fit:cover">`;
     }else{
-      ava.style.background=avColor(user.name);
+      ava.style.cssText=`background:${avColor(user.name)};width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#fff;flex-shrink:0;`+glowStyle;
       ava.innerHTML=avInitials(user.name);
     }
+    // Status badge under name
+    let statusBadge='';
+    if(isVip) statusBadge='<div style="margin-top:3px;display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:6px;background:rgba(231,200,137,.12);border:1px solid rgba(231,200,137,.35);color:#e7c889;font-size:10px;font-weight:800">👑 VIP клиент</div>';
+    else if(isPremium) statusBadge='<div style="margin-top:3px;display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:6px;background:rgba(0,212,255,.10);border:1px solid rgba(0,212,255,.3);color:#00d4ff;font-size:10px;font-weight:800">💎 Premium клиент</div>';
     document.getElementById('pdName').textContent=user.name;
+    if(statusBadge){
+      document.getElementById('pdName').insertAdjacentHTML('afterend',`<div id="pdStatusBadge">${statusBadge}</div>`);
+    } else {
+      const old=document.getElementById('pdStatusBadge');
+      if(old) old.remove();
+    }
     document.getElementById('pdEmail').textContent=user.email;
     const d=new Date(user.createdAt);
     document.getElementById('pdSince').textContent='С '+d.toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'});

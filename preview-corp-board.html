@@ -175,21 +175,19 @@ a{text-decoration:none;color:inherit}
   <div class="ticker-track" id="tickerTrack">
     <span class="ticker-item">Принимаем заявки на крупные проекты — 2026</span>
     <span class="ticker-item">Средний срок enterprise-разработки: 45–90 дней</span>
-    <span class="ticker-item">Порог входа в Board Room: от 90 000 ₸</span>
-    <span class="ticker-item">Команда: 12 специалистов в штате</span>
-    <span class="ticker-item">Принято проектов в Q1 2026: 8 из 10 мест</span>
+    <span class="ticker-item">Порог входа в Board Room: от 15 000 ₸</span>
     <span class="ticker-item">Специализация: e-commerce, порталы, web-приложения</span>
     <span class="ticker-item">Поддержка 24/7 на всех premium-проектах</span>
     <span class="ticker-item">NDA подписываем до начала переговоров</span>
+    <span class="ticker-item">Принято проектов в Q1 2026: 8 из 10 мест</span>
     <!-- duplicate for seamless loop -->
     <span class="ticker-item">Принимаем заявки на крупные проекты — 2026</span>
     <span class="ticker-item">Средний срок enterprise-разработки: 45–90 дней</span>
-    <span class="ticker-item">Порог входа в Board Room: от 90 000 ₸</span>
-    <span class="ticker-item">Команда: 12 специалистов в штате</span>
-    <span class="ticker-item">Принято проектов в Q1 2026: 8 из 10 мест</span>
+    <span class="ticker-item">Порог входа в Board Room: от 15 000 ₸</span>
     <span class="ticker-item">Специализация: e-commerce, порталы, web-приложения</span>
     <span class="ticker-item">Поддержка 24/7 на всех premium-проектах</span>
     <span class="ticker-item">NDA подписываем до начала переговоров</span>
+    <span class="ticker-item">Принято проектов в Q1 2026: 8 из 10 мест</span>
   </div>
 </div>
 
@@ -209,7 +207,7 @@ a{text-decoration:none;color:inherit}
         <h1>Сложный проект? Мы берём такое.</h1>
         <p>Board Room — приватный уровень SiteCode для крупных и нестандартных заказов. Отдельная команда, персональный менеджер, NDA и полный контроль над процессом от брифа до запуска.</p>
         <div class="metrics" id="metricsGrid">
-          <div class="metric"><strong data-count="90">0</strong><span>тыс. ₸ — порог входа</span></div>
+          <div class="metric"><strong data-count="15">0</strong><span>тыс. ₸ — порог входа</span></div>
           <div class="metric"><strong data-count="12">0</strong><span>специалистов в штате</span></div>
           <div class="metric"><strong data-count="98">0</strong><span>% проектов в срок</span></div>
         </div>
@@ -300,21 +298,21 @@ a{text-decoration:none;color:inherit}
           <div class="ci-icon">✉️</div>
           <div class="ci-body">
             <h4>Email</h4>
-            <p>Для брифов и партнёрских запросов<br><a href="mailto:hello@sitecode.ru">hello@sitecode.ru</a></p>
+            <p>Для брифов и партнёрских запросов<br><a href="mailto:Ss1teC0de@gmail.com">Ss1teC0de@gmail.com</a></p>
           </div>
         </div>
         <div class="ci-card">
           <div class="ci-icon">💬</div>
           <div class="ci-body">
             <h4>Telegram</h4>
-            <p>Быстрый ответ в рабочие часы<br><a href="https://t.me/sitecode" target="_blank">@sitecode</a></p>
+            <p>Быстрый ответ в рабочие часы<br><a href="https://t.me/Luminosik" target="_blank">@Luminosik</a> &middot; <a href="https://t.me/sssancho1ll" target="_blank">@sssancho1ll</a></p>
           </div>
         </div>
         <div class="ci-card">
           <div class="ci-icon">📞</div>
           <div class="ci-body">
             <h4>Телефон</h4>
-            <p>По предварительной записи<br><a href="tel:+79991234567">+7 999 123-45-67</a></p>
+            <p>По предварительной записи<br><a href="tel:+77789697305">+7 778 969 73-05</a> &middot; <a href="tel:+77751372731">+7 775 137 27-31</a></p>
           </div>
         </div>
         <div class="confidential-note">
@@ -462,6 +460,47 @@ if(d.timeline&&d.timeline.length){const h1=d.timeline.slice(0,3),h2=d.timeline.s
 if(d.roles&&d.roles.length){const RC={gold:'rgba(231,200,137,.12)',blue:'rgba(159,213,255,.10)',green:'rgba(68,221,136,.10)',white:'rgba(255,255,255,.06)'};const RB={gold:'rgba(231,200,137,.22)',blue:'rgba(159,213,255,.20)',green:'rgba(68,221,136,.20)',white:'rgba(255,255,255,.12)'};document.getElementById('rolesGrid').innerHTML=d.roles.map(r=>`<div class="role-card"><div class="role-avatar" style="background:${RC[r.color]||RC.white};border-color:${RB[r.color]||RB.white}">${esc(r.emoji)}</div><h4>${esc(r.title)}</h4><p>${esc(r.desc)}</p><span class="role-badge">${esc(r.badge)}</span></div>`).join('');}
 if(d.contacts){const c=d.contacts;const tg=(c.telegram||'').replace('@','');document.getElementById('contactInfo').innerHTML=`<div class="ci-card"><div class="ci-icon">✉️</div><div class="ci-body"><h4>Email</h4><p>Для деловых запросов и партнёрских предложений<br><a href="mailto:${esc(c.email)}">${esc(c.email)}</a></p></div></div><div class="ci-card"><div class="ci-icon">💬</div><div class="ci-body"><h4>Telegram</h4><p>Быстрый ответ в рабочие часы<br><a href="https://t.me/${esc(tg)}" target="_blank">${esc(c.telegram)}</a></p></div></div><div class="ci-card"><div class="ci-icon">📞</div><div class="ci-body"><h4>Телефон</h4><p>По предварительной записи<br><a href="tel:${esc((c.phone||'').replace(/\s/g,''))}">${esc(c.phone)}</a></p></div></div><div class="confidential-note">${esc(c.note)}</div>`;}
 })();
+</script>
+
+<!-- FLOATING CHAT BUTTON -->
+<style>
+.br-chat-fab{position:fixed;bottom:28px;right:28px;z-index:9000;display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.br-chat-bubble{background:linear-gradient(135deg,#0d2040,#091528);border:1px solid rgba(0,212,255,.35);border-radius:18px;padding:12px 16px;color:#eef2f7;font-size:13px;font-weight:600;white-space:nowrap;box-shadow:0 8px 32px rgba(0,212,255,.18);animation:chatBubbleIn .3s ease;pointer-events:none}
+@keyframes chatBubbleIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.br-chat-btn{width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,#00c8f0,#0066d6);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 6px 28px rgba(0,212,255,.45);transition:transform .2s,box-shadow .2s;position:relative}
+.br-chat-btn:hover{transform:scale(1.1);box-shadow:0 8px 36px rgba(0,212,255,.6)}
+.br-chat-dot{position:absolute;top:4px;right:4px;width:12px;height:12px;background:#44dd88;border-radius:50%;border:2px solid #091528;animation:chatDotPulse 2s infinite}
+@keyframes chatDotPulse{0%,100%{opacity:1}50%{opacity:.4}}
+@media(max-width:600px){.br-chat-fab{bottom:16px;right:16px}.br-chat-btn{width:50px;height:50px;font-size:22px}}
+</style>
+<div class="br-chat-fab" id="brChatFab">
+  <div class="br-chat-bubble" id="brChatBubble">💬 Онлайн — ответим быстро!</div>
+  <button class="br-chat-btn" onclick="openBrChat()" title="Написать нам">
+    💬
+    <span class="br-chat-dot"></span>
+  </button>
+</div>
+<script>
+setTimeout(()=>{const b=document.getElementById('brChatBubble');if(b)b.style.display='none';},6000);
+window.openBrChat=function(){
+  const menu=document.createElement('div');
+  menu.style.cssText='position:fixed;bottom:100px;right:28px;z-index:9001;background:linear-gradient(180deg,#0d2040,#091528);border:1px solid rgba(0,212,255,.3);border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:220px;box-shadow:0 12px 40px rgba(0,0,0,.5)';
+  menu.innerHTML=`
+    <div style="font-size:12px;color:#8299b9;font-weight:700;padding:0 4px;margin-bottom:2px">НАПИСАТЬ НАМ</div>
+    <a href="https://t.me/Luminosik" target="_blank" style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.2);border-radius:12px;color:#eef2f7;text-decoration:none;font-size:14px;font-weight:600;transition:background .15s" onmouseover="this.style.background='rgba(0,212,255,.16)'" onmouseout="this.style.background='rgba(0,212,255,.08)'">
+      <span style="font-size:20px">✈️</span><span>@Luminosik</span>
+    </a>
+    <a href="https://t.me/sssancho1ll" target="_blank" style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.2);border-radius:12px;color:#eef2f7;text-decoration:none;font-size:14px;font-weight:600;transition:background .15s" onmouseover="this.style.background='rgba(0,212,255,.16)'" onmouseout="this.style.background='rgba(0,212,255,.08)'">
+      <span style="font-size:20px">✈️</span><span>@sssancho1ll</span>
+    </a>
+    <a href="mailto:Ss1teC0de@gmail.com" style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:12px;color:#eef2f7;text-decoration:none;font-size:14px;font-weight:600;transition:background .15s" onmouseover="this.style.background='rgba(255,255,255,.08)'" onmouseout="this.style.background='rgba(255,255,255,.04)'">
+      <span style="font-size:20px">✉️</span><span>Email нам</span>
+    </a>
+    <button onclick="this.closest('div').remove()" style="margin-top:4px;background:none;border:none;color:#4a6a8a;font-size:12px;cursor:pointer;font-family:inherit;padding:4px">✕ Закрыть</button>
+  `;
+  document.body.appendChild(menu);
+  setTimeout(()=>document.addEventListener('click',function h(e){if(!menu.contains(e.target)&&e.target.className!=='br-chat-btn'){menu.remove();document.removeEventListener('click',h);}},true),100);
+};
 </script>
 </body>
 </html>

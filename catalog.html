@@ -862,7 +862,7 @@
     /* ─── BOARD ROOM GATE ─── */
     .br-gate-ov{position:fixed;inset:0;background:rgba(3,8,18,.93);backdrop-filter:blur(14px);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s}
     .br-gate-ov.open{opacity:1;pointer-events:all}
-    .br-gate-box{max-width:800px;width:100%;background:radial-gradient(circle at 80% 10%,rgba(0,212,255,.14),transparent 32%),linear-gradient(180deg,#0d2040,#091528);border:1px solid rgba(0,212,255,.24);border-radius:32px;padding:36px 32px 32px;position:relative}
+    .br-gate-box{max-width:800px;width:100%;background:radial-gradient(circle at 80% 10%,rgba(0,212,255,.14),transparent 32%),linear-gradient(180deg,#0d2040,#091528);border:1px solid rgba(0,212,255,.24);border-radius:32px;padding:36px 32px 32px;position:relative;max-height:90vh;overflow-y:auto}
     .br-gate-close{position:absolute;top:16px;right:16px;width:36px;height:36px;border-radius:8px;background:#1a3050;border:1px solid #25405e;color:#6699bb;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s,color .2s;line-height:1;font-family:inherit}
     .br-gate-close:hover{background:#2a4060;color:#fff}
     .br-gate-lbl{display:inline-block;padding:5px 12px;border-radius:999px;background:rgba(0,212,255,.10);border:1px solid rgba(0,212,255,.26);color:#00d4ff;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px}
@@ -884,7 +884,7 @@
     .br-tier-btn.off{background:rgba(255,255,255,.05);color:rgba(255,255,255,.25);cursor:default}
     .br-tier-btn.go{background:linear-gradient(135deg,#00c8f0,#0066d6);color:#fff;box-shadow:0 0 22px rgba(0,212,255,.26)}
     .br-tier-btn.go:hover{box-shadow:0 0 40px rgba(0,212,255,.44);transform:translateY(-1px)}
-    @media(max-width:640px){.br-tiers{grid-template-columns:1fr}}
+    @media(max-width:640px){.br-tiers{grid-template-columns:1fr}.br-gate-box{padding:20px 16px 24px;border-radius:20px}.br-tier{padding:16px}.br-tier-price{font-size:22px}.br-gate-box h2{font-size:20px}}
 
     /* ─── RESPONSIVE ─── */
     @media(max-width:900px){
@@ -1208,7 +1208,7 @@
     <div id="brTiersScreen">
     <span class="br-gate-lbl">◆ Board Room</span>
     <h2>Хотите сложный проект? Откройте Board Room</h2>
-    <p>Board Room — закрытая зона SiteCode для заявок на крупную разработку. Корпоративные сайты, enterprise e-commerce, веб-приложения — от 90 000 ₸. Доступен начиная со 2-го тарифа (Стандарт).</p>
+    <p>Board Room — закрытая зона SiteCode для заявок на крупную разработку. Корпоративные сайты, enterprise e-commerce, веб-приложения. Board Room доступен начиная с тарифа <strong style="color:#00d4ff">Стандарт (от 15 000 ₸)</strong>.</p>
     <div class="br-tiers">
       <div class="br-tier">
         <div class="br-tier-name">Базовый</div>
@@ -1224,7 +1224,7 @@
       </div>
       <div class="br-tier top">
         <div class="br-tier-name">Стандарт</div>
-        <div class="br-tier-price">25 000 <sub>₸</sub></div>
+        <div class="br-tier-price">15 000 <sub>₸</sub></div>
         <ul>
           <li>До 10 страниц</li>
           <li>Фильтры и интерактив</li>
