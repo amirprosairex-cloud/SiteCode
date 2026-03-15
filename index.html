@@ -2551,9 +2551,34 @@ const STATUS_CFG={
   vip:{label:'👑 VIP',color:'#00d4ff',bg:'rgba(0,212,255,.1)',border:'rgba(0,212,255,.3)'}
 };
 
-function admRenderUsers(){
+async function admRenderUsers(){
   try{
-    const users=JSON.parse(localStorage.getItem('sc_users')||'[]');
+    // Pull registered users from Worker and merge with local (to preserve status/boardroom)
+    let localUsers=JSON.parse(localStorage.getItem('sc_users')||'[]');
+    try{
+      const r=await fetch('https://hidden-term-8bcb.amirprosairex.workers.dev/users/list',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({secret:getBrSecret()})
+      });
+      if(r.ok){
+        const d=await r.json();
+        if(Array.isArray(d.users)){
+          // Merge: remote users as base, overlay local data (status, boardroom, passwordHash, twoFa)
+          const merged=d.users.map(ru=>{
+            const lu=localUsers.find(u=>u.email===ru.email||u.id===ru.id);
+            return lu?Object.assign({},ru,{status:lu.status,boardroom:lu.boardroom,twoFa:lu.twoFa,passwordHash:lu.passwordHash,avatar:lu.avatar}):ru;
+          });
+          // Also add local-only users not yet on Worker
+          localUsers.forEach(lu=>{
+            if(!merged.find(u=>u.email===lu.email||u.id===lu.id)) merged.push(lu);
+          });
+          localUsers=merged;
+          localStorage.setItem('sc_users',JSON.stringify(localUsers));
+        }
+      }
+    }catch(e){}
+    const users=localUsers;
     const list=document.getElementById('admUsersList');
     const empty=document.getElementById('admUsersEmpty');
     if(!list)return;
@@ -3307,7 +3332,7 @@ document.addEventListener('keydown',function(e){
     showTyping(true);
     // Use real OpenAI API only when explicitly configured
     const cfg = (typeof admGetCfg === 'function') ? admGetCfg() : {};
-    if (window._scApiCall && cfg.useApi && cfg.apikey) {
+    if (window._scApiCall && cfg.useApi) {
       window._scApiCall(text, function(reply) {
         showTyping(false);
         addMsg('bot', reply);
@@ -3834,9 +3859,18 @@ document.addEventListener('keydown',function(e){
     const users=getUsers();
     if(users.find(u=>u.email===email)){authErr('reg-err','Email уже зарегистрирован');return;}
     const id='u_'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
-    users.push({id,name,email,passwordHash:await hashPw(pw),createdAt:new Date().toISOString()});
+    const newUser={id,name,email,passwordHash:await hashPw(pw),createdAt:new Date().toISOString()};
+    users.push(newUser);
     saveUsers(users);
     setSession(id,false);
+    // Sync to Worker so admin sees new user
+    try{
+      fetch('https://hidden-term-8bcb.amirprosairex.workers.dev/users/register',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({id,name,email,createdAt:newUser.createdAt})
+      }).catch(()=>{});
+    }catch(e){}
     closeAuth();
     updateHeaderAuth();
     if(typeof showToast==='function') showToast('🎉',`Добро пожаловать, ${name.split(' ')[0]}!`);

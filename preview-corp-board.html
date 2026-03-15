@@ -138,33 +138,33 @@ a{text-decoration:none;color:inherit}
 </div>
 <script>
 (function(){
-  // Admin override
-  if(localStorage.getItem('br_access')==='1'){document.getElementById('brLock').style.display='none';return;}
-  try{
-    const id=sessionStorage.getItem('sc_session')||localStorage.getItem('sc_session');
-    if(!id){
-      // Not logged in — show registration prompt
-      document.getElementById('brStateGuest').style.display='';
-      return;
-    }
-    const users=JSON.parse(localStorage.getItem('sc_users')||'[]');
-    const u=users.find(x=>x.id===id);
-    if(!u){
-      document.getElementById('brStateGuest').style.display='';
-      return;
-    }
-    if(u.boardroom===true){
-      // Access granted!
-      document.getElementById('brLock').style.display='none';
-      return;
-    }
-    // Logged in but no boardroom access
-    document.getElementById('brStateNoAccess').style.display='';
-    const el=document.getElementById('brUserHello');
-    if(el&&u.name) el.innerHTML=`Привет, <strong style="color:#eef2f7">${u.name}</strong>! Ваш аккаунт зарегистрирован, но доступ в Board Room ещё не выдан. Обратитесь к администратору — он активирует доступ после подтверждения.`;
-  }catch(e){
+  const BR_WORKER = 'https://hidden-term-8bcb.amirprosairex.workers.dev';
+  const lock = document.getElementById('brLock');
+  const email = (localStorage.getItem('br_email')||'').trim().toLowerCase();
+  if(!email){
+    // No email cached — show gate immediately, redirect back
     document.getElementById('brStateGuest').style.display='';
+    return;
   }
+  // Show loading state, then check Worker
+  lock.style.display='';
+  fetch(BR_WORKER+'/br/check',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({email})
+  }).then(r=>r.json()).then(d=>{
+    if(d.access){
+      lock.style.display='none';
+    } else {
+      localStorage.removeItem('br_email');
+      document.getElementById('brStateNoAccess').style.display='';
+      const el=document.getElementById('brUserHello');
+      if(el) el.innerHTML='Доступ для <strong style="color:#eef2f7">'+email+'</strong> аннулирован. Обратитесь к администратору для восстановления.';
+    }
+  }).catch(()=>{
+    // Network error — show access denied to be safe
+    document.getElementById('brStateGuest').style.display='';
+  });
 })();
 </script>
 <div class="board-grid"></div>
