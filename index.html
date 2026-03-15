@@ -3689,10 +3689,22 @@ document.addEventListener('keydown',function(e){
     const mobileBtn=document.getElementById('mobileAuthBtn');
     if(mobileBtn){
       if(user){
-        mobileBtn.textContent=`👤 ${user.name.split(' ')[0]} — профиль`;
+        const isPrem=user.status==='premium';
+        const isVip=user.status==='vip';
+        const isSt=user.status==='standard';
+        let statusIcon='';
+        let btnBorder='1px solid rgba(255,255,255,.1)';
+        let btnBg='rgba(255,255,255,.04)';
+        let btnColor='#eef2f7';
+        if(isPrem){statusIcon='💎 ';btnBorder='1px solid rgba(0,212,255,.4)';btnBg='rgba(0,212,255,.08)';btnColor='#00d4ff';}
+        else if(isVip){statusIcon='👑 ';btnBorder='1px solid rgba(231,200,137,.4)';btnBg='rgba(231,200,137,.08)';btnColor='#e7c889';}
+        else if(isSt){statusIcon='🪨 ';btnBorder='1px solid rgba(176,184,200,.3)';btnBg='rgba(176,184,200,.06)';btnColor='#b0b8c8';}
+        mobileBtn.innerHTML=`${statusIcon}${user.name.split(' ')[0]} — профиль`;
+        mobileBtn.style.cssText=`border:${btnBorder};background:${btnBg};color:${btnColor};border-radius:14px;padding:14px 18px;font-weight:700;transition:none`;
         mobileBtn.onclick=e=>{e.preventDefault();closeMenu();toggleProfileDrop();};
       }else{
-        mobileBtn.textContent='👤 Войти в аккаунт';
+        mobileBtn.innerHTML='👤 Войти в аккаунт';
+        mobileBtn.style.cssText='';
         mobileBtn.onclick=e=>{e.preventDefault();closeMenu();openAuth();};
       }
     }
@@ -4003,11 +4015,11 @@ document.addEventListener('keydown',function(e){
     else if(isVip) statusBadge='<div style="margin-top:3px;display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:6px;background:rgba(231,200,137,.12);border:1px solid rgba(231,200,137,.35);color:#e7c889;font-size:10px;font-weight:800">👑 VIP</div>';
     else if(isStandard) statusBadge='<div style="margin-top:3px;display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:6px;background:rgba(176,184,200,.10);border:1px solid rgba(176,184,200,.35);color:#b0b8c8;font-size:10px;font-weight:800">🪨 Стандарт</div>';
     document.getElementById('pdName').textContent=user.name;
+    // Remove old badge before inserting new
+    const oldBadge=document.getElementById('pdStatusBadge');
+    if(oldBadge) oldBadge.remove();
     if(statusBadge){
       document.getElementById('pdName').insertAdjacentHTML('afterend',`<div id="pdStatusBadge">${statusBadge}</div>`);
-    } else {
-      const old=document.getElementById('pdStatusBadge');
-      if(old) old.remove();
     }
     document.getElementById('pdEmail').textContent=user.email;
     const d=new Date(user.createdAt);
