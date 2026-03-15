@@ -1058,7 +1058,7 @@
   <a href="blog.html" onclick="closeMenu()">Блог</a>
   <a href="#contact" class="btn-nav" onclick="closeMenu()">Заказать сайт</a>
   <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.08)">
-    <a href="#" id="mobileAuthBtn" onclick="closeMenu();openAuth();return false;" style="color:#00d4ff">👤 Войти в аккаунт</a>
+    <a href="#" id="mobileAuthBtn" onclick="mobileAuthAction();return false;">👤 Войти в аккаунт</a>
   </div>
 </div>
 
@@ -1655,6 +1655,20 @@
     mobileMenu.classList.remove('open');
     menuOverlay.classList.remove('open');
   }
+  // Global handler for mobile profile/auth button — always works regardless of login state
+  window.mobileAuthAction=function(){
+    closeMenu();
+    const user=typeof getCurrentUser==='function'?getCurrentUser():null;
+    setTimeout(function(){
+      if(user){
+        if(typeof toggleProfileDrop==='function') toggleProfileDrop();
+        else if(typeof window.toggleProfileDrop==='function') window.toggleProfileDrop();
+      }else{
+        if(typeof openAuth==='function') openAuth();
+        else if(typeof window.openAuth==='function') window.openAuth();
+      }
+    }, 320); // wait for menu slide-out transition (350ms) to complete
+  };
   menuBtn.addEventListener('click', toggleMenu);
   menuOverlay.addEventListener('click', closeMenu);
 
@@ -3473,10 +3487,11 @@ document.addEventListener('keydown',function(e){
 /* ── Profile dropdown ── */
 .profile-drop{position:fixed;top:64px;right:18px;width:288px;background:#131c28;border:1px solid #283244;border-radius:20px;box-shadow:0 24px 80px rgba(0,0,0,.75);z-index:9970;display:none;overflow:hidden}
 @keyframes profileDropIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes profileDropInMob{from{opacity:0;transform:translateY(100%)}to{opacity:1;transform:translateY(0)}}
 .profile-drop.open{display:block;animation:profileDropIn .18s ease}
 @media(max-width:640px){
   .profile-drop{top:auto;bottom:0;left:0;right:0;width:100%;border-radius:24px 24px 0 0;max-height:88vh;overflow-y:auto}
-  @keyframes profileDropIn{from{opacity:0;transform:translateY(60px)}to{opacity:1;transform:translateY(0)}}
+  .profile-drop.open{animation:profileDropInMob .25s cubic-bezier(.32,.72,0,1)}
   .profile-drop-head{padding:22px 20px 18px}
   .profile-avatar-lg{width:60px;height:60px;font-size:22px}
   .profile-drop-name{font-size:17px}
@@ -3486,7 +3501,7 @@ document.addEventListener('keydown',function(e){
   .profile-drop-divider{margin:6px 12px}
   .auth-body{padding:20px 16px 24px}
   .auth-title{font-size:18px}
-  .auth-box{border-radius:0 0 0 0;max-height:100vh;overflow-y:auto;border-radius:22px}
+  .auth-box{border-radius:22px}
   .auth-ov{padding:10px}
 }
 .profile-drop.open{display:block;animation:profileDropIn .18s ease}
@@ -3706,22 +3721,20 @@ document.addEventListener('keydown',function(e){
     if(mobileBtn){
       if(user){
         const isPrem=user.status==='premium';
-        const isVip=user.status==='vip';
-        const isSt=user.status==='standard';
-        let statusIcon='';
-        let btnBorder='1px solid rgba(255,255,255,.1)';
-        let btnBg='rgba(255,255,255,.04)';
+        const isVipU=user.status==='vip';
+        const isStU=user.status==='standard';
+        let statusIcon='👤 ';
         let btnColor='#eef2f7';
-        if(isPrem){statusIcon='💎 ';btnBorder='1px solid rgba(0,212,255,.4)';btnBg='rgba(0,212,255,.08)';btnColor='#00d4ff';}
-        else if(isVip){statusIcon='👑 ';btnBorder='1px solid rgba(231,200,137,.4)';btnBg='rgba(231,200,137,.08)';btnColor='#e7c889';}
-        else if(isSt){statusIcon='🪨 ';btnBorder='1px solid rgba(176,184,200,.3)';btnBg='rgba(176,184,200,.06)';btnColor='#b0b8c8';}
-        mobileBtn.innerHTML=`${statusIcon}${user.name.split(' ')[0]} — профиль`;
-        mobileBtn.style.cssText=`border:${btnBorder};background:${btnBg};color:${btnColor};border-radius:14px;padding:14px 18px;font-weight:700;transition:none`;
-        mobileBtn.onclick=e=>{e.preventDefault();closeMenu();toggleProfileDrop();};
+        let btnBorder='1px solid rgba(255,255,255,.12)';
+        let btnBg='rgba(255,255,255,.05)';
+        if(isPrem){statusIcon='💎 ';btnColor='#00d4ff';btnBorder='1px solid rgba(0,212,255,.4)';btnBg='rgba(0,212,255,.08)';}
+        else if(isVipU){statusIcon='👑 ';btnColor='#e7c889';btnBorder='1px solid rgba(231,200,137,.4)';btnBg='rgba(231,200,137,.08)';}
+        else if(isStU){statusIcon='🪨 ';btnColor='#b0b8c8';btnBorder='1px solid rgba(176,184,200,.3)';btnBg='rgba(176,184,200,.06)';}
+        mobileBtn.textContent=`${statusIcon}${user.name.split(' ')[0]} — профиль`;
+        mobileBtn.style.cssText=`color:${btnColor};border:${btnBorder};background:${btnBg};border-radius:12px;padding:12px 16px;font-weight:700;white-space:nowrap;display:block;text-align:left;margin-top:0;`;
       }else{
-        mobileBtn.innerHTML='👤 Войти в аккаунт';
-        mobileBtn.style.cssText='';
-        mobileBtn.onclick=e=>{e.preventDefault();closeMenu();openAuth();};
+        mobileBtn.textContent='👤 Войти в аккаунт';
+        mobileBtn.style.cssText='color:#00d4ff;white-space:nowrap;';
       }
     }
   }
