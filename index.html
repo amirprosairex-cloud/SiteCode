@@ -2423,6 +2423,21 @@
 
         <!-- ── USERS ── -->
         <div class="adm-pane" id="pane-users">
+          <!-- Board Room access manager -->
+          <div style="background:linear-gradient(135deg,rgba(231,200,137,.07),rgba(0,212,255,.04));border:1px solid rgba(231,200,137,.22);border-radius:14px;padding:16px 18px;margin-bottom:20px">
+            <div style="font-size:13px;font-weight:800;color:#e7c889;margin-bottom:6px">◆ Выдача Board Room доступа</div>
+            <div style="font-size:12px;color:#8299b9;margin-bottom:12px">Введите email клиента (который связался с вами) — и нажмите «Выдать». После этого пользователь вводит этот email на сайте и попадёт в Board Room.</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <input id="brGrantEmail" type="email" placeholder="email@example.com"
+                style="flex:1;min-width:200px;padding:9px 13px;background:#0f1826;border:1px solid #283244;border-radius:10px;color:#eef2f7;font-size:13px;font-family:inherit;outline:none"
+                onkeydown="if(event.key==='Enter')admGrantBR()">
+              <button onclick="admGrantBR()"
+                style="padding:9px 16px;background:rgba(231,200,137,.12);border:1px solid rgba(231,200,137,.3);border-radius:10px;color:#e7c889;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit">◆ Выдать</button>
+              <button onclick="admRevokeBR()"
+                style="padding:9px 16px;background:rgba(255,85,102,.06);border:1px solid rgba(255,85,102,.2);border-radius:10px;color:#ff5566;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit">✕ Отозвать</button>
+            </div>
+            <div id="brGrantStatus" style="display:none;font-size:12px;margin-top:10px"></div>
+          </div>
           <div class="adm-sh">👥 Зарегистрированные пользователи</div>
           <div id="admUsersList" style="display:flex;flex-direction:column;gap:10px"></div>
           <div id="admUsersEmpty" style="display:none;color:#385a78;font-size:13px;padding:20px 0">Нет зарегистрированных пользователей.</div>
@@ -2579,7 +2594,62 @@ window.admToggleBoardroom=function(id){
     admRenderUsers();
     const msg=users[idx].boardroom?'✅ Board Room доступ выдан':'🔒 Board Room доступ отозван';
     if(typeof showToast==='function') showToast(users[idx].boardroom?'◆':'🔒', msg);
+    // Also sync to Worker
+    const email=users[idx].email;
+    if(email){
+      const action=users[idx].boardroom?'grant':'revoke';
+      const secret=localStorage.getItem('sc_adm_br_token')||admGetPwd();
+      fetch('https://hidden-term-8bcb.amirprosairex.workers.dev/br/'+action,{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({email,secret})
+      }).catch(()=>{});
+    }
   }catch(e){}
+};
+
+const BR_WORKER_URL='https://hidden-term-8bcb.amirprosairex.workers.dev';
+function getBrSecret(){ return localStorage.getItem('sc_adm_br_token')||admGetPwd(); }
+function setBrGrantStatus(msg,color){
+  const el=document.getElementById('brGrantStatus');
+  if(!el)return;
+  el.textContent=msg; el.style.color=color; el.style.display='';
+}
+window.admGrantBR=async function(){
+  const email=(document.getElementById('brGrantEmail').value||'').trim().toLowerCase();
+  if(!email){setBrGrantStatus('Введите email','#ff5566');return;}
+  setBrGrantStatus('⏳ Выдаём доступ...','#93a2b7');
+  try{
+    const r=await fetch(BR_WORKER_URL+'/br/grant',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email,secret:getBrSecret()})
+    });
+    const d=await r.json();
+    if(r.ok&&d.ok){
+      setBrGrantStatus('✅ Доступ выдан: '+email,'#44dd88');
+      document.getElementById('brGrantEmail').value='';
+      if(typeof showToast==='function') showToast('◆','Доступ Board Room выдан');
+    }else{
+      setBrGrantStatus('❌ '+( d.error||'Ошибка. Проверьте токен.'),d.error?'#ff5566':'#ff5566');
+    }
+  }catch(e){setBrGrantStatus('❌ Ошибка сети','#ff5566');}
+};
+window.admRevokeBR=async function(){
+  const email=(document.getElementById('brGrantEmail').value||'').trim().toLowerCase();
+  if(!email){setBrGrantStatus('Введите email для отзыва','#ff5566');return;}
+  setBrGrantStatus('⏳ Отзываем...','#93a2b7');
+  try{
+    const r=await fetch(BR_WORKER_URL+'/br/revoke',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email,secret:getBrSecret()})
+    });
+    const d=await r.json();
+    if(r.ok&&d.ok){
+      setBrGrantStatus('🔒 Доступ отозван: '+email,'#e7c889');
+      if(typeof showToast==='function') showToast('🔒','Board Room доступ отозван');
+    }else{
+      setBrGrantStatus('❌ '+(d.error||'Ошибка'),'#ff5566');
+    }
+  }catch(e){setBrGrantStatus('❌ Ошибка сети','#ff5566');}
 };
 window.admSetUserStatus=function(id){
   try{

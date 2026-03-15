@@ -1281,26 +1281,69 @@
 
 <script>
   // ===== BOARD ROOM GATE =====
-  function getBrUserStatus(){
+  const BR_WORKER = 'https://hidden-term-8bcb.amirprosairex.workers.dev';
+
+  async function hasBrAccess(){
+    // Check cached email against Worker
+    const email = localStorage.getItem('br_email');
+    if(email){
+      try{
+        const r = await fetch(BR_WORKER+'/br/check',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});
+        const d = await r.json();
+        if(d.access) return true;
+      }catch(e){}
+    }
+    return false;
+  }
+
+  async function openBoardGate(){
+    // Quick check if already has access
+    if(await hasBrAccess()){window.location.href='preview-corp-board.html';return;}
+    showBrTiers();
+    document.getElementById('brGate').classList.add('open');
+    document.body.style.overflow='hidden';
+  }
+
+  function showBrTiers(){
+    document.getElementById('brTiersScreen').style.display='';
+    document.getElementById('brEmailScreen').style.display='none';
+  }
+
+  function showBrEmailForm(){
+    document.getElementById('brTiersScreen').style.display='none';
+    document.getElementById('brEmailScreen').style.display='';
+    document.getElementById('brCheckStatus').style.display='none';
+    document.getElementById('brNoAccess').style.display='none';
+    setTimeout(()=>document.getElementById('brCheckEmail').focus(),100);
+  }
+
+  async function checkBrEmail(){
+    const email=(document.getElementById('brCheckEmail').value||'').trim().toLowerCase();
+    if(!email){setBrStatus('Введите email','#ff5566');return;}
+    setBrStatus('⏳ Проверяем...','#93a2b7');
+    document.getElementById('brNoAccess').style.display='none';
     try{
-      const id=sessionStorage.getItem('sc_session')||localStorage.getItem('sc_session');
-      if(!id)return null;
-      const users=JSON.parse(localStorage.getItem('sc_users')||'[]');
-      const u=users.find(x=>x.id===id);
-      return u?u.status||'standard':null;
-    }catch(e){return null;}
+      const r=await fetch(BR_WORKER+'/br/check',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});
+      const d=await r.json();
+      if(d.access){
+        localStorage.setItem('br_email',email);
+        setBrStatus('✅ Доступ подтверждён! Загружаем...','#44dd88');
+        setTimeout(()=>{window.location.href='preview-corp-board.html';},800);
+      }else{
+        setBrStatus('❌ Этот email не найден в системе','#ff5566');
+        document.getElementById('brNoAccess').style.display='';
+      }
+    }catch(e){
+      setBrStatus('❌ Ошибка подключения. Попробуйте ещё раз.','#ff5566');
+    }
   }
-  function hasBrAccess(){
-    if(localStorage.getItem('br_access')==='1')return true;
-    const st=getBrUserStatus();
-    return st==='premium'||st==='vip';
+
+  function setBrStatus(msg,color){
+    const el=document.getElementById('brCheckStatus');
+    el.textContent=msg; el.style.color=color; el.style.display='';
   }
-  function openBoardGate(){
-    if(hasBrAccess()){window.location.href='preview-corp-board.html';return;}
-    document.getElementById('brGate').classList.add('open');document.body.style.overflow='hidden';
-  }
+
   function closeBoardGate(){document.getElementById('brGate').classList.remove('open');document.body.style.overflow='';}
-  function unlockBoardRoom(){localStorage.setItem('br_access','1');window.location.href='preview-corp-board.html';}
   document.getElementById('brGate').addEventListener('click',function(e){if(e.target===this)closeBoardGate();});
 
   // ===== STARFIELD WITH PARALLAX + COMET =====
