@@ -2151,7 +2151,20 @@
             </div>
             <div class="adm-field">
               <label>Системный промпт (роль ИИ)</label>
-              <textarea id="cf-sysprompt" style="min-height:110px">Ты — AI-ассистент компании SiteCode. Отвечай на вопросы о разработке сайтов, ценах, сроках и услугах компании. Отвечай коротко, дружелюбно, на русском языке. Если не знаешь точного ответа — предложи связаться с менеджером.</textarea>
+              <textarea id="cf-sysprompt" style="min-height:110px">Ты — AI-ассистент компании SiteCode (sitecode.store). Отвечай коротко, дружелюбно, на русском языке. Все цены ТОЛЬКО в тенге (₸), никогда не упоминай рубли.
+
+Тарифы SiteCode:
+- Базовый лендинг — от 5 000 ₸
+- Стандарт (многостраничный сайт) — от 5 000 ₸
+- VIP — от 15 000 ₸
+- Corporate Standard — от 35 000 ₸
+- Веб-приложение / Enterprise — от 90 000 ₸
+
+Board Room — закрытый раздел для крупных клиентов, доступен с тарифа VIP (от 15 000 ₸).
+
+Контакты: @Luminosik, @sssancho1ll, Ss1teC0de@gmail.com
+
+Если не знаешь точного ответа — предложи связаться с менеджером в Telegram.</textarea>
             </div>
           </div>
 
@@ -2477,7 +2490,7 @@ const ADM_DEFAULTS = {
   stv1:'30',sts1:'+',stl1:'Проектов сдано',stv2:'98',sts2:'%',stl2:'Довольных клиентов',
   stv3:'2',sts3:' лет',stl3:'На рынке',stv4:'24',sts4:'/7',stl4:'Поддержка',
   brand:'SiteCode',slogan:'Разработка сайтов',
-  apikey:'',model:'gpt-4o-mini',sysprompt:'Ты — AI-ассистент компании SiteCode. Отвечай на вопросы о разработке сайтов, ценах, сроках и услугах компании. Отвечай коротко, дружелюбно, на русском языке. Если не знаешь точного ответа — предложи связаться с менеджером.',
+  apikey:'',model:'gpt-4o-mini',sysprompt:'Ты — AI-ассистент компании SiteCode (sitecode.store). Отвечай коротко, дружелюбно, на русском языке. Все цены ТОЛЬКО в тенге (₸), никогда не упоминай рубли.\n\nТарифы SiteCode:\n- Базовый лендинг — от 5 000 ₸\n- Стандарт (многостраничный сайт) — от 5 000 ₸\n- VIP — от 15 000 ₸\n- Corporate Standard — от 35 000 ₸\n- Веб-приложение / Enterprise — от 90 000 ₸\n\nBoard Room — закрытый раздел для крупных клиентов, доступен с тарифа VIP (от 15 000 ₸).\n\nКонтакты: @Luminosik, @sssancho1ll, Ss1teC0de@gmail.com\n\nЕсли не знаешь точного ответа — предложи связаться с менеджером в Telegram.',
   useApi:true,proxyUrl:'https://hidden-term-8bcb.amirprosairex.workers.dev/',chatVisible:true,botname:'SiteCode AI',
   welcomeMsg:'Привет! Я помогу подобрать нужный сайт и отвечу на любые вопросы по разработке. Что вас интересует? 👋',
   botstatus:'Онлайн · отвечает мгновенно',chips:'💰 Сколько стоит сайт?|⏱ Сроки разработки|📦 Что входит в проект?|📞 Связаться с менеджером',
@@ -3311,11 +3324,11 @@ document.addEventListener('keydown',function(e){
 <script>
 (function(){
   const KB = [
-    { q: /цен|стоим|сколько|прайс/i, a: 'Цены стартуют от 15 000 ₸ за лендинг и до 90 000+ ₸ за корпоративный / Enterprise проект. Точная стоимость зависит от функционала. Хотите, я помогу подобрать подходящий вариант?' },
+    { q: /цен|стоим|сколько|прайс/i, a: 'Цены: Базовый лендинг — от 5 000 ₸, Стандарт — от 5 000 ₸, VIP — от 15 000 ₸, Corporate Standard — от 35 000 ₸, Enterprise — от 90 000 ₸. Все цены в тенге. Хотите подобрать вариант?' },
     { q: /срок|долго|быстро|успе/i, a: 'Сроки разработки: лендинг — 3–5 дней, магазин — 21–30 дней, образовательная платформа — 25–35 дней. Есть срочный заказ — уточните задачу, ускоримся!' },
     { q: /магаз|shop|корзин|1с/i, a: 'Да! Шаблон **Shop Pro** — полноценный интернет-магазин с каталогом, корзиной, онлайн-оплатой и интеграцией с 1С. Стоимость от 55 000 ₸.' },
     { q: /лендинг|landing|business/i, a: 'Business Landing — это лаконичный одностраничник в чёрно-белой теме с калькулятором и живыми отзывами. Отлично подходит для старта. Цена: 15 000 ₸, срок 3–5 дней.' },
-    { q: /корпорат|corporate|board/i, a: 'Corporate Standard — наш флагман. Модульная архитектура, до 10 страниц, закрытый Board Room для крупных проектов от 90 000 ₸. Цена старта: 35 000 ₸.' },
+    { q: /корпорат|corporate|board/i, a: 'Corporate Standard — наш флагман. Модульная архитектура, до 10 страниц, цена от 35 000 ₸. Board Room — закрытый раздел для крупных клиентов, доступен с тарифа VIP (от 15 000 ₸).' },
     { q: /красот|beauty|салон|фитнес/i, a: 'Beauty Studio — сайт салона красоты или фитнес-клуба: онлайн-запись, прайс, галерея, акции. Цена: 22 000 ₸, срок 7–10 дней.' },
     { q: /авто|dealer|машин|кредит|trade/i, a: 'Auto Dealer — автосалон с каталогом, кредитным калькулятором, Trade-In оценщиком и записью на тест-драйв. Цена: 50 000 ₸, срок 14–21 день.' },
     { q: /edu|обучен|курс|lms|сертифик/i, a: 'EduPlatform — полноценная LMS: видеоуроки, тесты, сертификаты, личный кабинет студента и оплата курсов. Цена: 70 000 ₸, срок 25–35 дней.' },
@@ -3657,9 +3670,11 @@ document.addEventListener('keydown',function(e){
         btn.className='btn-profile logged-in';
         const isVip=user.status==='vip';
         const isPremium=user.status==='premium';
+        const isStandard=user.status==='standard';
         let ringStyle='';
-        if(isVip) ringStyle='box-shadow:0 0 0 2px #e7c889,0 0 12px rgba(231,200,137,.5);border-radius:50%';
-        else if(isPremium) ringStyle='box-shadow:0 0 0 2px #00d4ff,0 0 12px rgba(0,212,255,.45);border-radius:50%';
+        if(isPremium) ringStyle='box-shadow:0 0 0 2px #00d4ff,0 0 12px rgba(0,212,255,.45);border-radius:50%';
+        else if(isVip) ringStyle='box-shadow:0 0 0 2px #e7c889,0 0 12px rgba(231,200,137,.5);border-radius:50%';
+        else if(isStandard) ringStyle='box-shadow:0 0 0 2px #b0b8c8,0 0 10px rgba(176,184,200,.4);border-radius:50%';
         const avSrc=user.avatar
           ?`<img src="${user.avatar}" style="width:29px;height:29px;border-radius:50%;object-fit:cover;${ringStyle}">`
           :`<div class="profile-avatar-sm" style="background:${avColor(user.name)};${ringStyle}">${avInitials(user.name)}</div>`;
@@ -3966,12 +3981,14 @@ document.addEventListener('keydown',function(e){
     const user=getCurrentUser();
     if(!user){openAuth();return;}
     const ava=document.getElementById('pdAvatar');
-    // VIP = gold glow, Premium = diamond (cyan) glow
+    // VIP = gold glow, Premium = diamond (cyan) glow, Standard = silver glow
     const isVip=user.status==='vip';
     const isPremium=user.status==='premium';
+    const isStandard=user.status==='standard';
     let glowStyle='';
-    if(isVip) glowStyle='box-shadow:0 0 0 3px #e7c889,0 0 22px rgba(231,200,137,.6);border-radius:50%';
-    else if(isPremium) glowStyle='box-shadow:0 0 0 3px #00d4ff,0 0 22px rgba(0,212,255,.55);border-radius:50%';
+    if(isPremium) glowStyle='box-shadow:0 0 0 3px #00d4ff,0 0 22px rgba(0,212,255,.55);border-radius:50%';
+    else if(isVip) glowStyle='box-shadow:0 0 0 3px #e7c889,0 0 22px rgba(231,200,137,.6);border-radius:50%';
+    else if(isStandard) glowStyle='box-shadow:0 0 0 3px #b0b8c8,0 0 18px rgba(176,184,200,.45);border-radius:50%';
     if(user.avatar){
       ava.style.background='transparent';
       ava.style.cssText='width:48px;height:48px;border-radius:50%;overflow:hidden;'+glowStyle;
@@ -3982,8 +3999,9 @@ document.addEventListener('keydown',function(e){
     }
     // Status badge under name
     let statusBadge='';
-    if(isVip) statusBadge='<div style="margin-top:3px;display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:6px;background:rgba(231,200,137,.12);border:1px solid rgba(231,200,137,.35);color:#e7c889;font-size:10px;font-weight:800">👑 VIP клиент</div>';
-    else if(isPremium) statusBadge='<div style="margin-top:3px;display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:6px;background:rgba(0,212,255,.10);border:1px solid rgba(0,212,255,.3);color:#00d4ff;font-size:10px;font-weight:800">💎 Premium клиент</div>';
+    if(isPremium) statusBadge='<div style="margin-top:3px;display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:6px;background:rgba(0,212,255,.10);border:1px solid rgba(0,212,255,.3);color:#00d4ff;font-size:10px;font-weight:800">💎 Premium</div>';
+    else if(isVip) statusBadge='<div style="margin-top:3px;display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:6px;background:rgba(231,200,137,.12);border:1px solid rgba(231,200,137,.35);color:#e7c889;font-size:10px;font-weight:800">👑 VIP</div>';
+    else if(isStandard) statusBadge='<div style="margin-top:3px;display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:6px;background:rgba(176,184,200,.10);border:1px solid rgba(176,184,200,.35);color:#b0b8c8;font-size:10px;font-weight:800">🪨 Стандарт</div>';
     document.getElementById('pdName').textContent=user.name;
     if(statusBadge){
       document.getElementById('pdName').insertAdjacentHTML('afterend',`<div id="pdStatusBadge">${statusBadge}</div>`);
