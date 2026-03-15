@@ -2693,15 +2693,34 @@ window.admRevokeBR=async function(){
     }
   }catch(e){setBrGrantStatus('❌ Ошибка сети','#ff5566');}
 };
-window.admSetUserStatus=function(id){
+window.admSetUserStatus=async function(id){
   try{
     const sel=document.getElementById('st_'+id);
     if(!sel)return;
     let users=JSON.parse(localStorage.getItem('sc_users')||'[]');
     const idx=users.findIndex(u=>u.id===id);
     if(idx===-1)return;
-    users[idx].status=sel.value;
+    const newStatus=sel.value;
+    users[idx].status=newStatus;
     localStorage.setItem('sc_users',JSON.stringify(users));
+    // VIP/Premium → автоматически выдаём Board Room через Worker
+    const email=users[idx].email;
+    if(email){
+      if(newStatus==='vip'||newStatus==='premium'){
+        try{
+          await fetch(BR_WORKER_URL+'/br/grant',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,secret:getBrSecret()})});
+          users[idx].boardroom=true;
+          localStorage.setItem('sc_users',JSON.stringify(users));
+        }catch(e){}
+      } else {
+        // При сбросе статуса — отозвать Board Room
+        try{
+          await fetch(BR_WORKER_URL+'/br/revoke',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,secret:getBrSecret()})});
+          users[idx].boardroom=false;
+          localStorage.setItem('sc_users',JSON.stringify(users));
+        }catch(e){}
+      }
+    }
     admRenderUsers();
     if(typeof showToast==='function') showToast('✅','Статус пользователя обновлён');
   }catch(e){}
