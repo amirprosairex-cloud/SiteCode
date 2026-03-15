@@ -3474,6 +3474,22 @@ document.addEventListener('keydown',function(e){
 .profile-drop{position:fixed;top:64px;right:18px;width:288px;background:#131c28;border:1px solid #283244;border-radius:20px;box-shadow:0 24px 80px rgba(0,0,0,.75);z-index:9970;display:none;overflow:hidden}
 @keyframes profileDropIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
 .profile-drop.open{display:block;animation:profileDropIn .18s ease}
+@media(max-width:640px){
+  .profile-drop{top:auto;bottom:0;left:0;right:0;width:100%;border-radius:24px 24px 0 0;max-height:88vh;overflow-y:auto}
+  @keyframes profileDropIn{from{opacity:0;transform:translateY(60px)}to{opacity:1;transform:translateY(0)}}
+  .profile-drop-head{padding:22px 20px 18px}
+  .profile-avatar-lg{width:60px;height:60px;font-size:22px}
+  .profile-drop-name{font-size:17px}
+  .profile-drop-email{font-size:13px}
+  .profile-drop-item{padding:15px 16px;font-size:15px}
+  .pdi-icon{font-size:19px;width:24px}
+  .profile-drop-divider{margin:6px 12px}
+  .auth-body{padding:20px 16px 24px}
+  .auth-title{font-size:18px}
+  .auth-box{border-radius:0 0 0 0;max-height:100vh;overflow-y:auto;border-radius:22px}
+  .auth-ov{padding:10px}
+}
+.profile-drop.open{display:block;animation:profileDropIn .18s ease}
 .profile-drop-head{padding:18px 18px 14px;background:linear-gradient(135deg,rgba(0,212,255,.07),rgba(0,85,204,.05));border-bottom:1px solid #283244;display:flex;align-items:center;gap:13px}
 .profile-avatar-lg{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#fff;flex-shrink:0;box-shadow:0 4px 16px rgba(0,0,0,.4);user-select:none;letter-spacing:0}
 .profile-drop-name{font-size:15px;font-weight:800;line-height:1.2;color:#eef2f7}
@@ -4027,8 +4043,27 @@ document.addEventListener('keydown',function(e){
     const tfa2=document.getElementById('pd2faStatus');
     if(tfa2) tfa2.textContent=user.twoFa?'🔐 Двухфакторная аутентификация включена':'';
     drop.classList.toggle('open');
+    // Mobile backdrop
+    if(window.innerWidth<=640){
+      const existing=document.getElementById('profileDropBackdrop');
+      if(drop.classList.contains('open')){
+        if(!existing){
+          const bd=document.createElement('div');
+          bd.id='profileDropBackdrop';
+          bd.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9969;backdrop-filter:blur(3px)';
+          bd.onclick=closeProfileDrop;
+          document.body.insertBefore(bd,document.getElementById('profileDrop'));
+        }
+      } else {
+        if(existing) existing.remove();
+      }
+    }
   };
-  window.closeProfileDrop=function(){ document.getElementById('profileDrop')?.classList.remove('open'); };
+  window.closeProfileDrop=function(){
+    document.getElementById('profileDrop')?.classList.remove('open');
+    const bd=document.getElementById('profileDropBackdrop');
+    if(bd) bd.remove();
+  };
 
   // ── Logout ──
   window.doLogout=function(){
