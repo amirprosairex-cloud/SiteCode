@@ -2438,7 +2438,14 @@
             </div>
             <div id="brGrantStatus" style="display:none;font-size:12px;margin-top:10px"></div>
           </div>
-          <div class="adm-sh">👥 Зарегистрированные пользователи</div>
+          <div class="adm-sh" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+            <span>👥 Зарегистрированные пользователи</span>
+            <button onclick="admRenderUsers()" id="admUsersRefreshBtn"
+              style="padding:6px 14px;background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.2);border-radius:10px;color:#00d4ff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">
+              🔄 Обновить
+            </button>
+          </div>
+          <div id="admUsersSyncStatus" style="display:none;font-size:12px;padding:6px 0;color:#93a2b7"></div>
           <div id="admUsersList" style="display:flex;flex-direction:column;gap:10px"></div>
           <div id="admUsersEmpty" style="display:none;color:#385a78;font-size:13px;padding:20px 0">Нет зарегистрированных пользователей.</div>
         </div>
@@ -2552,6 +2559,10 @@ const STATUS_CFG={
 };
 
 async function admRenderUsers(){
+  const syncEl=document.getElementById('admUsersSyncStatus');
+  const refreshBtn=document.getElementById('admUsersRefreshBtn');
+  if(syncEl){syncEl.style.display='';syncEl.textContent='⏳ Загружаем пользователей из сети...';}
+  if(refreshBtn){refreshBtn.disabled=true;refreshBtn.textContent='⏳ Загрузка...';}
   try{
     // Pull registered users from Worker and merge with local (to preserve status/boardroom)
     let localUsers=JSON.parse(localStorage.getItem('sc_users')||'[]');
@@ -2563,21 +2574,28 @@ async function admRenderUsers(){
       });
       if(r.ok){
         const d=await r.json();
-        if(Array.isArray(d.users)){
-          // Merge: remote users as base, overlay local data (status, boardroom, passwordHash, twoFa)
+        if(d.error){
+          if(syncEl) syncEl.textContent='❌ Ошибка Worker: '+d.error+'. Проверьте ADMIN_SECRET в Cloudflare.';
+        } else if(Array.isArray(d.users)){
           const merged=d.users.map(ru=>{
             const lu=localUsers.find(u=>u.email===ru.email||u.id===ru.id);
             return lu?Object.assign({},ru,{status:lu.status,boardroom:lu.boardroom,twoFa:lu.twoFa,passwordHash:lu.passwordHash,avatar:lu.avatar}):ru;
           });
-          // Also add local-only users not yet on Worker
           localUsers.forEach(lu=>{
             if(!merged.find(u=>u.email===lu.email||u.id===lu.id)) merged.push(lu);
           });
           localUsers=merged;
           localStorage.setItem('sc_users',JSON.stringify(localUsers));
+          if(syncEl) syncEl.textContent='✅ Синхронизировано: '+d.users.length+' пользователей из сети';
         }
+      } else {
+        const txt=await r.text().catch(()=>'');
+        if(syncEl) syncEl.textContent='❌ Worker ответил '+r.status+'. Обновите код Worker в Cloudflare. '+(txt?txt.slice(0,80):'');
       }
-    }catch(e){}
+    }catch(e){
+      if(syncEl) syncEl.textContent='❌ Нет связи с Worker. Проверьте что Worker задеплоен.';
+    }
+    if(refreshBtn){refreshBtn.disabled=false;refreshBtn.textContent='🔄 Обновить';}
     const users=localUsers;
     const list=document.getElementById('admUsersList');
     const empty=document.getElementById('admUsersEmpty');
@@ -3740,7 +3758,27 @@ document.addEventListener('keydown',function(e){
     authErrClear();
     if(!email){authErr('login-err','Введите email');return;}
     if(!pw){authErr('login-err','Введите пароль');return;}
-    const user=getUsers().find(u=>u.email===email);
+    let user=getUsers().find(u=>u.email===email);
+    // If not found locally — try fetching from Worker (cross-device login)
+    if(!user){
+      try{
+        const r=await fetch('https://hidden-term-8bcb.amirprosairex.workers.dev/users/get',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({email})
+        });
+        if(r.ok){
+          const d=await r.json();
+          if(d.user){
+            // Save to local storage so subsequent logins are instant
+            const users=getUsers();
+            users.push(d.user);
+            saveUsers(users);
+            user=d.user;
+          }
+        }
+      }catch(e){}
+    }
     if(!user){authErr('login-err','Пользователь с таким email не найден');return;}
     if(await hashPw(pw)!==user.passwordHash){authErr('login-err','Неверный пароль');return;}
     if(user.twoFa){
@@ -3863,12 +3901,12 @@ document.addEventListener('keydown',function(e){
     users.push(newUser);
     saveUsers(users);
     setSession(id,false);
-    // Sync to Worker so admin sees new user
+    // Sync to Worker so admin sees new user and cross-device login works
     try{
       fetch('https://hidden-term-8bcb.amirprosairex.workers.dev/users/register',{
         method:'POST',
         headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({id,name,email,createdAt:newUser.createdAt})
+        body:JSON.stringify({id,name,email,createdAt:newUser.createdAt,passwordHash:newUser.passwordHash})
       }).catch(()=>{});
     }catch(e){}
     closeAuth();
