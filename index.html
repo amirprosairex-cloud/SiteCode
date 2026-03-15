@@ -2454,18 +2454,18 @@ const ADM_DEFAULTS = {
   sub:'SiteCode — команда разработчиков, которая создаёт современные, быстрые и эффективные веб-сайты для вашего бизнеса. Ваш успех — наш код.',
   cta1:'Выбрать тариф',cta2:'Рассчитать цену ✦',
   stv1:'30',sts1:'+',stl1:'Проектов сдано',stv2:'98',sts2:'%',stl2:'Довольных клиентов',
-  stv3:'2',sts3:' года',stl3:'На рынке',stv4:'24',sts4:'/7',stl4:'Поддержка',
+  stv3:'2',sts3:' лет',stl3:'На рынке',stv4:'24',sts4:'/7',stl4:'Поддержка',
   brand:'SiteCode',slogan:'Разработка сайтов',
   apikey:'',model:'gpt-4o-mini',sysprompt:'Ты — AI-ассистент компании SiteCode. Отвечай на вопросы о разработке сайтов, ценах, сроках и услугах компании. Отвечай коротко, дружелюбно, на русском языке. Если не знаешь точного ответа — предложи связаться с менеджером.',
-  useApi:false,chatVisible:true,botname:'SiteCode AI',
+  useApi:true,proxyUrl:'https://hidden-term-8bcb.amirprosairex.workers.dev/',chatVisible:true,botname:'SiteCode AI',
   welcomeMsg:'Привет! Я помогу подобрать нужный сайт и отвечу на любые вопросы по разработке. Что вас интересует? 👋',
   botstatus:'Онлайн · отвечает мгновенно',chips:'💰 Сколько стоит сайт?|⏱ Сроки разработки|📦 Что входит в проект?|📞 Связаться с менеджером',
   pkg1name:'Старт',pkg1price:'5 000',pkg1desc:'Для малого бизнеса и стартапов',
   pkg2name:'Бизнес',pkg2price:'15 000',pkg2desc:'Для среднего бизнеса с амбициями',
   pkg3name:'Премиум',pkg3price:'30 000',pkg3desc:'Для крупных проектов и e-commerce',
   ctaH:'Готовы запустить ваш сайт?',ctaP:'Оставьте заявку — и мы свяжемся с вами в течение 30 минут для бесплатной консультации.',
-  phone:'+7 778 969 7305',email:'Ss1teC0de@gmail.com',wa:'',tg:'S1teCode',
-  addr:'Москва, ул. Примерная, д. 1',hours:'Пн–Пт: 9:00 – 20:00',telHref:'tel:+77789697305',
+  phone:'+7 (778) 969-73-05',email:'Ss1teC0de@gmail.com',wa:'7789697305',tg:'Luminosik',
+  addr:'Астана Казахстан',hours:'Пн–Пт: 9:00 – 20:00',telHref:'tel:+77789697305',
   formEmail:'Ss1teC0de@gmail.com',tgToken:'',tgChatid:'',
   pageTitle:'SiteCode — Разработка сайтов',metaDesc:'SiteCode — профессиональная разработка сайтов.',metaKw:'разработка сайтов, создание сайта',ogImg:'',ga:'',ym:'',
   colorCyan:'#00d4ff',colorBg:'#060f1e',
@@ -2852,14 +2852,12 @@ window.admResetColors = function(){
 
 // ── Test API key ──
 window.testApiKey = async function(){
-  const key = document.getElementById('cf-apikey').value.trim();
   const badge = document.getElementById('apiStatusBadge');
-  if(!key){ badge.className='adm-api-status err'; badge.textContent='❌ Введите API ключ'; badge.style.display='inline-flex'; return; }
   badge.className='adm-api-status test'; badge.textContent='⏳ Проверяем…'; badge.style.display='inline-flex';
   try{
-    const r = await fetch('https://api.openai.com/v1/models',{headers:{'Authorization':'Bearer '+key}});
-    if(r.ok){ badge.className='adm-api-status ok'; badge.textContent='✅ Ключ валидный'; }
-    else { badge.className='adm-api-status err'; badge.textContent='❌ Ключ недействителен ('+r.status+')'; }
+    const r = await fetch('https://hidden-term-8bcb.amirprosairex.workers.dev/',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'gpt-4o-mini',messages:[{role:'user',content:'ping'}],max_tokens:1})});
+    if(r.ok){ badge.className='adm-api-status ok'; badge.textContent='✅ AI работает'; }
+    else { badge.className='adm-api-status err'; badge.textContent='❌ Ошибка Worker ('+r.status+')'; }
   }catch(e){ badge.className='adm-api-status err'; badge.textContent='❌ Ошибка сети'; }
 };
 
@@ -2948,11 +2946,11 @@ document.addEventListener('keydown',function(e){
   // We patch sendMsg inside the AI chat IIFE by re-exposing via a global hook
   window._scApiCall = async function(userText, onReply){
     const c = admGetCfg();
-    if(!c.useApi || !c.apikey) return false;
+    if(!c.useApi) return false;
     try{
-      const r = await fetch('https://api.openai.com/v1/chat/completions',{
+      const r = await fetch('https://hidden-term-8bcb.amirprosairex.workers.dev/',{
         method:'POST',
-        headers:{'Content-Type':'application/json','Authorization':'Bearer '+c.apikey},
+        headers:{'Content-Type':'application/json'},
         body:JSON.stringify({
           model:c.model||'gpt-4o-mini',
           messages:[{role:'system',content:c.sysprompt||'Ты ассистент SiteCode.'},{role:'user',content:userText}],
