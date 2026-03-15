@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="icon" href="img/favicon.png" type="image/png">
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{--bg-deep:#060f1e;--bg-dark:#0a1628;--bg-card:#0e1f38;--bg-card2:#112341;--cyan:#00d4ff;--cyan-mid:#00aadd;--blue:#0077b6;--grad:linear-gradient(135deg,#00d4ff 0%,#0099cc 50%,#0066aa 100%);--text:#e8f4fd;--text-muted:#7ba3c0;--border:#1a3050}
@@ -706,6 +707,19 @@
 
   // Init preview
   updatePreview();
+
+  // Clean anchor navigation: smooth scroll + remove # from URL
+  (function(){
+    document.querySelectorAll('a[href^="#"]').forEach(function(a){
+      a.addEventListener('click',function(e){
+        var id=a.getAttribute('href');
+        if(id==='#'||id==='#!') return;
+        var el=document.querySelector(id);
+        if(el){e.preventDefault();el.scrollIntoView({behavior:'smooth',block:'start'});history.replaceState(null,'',window.location.pathname);}
+      });
+    });
+    if(location.hash){var el=document.querySelector(location.hash);if(el){setTimeout(function(){el.scrollIntoView({behavior:'smooth',block:'start'});history.replaceState(null,'',window.location.pathname);},300);}}
+  })();
 </script>
 </body>
 </html>
