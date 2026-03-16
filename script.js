@@ -28,51 +28,29 @@
       else drop.classList.remove("open");
     }
 
-    function getSessionUserFromStorage() {
-      try {
-        const sessionId = sessionStorage.getItem("sc_session") || localStorage.getItem("sc_session");
-        if (!sessionId) return null;
-        const users = JSON.parse(localStorage.getItem("sc_users") || "[]");
-        if (!Array.isArray(users)) return null;
-        return users.find((u) => u && u.id === sessionId) || null;
-      } catch {
-        return null;
-      }
-    }
+    const trigger = (e && e.currentTarget) || (e && e.target) || document.getElementById("profileBtn");
+    const triggerText = ((trigger && trigger.textContent) || "").toLowerCase();
+    const wantsLogin = triggerText.includes("войти");
 
-    function triggerLooksLoggedIn(triggerEl) {
-      if (!triggerEl) return false;
-      const btn =
-        triggerEl.closest("#profileBtn") ||
-        document.getElementById("profileBtn");
-      if (!btn) return false;
-
-      if (btn.classList.contains("logged-in")) return true;
-      if (btn.querySelector("img")) return true;
-      if (btn.querySelector(".profile-avatar-sm")) return true;
-
-      const text = (btn.textContent || "").trim().toLowerCase();
-      return text !== "" && !text.includes("войти");
-    }
-
-    function openProfileEditor() {
-      if (typeof window.openEditProfile === "function") {
-        window.openEditProfile();
-        return true;
-      }
+    // Only when trigger explicitly says "Войти" allow login modal.
+    if (wantsLogin) {
+      if (typeof window.openAuth === "function") window.openAuth();
       return false;
     }
 
-    const userFromGlobal = typeof window.getCurrentUser === "function" ? window.getCurrentUser() : null;
-    const userFromStorage = getSessionUserFromStorage();
-    const likelyLoggedIn = !!(userFromGlobal || userFromStorage || triggerLooksLoggedIn(e ? e.target : null));
-
-    if (likelyLoggedIn) {
-      // If nickname/avatar is already visible, force open settings instead of login.
-      if (openProfileEditor()) return false;
+    // Force method: find and click any "Редактировать профиль" button/link.
+    const nodes = Array.from(document.querySelectorAll("button, a, [role='button'], .profile-drop-item, .profile-action-btn"));
+    const editBtn = nodes.find((el) => ((el.textContent || "").toLowerCase().includes("редактировать профиль")));
+    if (editBtn) {
+      editBtn.click();
+      return false;
     }
 
-    if (typeof window.openAuth === "function") window.openAuth();
+    // Fallback if edit button not present yet.
+    if (typeof window.openEditProfile === "function") {
+      window.openEditProfile();
+      return false;
+    }
 
     return false;
   };
