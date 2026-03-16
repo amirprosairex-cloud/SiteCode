@@ -21,25 +21,58 @@
 
     window.__scLastProfileTouchEnd = Date.now();
 
-    const user = typeof window.getCurrentUser === "function" ? window.getCurrentUser() : null;
-    if (!user) {
-      if (typeof window.openAuth === "function") window.openAuth();
+    // Always hide dropdown first.
+    const drop = document.getElementById("profileDrop");
+    if (drop && drop.classList.contains("open")) {
+      if (typeof window.closeProfileDrop === "function") window.closeProfileDrop();
+      else drop.classList.remove("open");
+    }
+
+    function getSessionUserFromStorage() {
+      try {
+        const sessionId = sessionStorage.getItem("sc_session") || localStorage.getItem("sc_session");
+        if (!sessionId) return null;
+        const users = JSON.parse(localStorage.getItem("sc_users") || "[]");
+        if (!Array.isArray(users)) return null;
+        return users.find((u) => u && u.id === sessionId) || null;
+      } catch {
+        return null;
+      }
+    }
+
+    function triggerLooksLoggedIn(triggerEl) {
+      if (!triggerEl) return false;
+      const btn =
+        triggerEl.closest("#profileBtn") ||
+        document.getElementById("profileBtn");
+      if (!btn) return false;
+
+      if (btn.classList.contains("logged-in")) return true;
+      if (btn.querySelector("img")) return true;
+      if (btn.querySelector(".profile-avatar-sm")) return true;
+
+      const text = (btn.textContent || "").trim().toLowerCase();
+      return text !== "" && !text.includes("войти");
+    }
+
+    function openProfileEditor() {
+      if (typeof window.openEditProfile === "function") {
+        window.openEditProfile();
+        return true;
+      }
       return false;
     }
 
-    // If dropdown is visible, close it before opening edit profile.
-    const drop = document.getElementById("profileDrop");
-    if (drop && drop.classList.contains("open") && typeof window.closeProfileDrop === "function") {
-      window.closeProfileDrop();
+    const userFromGlobal = typeof window.getCurrentUser === "function" ? window.getCurrentUser() : null;
+    const userFromStorage = getSessionUserFromStorage();
+    const likelyLoggedIn = !!(userFromGlobal || userFromStorage || triggerLooksLoggedIn(e ? e.target : null));
+
+    if (likelyLoggedIn) {
+      // If nickname/avatar is already visible, force open settings instead of login.
+      if (openProfileEditor()) return false;
     }
 
-    // Open profile editor directly (avatar/nickname tap should go here).
-    if (typeof window.openEditProfile === "function") {
-      window.openEditProfile();
-    } else if (typeof window.openAuth === "function") {
-      // Fallback if edit handler is unavailable
-      window.openAuth("edit");
-    }
+    if (typeof window.openAuth === "function") window.openAuth();
 
     return false;
   };
