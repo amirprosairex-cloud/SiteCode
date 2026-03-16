@@ -39,6 +39,7 @@ const BOARDROOM_URL = 'https://sitecode.store/preview-corp-board.html';
 const HOME_URL      = 'https://sitecode.store/index.html';
 /** Signed token max age — 7 days */
 const TOKEN_MAX_AGE = 7 * 24 * 60 * 60 * 1000;
+const GLOBAL_LEADS_KEY = 'global_leads';
 
 export default {
   async fetch(request, env) {
@@ -66,6 +67,8 @@ export default {
       if (path === '/br/revoke' && request.method === 'POST') return await handleRevoke(request, env, cors);
       if (path === '/br/verify' && request.method === 'POST') return await handleVerify(request, env, cors);
       if (path === '/br/list'   && request.method === 'GET')  return await handleList(request, env, cors);
+      if (path === '/br/add-lead' && request.method === 'POST') return await handleAddLead(request, env, cors);
+      if (path === '/br/get-leads' && request.method === 'GET') return await handleGetLeads(request, env, cors, url);
 
       return json({ ok: false, error: 'Not Found' }, 404, cors);
     } catch (err) {
@@ -225,6 +228,42 @@ async function handleList(request, env, cors) {
   return json({ ok: true, users: entries.filter(Boolean) }, 200, cors);
 }
 
+// ── /br/add-lead ─────────────────────────────────────────────────────────────
+
+async function handleAddLead(request, env, cors) {
+  const body = await request.json().catch(() => ({}));
+  const lead = normalizeLead(body);
+  if (!lead.name || !lead.phone) {
+    return json({ ok: false, error: 'name and phone required' }, 400, cors);
+  }
+
+  const raw = await env.USERS_KV.get(GLOBAL_LEADS_KEY, 'json');
+  const leads = Array.isArray(raw) ? raw : [];
+
+  const exists = leads.some((x) => Number(x?.id) === Number(lead.id));
+  if (!exists) {
+    leads.unshift(lead);
+    // Keep KV payload bounded.
+    if (leads.length > 2000) leads.length = 2000;
+    await env.USERS_KV.put(GLOBAL_LEADS_KEY, JSON.stringify(leads));
+  }
+
+  return json({ ok: true, lead, total: exists ? leads.length : leads.length }, 200, cors);
+}
+
+// ── /br/get-leads ─────────────────────────────────────────────────────────────
+
+async function handleGetLeads(request, env, cors, url) {
+  const isAdmin = await isAdminAuthorized(request, env, url);
+  if (!isAdmin) return json({ ok: false, error: 'Unauthorized' }, 401, cors);
+
+  const raw = await env.USERS_KV.get(GLOBAL_LEADS_KEY, 'json');
+  const leads = (Array.isArray(raw) ? raw : [])
+    .sort((a, b) => Number(b?.id || 0) - Number(a?.id || 0));
+
+  return json({ ok: true, leads, total: leads.length }, 200, cors);
+}
+
 // ── HMAC token helpers ────────────────────────────────────────────────────────
 
 /**
@@ -288,12 +327,36 @@ function normalizeEmail(raw) {
   return e.includes('@') && e.length <= 254 ? e : '';
 }
 
-async function isAdminAuthorized(request, env) {
+async function isAdminAuthorized(request, env, url) {
   const headerSecret = request.headers.get('x-admin-secret') || '';
   if (headerSecret && headerSecret === env.ADMIN_SECRET) return true;
-  // Also accept secret in body (for admin panel POST requests)
-  const body = await request.clone().json().catch(() => ({}));
-  return String(body?.secret || '') === env.ADMIN_SECRET;
+
+  const querySecret = String(url?.searchParams?.get('secret') || '');
+  if (querySecret && querySecret === env.ADMIN_SECRET) return true;
+
+  // For POST requests support secret in JSON body.
+  if (request.method !== 'GET') {
+    const body = await request.clone().json().catch(() => ({}));
+    if (String(body?.secret || '') === env.ADMIN_SECRET) return true;
+  }
+
+  return false;
+}
+
+function normalizeLead(input) {
+  const id = Number(input?.id || Date.now());
+  return {
+    id,
+    status: String(input?.status || 'new').slice(0, 24),
+    date: String(input?.date || new Date().toLocaleString('ru-RU')).slice(0, 80),
+    nickname: String(input?.nickname || 'фарка').slice(0, 80),
+    name: String(input?.name || '').trim().slice(0, 180),
+    phone: String(input?.phone || '').trim().slice(0, 80),
+    message: String(input?.message || input?.comment || '').trim().slice(0, 4000),
+    budget: String(input?.budget || '').trim().slice(0, 80),
+    comment: String(input?.comment || input?.message || '').trim().slice(0, 4000),
+    source: String(input?.source || 'site_form').slice(0, 64),
+  };
 }
 
 function parseCookies(header) {

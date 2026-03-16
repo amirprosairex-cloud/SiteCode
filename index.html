@@ -3,7 +3,7 @@
 <head>
   <link rel="icon" href="img/favicon.png?v=2" type="image/png">
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viЯ обновил воркер в Cloudflare. Теперь заявки лежат в KV BOARDROOM_KV под ключом global_leads. В воркере используется секрет из переменной ADMIN_SECRET. Обнови код моей страницы админки, чтобы она забирала данные с /br/get-leads?secret=ТВОЙ_ПАРОЛЬЯ обновил воркер в Cloudflare. Теперь заявки лежат в KV BOARDROOM_KV под ключом global_leads. В воркере используется секрет из переменной ADMIN_SECRET. Обнови код моей страницы админки, чтобы она забирала данные с /br/get-leads?secret=ТВОЙ_ПАРОЛЬewport-fit=cover" />
   <title>SiteCode — Разработка сайтов</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -1840,6 +1840,8 @@
       name: name.value.trim(),
       phone: phone.value.trim(),
       message: commentText,
+      cloudSynced: false,
+      source: 'site_form',
 
       // Backward-compatible fields used by current admin render + Telegram text
       budget: document.getElementById('fBudget').value,
@@ -1859,6 +1861,9 @@
       window.dispatchEvent(new CustomEvent('sc:lead-created', {
         detail: { lead: lead, total: leads.length }
       }));
+
+      // Cross-device sync: if offline, lead remains queued in localStorage.
+      syncLeadToCloud(lead);
     } catch(err) {}
 
     // Send to Telegram if configured
@@ -2712,7 +2717,92 @@ window.admToggleBoardroom=function(id){
 };
 
 const BR_WORKER_URL='https://hidden-term-8bcb.amirprosairex.workers.dev';
+const LEADS_WORKER_BASE_URL='https://api.sitecode.store';
+const LEADS_GET_URL='https://api.sitecode.store/br/get-leads?secret=[^\\]=;Xh:262BRmav%7Am@5Y[ltOy,VMzkA8ou7<0jYb]';
 function getBrSecret(){ return localStorage.getItem('sc_adm_br_token')||admGetPwd(); }
+function getPendingCloudLeads(){
+  try{return JSON.parse(localStorage.getItem('sc_leads_pending_cloud')||'[]');}catch(e){return[];}
+}
+function setPendingCloudLeads(items){
+  try{localStorage.setItem('sc_leads_pending_cloud',JSON.stringify(Array.isArray(items)?items:[]));}catch(e){}
+}
+function queueLeadForCloud(lead){
+  const pending=getPendingCloudLeads();
+  if(!pending.some(x=>Number(x&&x.id)===Number(lead.id))){
+    pending.push(lead);
+    setPendingCloudLeads(pending);
+  }
+}
+function unqueueLeadForCloud(id){
+  const pending=getPendingCloudLeads().filter(x=>Number(x&&x.id)!==Number(id));
+  setPendingCloudLeads(pending);
+}
+function markLeadCloudSynced(id){
+  try{
+    const leads=JSON.parse(localStorage.getItem('sc_leads')||'[]');
+    const idx=leads.findIndex(x=>Number(x&&x.id)===Number(id));
+    if(idx!==-1){
+      leads[idx].cloudSynced=true;
+      localStorage.setItem('sc_leads',JSON.stringify(leads));
+    }
+  }catch(e){}
+}
+async function pushLeadToCloud(lead){
+  const r=await fetch(LEADS_WORKER_BASE_URL+'/br/add-lead',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(lead)
+  });
+  if(!r.ok) throw new Error('Worker '+r.status);
+  const d=await r.json().catch(()=>({}));
+  if(!d||d.ok!==true) throw new Error((d&&d.error)||'Cloud add failed');
+  return d;
+}
+async function flushPendingLeadsToCloud(){
+  const pending=getPendingCloudLeads();
+  if(!pending.length) return;
+  for(const lead of pending){
+    try{
+      await pushLeadToCloud(lead);
+      unqueueLeadForCloud(lead.id);
+      markLeadCloudSynced(lead.id);
+    }catch(e){
+      // Keep in queue for next attempt.
+    }
+  }
+}
+async function syncLeadToCloud(lead){
+  queueLeadForCloud(lead);
+  try{
+    await pushLeadToCloud(lead);
+    unqueueLeadForCloud(lead.id);
+    markLeadCloudSynced(lead.id);
+  }catch(e){
+    // Offline/network failure: keep local queue.
+  }
+}
+async function admLoadCloudLeads(){
+  // Всегда пробуем получить заявки из облака через новый endpoint
+  try {
+    const r = await fetch(LEADS_GET_URL, {
+      headers: { 'Accept': 'application/json' }
+    });
+    if (!r.ok) throw new Error('Worker ' + r.status);
+    const d = await r.json();
+    if (d && d.ok && Array.isArray(d.leads)) {
+      localStorage.setItem('sc_leads', JSON.stringify(d.leads));
+    }
+  } catch (e) {
+    // Нет интернета/ошибка воркера: показываем локальный кэш
+  }
+  admRenderLeads();
+  try {
+    const leads = JSON.parse(localStorage.getItem('sc_leads') || '[]');
+    const tab = document.getElementById('admLeadsTab');
+    if (tab) tab.textContent = leads.length ? '📬 Заявки (' + leads.length + ')' : '📬 Заявки';
+  } catch (e) {}
+}
+window.addEventListener('online',()=>{flushPendingLeadsToCloud();});
 function setBrGrantStatus(msg,color){
   const el=document.getElementById('brGrantStatus');
   if(!el)return;
@@ -2873,7 +2963,7 @@ window.checkAdmPwd = function(){
 // ── Tabs ──
 window.admTab = function(btn, paneId){
   if(paneId==='pane-users') admRenderUsers();
-  if(paneId==='pane-leads') admRenderLeads();
+  if(paneId==='pane-leads') admLoadCloudLeads();
   document.querySelectorAll('.adm-tab').forEach(t=>t.classList.remove('act'));
   document.querySelectorAll('.adm-pane').forEach(p=>p.classList.remove('act'));
   btn.classList.add('act');
