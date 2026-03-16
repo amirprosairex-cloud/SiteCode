@@ -1809,13 +1809,41 @@
     if (!phone.value.trim()) { phone.classList.add('error'); ok = false; }
     if (!ok) { showToast('⚠️', 'Заполните обязательные поля'); return; }
 
+    function resolveNickname() {
+      let nick = 'фарка';
+      try {
+        if (typeof window.getCurrentUser === 'function') {
+          const current = window.getCurrentUser();
+          if (current && current.name) {
+            nick = String(current.name).trim().split(' ')[0] || nick;
+            return nick;
+          }
+        }
+      } catch(err) {}
+      try {
+        const ses = sessionStorage.getItem('sc_session') || localStorage.getItem('sc_session');
+        const users = JSON.parse(localStorage.getItem('sc_users') || '[]');
+        if (ses && Array.isArray(users)) {
+          const current = users.find(u => u && u.id === ses);
+          if (current && current.name) nick = String(current.name).trim().split(' ')[0] || nick;
+        }
+      } catch(err) {}
+      return nick;
+    }
+
+    const commentText = document.getElementById('fComment').value.trim();
     const lead = {
       id: Date.now(),
+      status: 'new',
+      date: new Date().toLocaleString('ru-RU'),
+      nickname: resolveNickname(),
       name: name.value.trim(),
       phone: phone.value.trim(),
+      message: commentText,
+
+      // Backward-compatible fields used by current admin render + Telegram text
       budget: document.getElementById('fBudget').value,
-      comment: document.getElementById('fComment').value.trim(),
-      date: new Date().toLocaleString('ru-RU')
+      comment: commentText
     };
 
     // Save to localStorage
@@ -1826,6 +1854,11 @@
       // Update tab badge
       const tab = document.getElementById('admLeadsTab');
       if (tab) tab.textContent = '📬 Заявки (' + leads.length + ')';
+
+      // Live update for open admin panel in the same tab.
+      window.dispatchEvent(new CustomEvent('sc:lead-created', {
+        detail: { lead: lead, total: leads.length }
+      }));
     } catch(err) {}
 
     // Send to Telegram if configured
@@ -2779,9 +2812,16 @@ function admRenderLeads(){
     leads.forEach(lead=>{
       const row=document.createElement('div');
       row.style.cssText='padding:14px 16px;background:#1a2535;border:1px solid #283244;border-radius:12px;display:flex;flex-direction:column;gap:6px';
+      const nick=lead.nickname?`<span style="font-size:11px;color:#7ba3c0">@${lead.nickname}</span>`:'';
+      const status=lead.status?`<span style="font-size:10px;padding:2px 7px;border-radius:999px;background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.25);color:#00d4ff;text-transform:uppercase">${lead.status}</span>`:'';
+      const msg=lead.message||lead.comment||'';
       row.innerHTML=`
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
-          <div style="font-size:14px;font-weight:800;color:#eef2f7">👤 ${lead.name}</div>
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <div style="font-size:14px;font-weight:800;color:#eef2f7">👤 ${lead.name}</div>
+            ${nick}
+            ${status}
+          </div>
           <div style="display:flex;align-items:center;gap:8px">
             <span style="font-size:11px;color:#4a6a8a">${lead.date}</span>
             <button onclick="admDeleteLead(${lead.id})" style="padding:3px 9px;border-radius:7px;background:rgba(255,85,102,.08);border:1px solid rgba(255,85,102,.2);color:#ff5566;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">Удалить</button>
@@ -2789,12 +2829,22 @@ function admRenderLeads(){
         </div>
         <div style="font-size:13px;color:#9fd5ff">📞 ${lead.phone}</div>
         <div style="font-size:12px;color:#7ba3c0">💰 Бюджет: ${lead.budget||'—'}</div>
-        ${lead.comment?`<div style="font-size:12px;color:#7ba3c0">💬 ${lead.comment}</div>`:''}
+        ${msg?`<div style="font-size:12px;color:#7ba3c0">💬 ${msg}</div>`:''}
       `;
       list.appendChild(row);
     });
   }catch(e){}
 }
+
+// Real-time refresh when new lead is added while admin is open.
+window.addEventListener('sc:lead-created', function(e){
+  try{
+    admRenderLeads();
+    const tab=document.getElementById('admLeadsTab');
+    const total=e&&e.detail&&typeof e.detail.total==='number' ? e.detail.total : JSON.parse(localStorage.getItem('sc_leads')||'[]').length;
+    if(tab) tab.textContent=total ? '📬 Заявки ('+total+')' : '📬 Заявки';
+  }catch(err){}
+});
 window.admDeleteLead=function(id){
   try{
     let leads=JSON.parse(localStorage.getItem('sc_leads')||'[]');
