@@ -13,6 +13,44 @@
     "ontouchstart" in window ||
     navigator.maxTouchPoints > 0;
 
+  window.mobileProfileToggle = function (e) {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    window.__scLastProfileTouchEnd = Date.now();
+    alert("DEBUG: Нажатие сработало");
+
+    const user = typeof window.getCurrentUser === "function" ? window.getCurrentUser() : null;
+    if (!user) {
+      if (typeof window.openAuth === "function") window.openAuth();
+      return false;
+    }
+
+    const drop = document.getElementById("profileDrop");
+    if (!drop) return false;
+
+    if (!drop.classList.contains("open") && typeof window.toggleProfileDrop === "function") {
+      window.toggleProfileDrop();
+    }
+
+    drop.classList.add("open");
+    drop.style.setProperty("display", "block", "important");
+    drop.style.setProperty("opacity", "1", "important");
+    drop.style.setProperty("visibility", "visible", "important");
+    drop.style.setProperty("pointer-events", "all", "important");
+    drop.style.setProperty("z-index", "999999", "important");
+
+    const backdrop = document.getElementById("profileDropBackdrop");
+    if (backdrop) {
+      backdrop.style.setProperty("z-index", "999998", "important");
+      backdrop.style.setProperty("pointer-events", "all", "important");
+    }
+
+    return false;
+  };
+
   if (!avatarInput) return;
 
   let lastTouchTs = 0;
@@ -123,23 +161,6 @@
     );
   }
 
-  // Mobile fix: open profile dropdown on first tap for avatar/nickname trigger.
-  bindTouchAndClick(profileBtn, openProfileEntryPoint);
-
-  // Mobile menu profile item fallback.
-  bindTouchAndClick(mobileAuthBtn, (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (typeof window.mobileAuthAction === "function") {
-      window.mobileAuthAction();
-    } else {
-      openProfileEntryPoint(e);
-    }
-  });
-
-  // Extra tap target: profile dropdown head (avatar + nickname block).
-  bindTouchAndClick(profileDropHead, (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-  });
+  // The main mobile profile triggers are handled inline via mobileProfileToggle().
+  // Keep JS-only binding for elements that do not have inline handlers.
 })();

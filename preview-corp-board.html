@@ -4,6 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Board Room — SiteCode</title>
+<script>
+(function(){
+  const allowedEmail='prosairex034572@gmail.com';
+  const currentEmail=(localStorage.getItem('br_email')||localStorage.getItem('vip_access')||'').trim().toLowerCase();
+  if(currentEmail===allowedEmail) return;
+  const denyAccess=function(){
+    if(document.body) document.body.innerHTML='';
+    window.location.replace('/');
+  };
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',denyAccess,{once:true});
+  else denyAccess();
+})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -153,6 +166,42 @@ a{text-decoration:none;color:inherit}
 </style>
 </head>
 <body>
+<!-- ══ IMMEDIATE ACCESS GATE ══════════════════════════════════════════════════
+     Runs synchronously before any content renders.
+     If vip_access is not in localStorage, body is replaced instantly and the
+     user is redirected to the home page. This is a client-side defence layer;
+     the Cloudflare Worker route is the server-side gate.
+════════════════════════════════════════════════════════════════════════════ -->
+<script>(function(){
+  'use strict';
+  if(localStorage.getItem('vip_access')) return; // authorised — continue loading
+  // Replace body content immediately so page data is never visible
+  document.body.innerHTML=
+    '<div style="margin:0;padding:0;box-sizing:border-box;background:#0a0d12;color:#eef2f7;'
+   +'font-family:Inter,system-ui,sans-serif;min-height:100vh;display:flex;align-items:center;'
+   +'justify-content:center;text-align:center;padding:24px">'
+   +'<div>'
+   +'<div style="font-size:3rem;margin-bottom:18px">🔒</div>'
+   +'<p style="font-size:.6875rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;'
+   +'color:#00d4ff;margin-bottom:12px">Private Board Room</p>'
+   +'<h1 style="font-size:clamp(24px,5vw,40px);font-weight:900;letter-spacing:-2px;margin-bottom:14px">Доступ запрещён</h1>'
+   +'<p style="color:#8299b9;font-size:.9375rem;line-height:1.8;margin-bottom:28px">'
+   +'Эта страница доступна только авторизованным пользователям с выданным доступом.</p>'
+   +'<a href="index.html" style="padding:13px 26px;background:linear-gradient(135deg,#00c8f0,#0066d6);'
+   +'color:#fff;border-radius:13px;font-weight:800;font-size:.875rem;text-decoration:none;display:inline-block">'
+   +'← На главную</a>'
+   +'<p style="color:#3a4a5a;font-size:.75rem;margin-top:16px">'
+   +'Перенаправление через <span id="brGateCount">3</span> сек…</p>'
+   +'</div></div>';
+  // Countdown + redirect
+  var n=3;
+  var t=setInterval(function(){
+    n--;
+    var el=document.getElementById('brGateCount');
+    if(el) el.textContent=n;
+    if(n<=0){ clearInterval(t); window.location.replace('index.html'); }
+  },1000);
+})();</script>
 <!-- LOCK SCREEN -->
 <div id="brLock" style="position:fixed;inset:0;background:radial-gradient(circle at 62% 18%,rgba(0,212,255,.09),transparent 28%),#0a0d12;display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;color:#eef2f7;padding:24px;text-align:center;z-index:99999">
 
@@ -187,7 +236,7 @@ a{text-decoration:none;color:inherit}
   const lock = document.getElementById('brLock');
   const email = (localStorage.getItem('br_email')||'').trim().toLowerCase();
   if(!email){
-    // No email cached — show gate immediately, redirect back
+    localStorage.removeItem('vip_access');
     document.getElementById('brStateGuest').style.display='';
     return;
   }
@@ -199,15 +248,19 @@ a{text-decoration:none;color:inherit}
     body:JSON.stringify({email})
   }).then(r=>r.json()).then(d=>{
     if(d.access){
+      // Mark session as authorised so the immediate gate passes on refresh
+      localStorage.setItem('vip_access', email);
       lock.style.display='none';
     } else {
+      localStorage.removeItem('vip_access');
       localStorage.removeItem('br_email');
       document.getElementById('brStateNoAccess').style.display='';
       const el=document.getElementById('brUserHello');
       if(el) el.innerHTML='Доступ для <strong style="color:#eef2f7">'+email+'</strong> аннулирован. Обратитесь к администратору для восстановления.';
     }
   }).catch(()=>{
-    // Network error — show access denied to be safe
+    // Network error — fail closed: clear access and show gate
+    localStorage.removeItem('vip_access');
     document.getElementById('brStateGuest').style.display='';
   });
 })();

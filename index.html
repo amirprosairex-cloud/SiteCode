@@ -1043,7 +1043,7 @@
   </nav>
   <div style="display:flex;align-items:center;gap:12px">
     <a href="#contact" class="btn-nav">Заказать сайт</a>
-    <button class="btn-profile" id="profileBtn" onclick="openAuth()">👤 Войти</button>
+    <button class="btn-profile" id="profileBtn" onclick="return mobileProfileToggle(event)">👤 Войти</button>
   </div>
   <button class="hamburger" id="menuBtn" aria-label="Меню">
     <span></span><span></span><span></span>
@@ -1060,7 +1060,7 @@
   <a href="blog.html" onclick="closeMenu()">Блог</a>
   <a href="#contact" class="btn-nav" onclick="closeMenu()">Заказать сайт</a>
   <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.08)">
-    <a href="#" id="mobileAuthBtn" onclick="mobileAuthAction();return false;">👤 Войти в аккаунт</a>
+    <a href="#" id="mobileAuthBtn" onclick="return mobileProfileToggle(event)">👤 Войти в аккаунт</a>
   </div>
 </div>
 
@@ -3648,7 +3648,7 @@ document.addEventListener('keydown',function(e){
 
 <!-- PROFILE DROPDOWN -->
 <div class="profile-drop" id="profileDrop">
-  <div class="profile-drop-head">
+  <div class="profile-drop-head" onclick="return mobileProfileToggle(event)">
     <div class="profile-avatar-lg" id="pdAvatar">?</div>
     <div style="min-width:0">
       <div class="profile-drop-name" id="pdName">—</div>
@@ -3700,6 +3700,7 @@ document.addEventListener('keydown',function(e){
     const user=getCurrentUser();
     const btn=document.getElementById('profileBtn');
     if(btn){
+      btn.setAttribute('onclick','return mobileProfileToggle(event)');
       if(user){
         btn.className='btn-profile logged-in';
         const isVip=user.status==='vip';
@@ -3713,15 +3714,14 @@ document.addEventListener('keydown',function(e){
           ?`<img src="${user.avatar}" style="width:29px;height:29px;border-radius:50%;object-fit:cover;${ringStyle}">`
           :`<div class="profile-avatar-sm" style="background:${avColor(user.name)};${ringStyle}">${avInitials(user.name)}</div>`;
         btn.innerHTML=avSrc+`<span>${user.name.split(' ')[0]}</span>`;
-        btn.onclick=toggleProfileDrop;
       }else{
         btn.className='btn-profile';
         btn.innerHTML='👤 Войти';
-        btn.onclick=openAuth;
       }
     }
     const mobileBtn=document.getElementById('mobileAuthBtn');
     if(mobileBtn){
+      mobileBtn.setAttribute('onclick','return mobileProfileToggle(event)');
       if(user){
         const isPrem=user.status==='premium';
         const isVipU=user.status==='vip';

@@ -12,6 +12,8 @@
 .avatar-trigger {
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
+  z-index: 999999 !important;
+  pointer-events: all !important;
 }
 
 .btn-profile,
@@ -23,11 +25,23 @@
   pointer-events: auto;
 }
 
+#profileDrop,
+.profile-drop {
+  z-index: 999999 !important;
+  pointer-events: all !important;
+}
+
 @media (max-width: 768px) {
   #mobileAuthBtn,
   #profileBtn,
   .avatar-trigger {
     z-index: 9999;
+  }
+
+  #profileDrop,
+  .profile-drop {
+    z-index: 999999 !important;
+    pointer-events: all !important;
   }
 }
 
