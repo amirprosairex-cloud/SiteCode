@@ -60,6 +60,18 @@
   transition: opacity 0.24s ease;
 }
 
+#authOv,
+.auth-ov,
+.auth-overlay {
+  z-index: 1000001 !important;
+}
+
+#authWin,
+.auth-window {
+  position: relative;
+  z-index: 1000002 !important;
+}
+
 .profile-modal {
   width: min(520px, 100%);
   background:

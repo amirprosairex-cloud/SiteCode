@@ -20,7 +20,6 @@
     }
 
     window.__scLastProfileTouchEnd = Date.now();
-    alert("DEBUG: Нажатие сработало");
 
     const user = typeof window.getCurrentUser === "function" ? window.getCurrentUser() : null;
     if (!user) {
@@ -28,24 +27,18 @@
       return false;
     }
 
+    // If dropdown is visible, close it before opening edit profile.
     const drop = document.getElementById("profileDrop");
-    if (!drop) return false;
-
-    if (!drop.classList.contains("open") && typeof window.toggleProfileDrop === "function") {
-      window.toggleProfileDrop();
+    if (drop && drop.classList.contains("open") && typeof window.closeProfileDrop === "function") {
+      window.closeProfileDrop();
     }
 
-    drop.classList.add("open");
-    drop.style.setProperty("display", "block", "important");
-    drop.style.setProperty("opacity", "1", "important");
-    drop.style.setProperty("visibility", "visible", "important");
-    drop.style.setProperty("pointer-events", "all", "important");
-    drop.style.setProperty("z-index", "999999", "important");
-
-    const backdrop = document.getElementById("profileDropBackdrop");
-    if (backdrop) {
-      backdrop.style.setProperty("z-index", "999998", "important");
-      backdrop.style.setProperty("pointer-events", "all", "important");
+    // Open profile editor directly (avatar/nickname tap should go here).
+    if (typeof window.openEditProfile === "function") {
+      window.openEditProfile();
+    } else if (typeof window.openAuth === "function") {
+      // Fallback if edit handler is unavailable
+      window.openAuth("edit");
     }
 
     return false;
