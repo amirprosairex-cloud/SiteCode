@@ -2718,7 +2718,8 @@ window.admToggleBoardroom=function(id){
 
 const BR_WORKER_URL='https://hidden-term-8bcb.amirprosairex.workers.dev';
 const LEADS_WORKER_BASE_URL='https://api.sitecode.store';
-const LEADS_GET_URL='https://api.sitecode.store/br/get-leads?secret=MyMegaToken2026';
+const LEADS_ADMIN_SECRET='MyMegaToken2026';
+const LEADS_GET_URL=LEADS_WORKER_BASE_URL+'/br/get-leads?secret='+encodeURIComponent(LEADS_ADMIN_SECRET);
 function getBrSecret(){ return localStorage.getItem('sc_adm_br_token')||admGetPwd(); }
 function getPendingCloudLeads(){
   try{return JSON.parse(localStorage.getItem('sc_leads_pending_cloud')||'[]');}catch(e){return[];}
