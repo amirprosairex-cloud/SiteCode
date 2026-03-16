@@ -8,6 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=20260316-02" />
+  <script defer src="script.js?v=20260316-03"></script>
   <!-- EmailJS SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <style>
@@ -3575,10 +3577,11 @@ document.addEventListener('keydown',function(e){
         <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px">
           <div id="epAvatarPreview" style="width:56px;height:56px;border-radius:50%;background:#1a2535;border:2px solid #283244;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:#fff;flex-shrink:0;overflow:hidden"></div>
           <div>
-            <label style="display:inline-flex;align-items:center;gap:6px;padding:7px 13px;border-radius:10px;background:rgba(0,212,255,.07);border:1px solid rgba(0,212,255,.2);color:#00d4ff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s" onmouseenter="this.style.background='rgba(0,212,255,.14)'" onmouseleave="this.style.background='rgba(0,212,255,.07)'">
+            <label id="epAvatarTrigger" class="avatar-trigger" style="display:inline-flex;align-items:center;gap:6px;padding:7px 13px;border-radius:10px;background:rgba(0,212,255,.07);border:1px solid rgba(0,212,255,.2);color:#00d4ff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s" onmouseenter="this.style.background='rgba(0,212,255,.14)'" onmouseleave="this.style.background='rgba(0,212,255,.07)'">
               📷 Выбрать фото
               <input type="file" id="epAvatarFile" accept="image/*" style="display:none" onchange="previewAvatar(this)">
             </label>
+            <button id="openPremiumProfileModal" type="button" style="display:inline-flex;align-items:center;gap:6px;padding:7px 13px;border-radius:10px;background:rgba(231,200,137,.09);border:1px solid rgba(231,200,137,.28);color:#f0d395;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s;margin-left:8px">✨ Профиль</button>
             <div style="font-size:11px;color:#4a6a8a;margin-top:5px">JPG, PNG, GIF — до 2 МБ</div>
           </div>
         </div>
@@ -4179,7 +4182,23 @@ document.addEventListener('keydown',function(e){
   document.addEventListener('click',function(e){
     const drop=document.getElementById('profileDrop');
     const btn=document.getElementById('profileBtn');
-    if(drop&&drop.classList.contains('open')&&btn&&!drop.contains(e.target)&&!btn.contains(e.target)) closeProfileDrop();
+    const mobileBtn=document.getElementById('mobileAuthBtn');
+    const avatarTrigger=document.getElementById('epAvatarTrigger');
+    const profileHead=drop?drop.querySelector('.profile-drop-head'):null;
+    const isTouchDevice=('ontouchstart' in window)||navigator.maxTouchPoints>0;
+    const target=e.target;
+
+    // Ignore synthetic click fired right after touchend on mobile.
+    const lastTouchEndTs=window.__scLastProfileTouchEnd||0;
+    if(isTouchDevice&&Date.now()-lastTouchEndTs<520) return;
+
+    if(!drop||!drop.classList.contains('open')) return;
+    if(btn&&btn.contains(target)) return;
+    if(mobileBtn&&mobileBtn.contains(target)) return;
+    if(avatarTrigger&&avatarTrigger.contains(target)) return;
+    if(profileHead&&profileHead.contains(target)) return;
+    if(drop.contains(target)) return;
+    closeProfileDrop();
   });
 
   updateHeaderAuth();
@@ -4198,5 +4217,21 @@ document.addEventListener('keydown',function(e){
     if(location.hash){var el=document.querySelector(location.hash);if(el){setTimeout(function(){el.scrollIntoView({behavior:'smooth',block:'start'});history.replaceState(null,'',window.location.pathname);},300);}}
   })();
 </script>
+
+<div class="profile-modal-overlay" id="profileModalOverlay" aria-hidden="true">
+  <div class="profile-modal" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle">
+    <button class="profile-modal-close" id="profileModalClose" type="button" aria-label="Закрыть">✕</button>
+    <div class="profile-modal-head">
+      <h3 id="profileModalTitle">Профиль Premium</h3>
+      <p>Управляйте аккаунтом в стиле современной mobile-first панели.</p>
+    </div>
+    <div class="profile-modal-body">
+      <button class="profile-action-btn" type="button" onclick="openEditProfile();document.getElementById('profileModalOverlay').classList.remove('open')">Редактировать профиль</button>
+      <button class="profile-action-btn" type="button" onclick="document.getElementById('formName').focus();document.getElementById('profileModalOverlay').classList.remove('open')">Оставить заявку</button>
+      <button class="profile-action-btn profile-action-btn-premium" type="button" onclick="window.location.href='catalog.html'">Открыть тарифы</button>
+      <button class="profile-action-btn profile-action-btn-danger" type="button" onclick="doLogout();document.getElementById('profileModalOverlay').classList.remove('open')">Выйти из аккаунта</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>

@@ -108,6 +108,29 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .price-card ul{list-style:none;display:grid;gap:10px}
 .price-card li{font-size:14px;line-height:1.6;color:var(--accent-soft)}
 .price-card li::before{content:'✓ ';color:var(--accent)}
+
+/* User tiers: avatar shine + tariff gradients */
+.tier-users-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px}
+.user-block{--tier-a:#cfd4df;--tier-b:#f5f8ff;--tier-c:#8d95a6;--tier-glow:rgba(220,230,255,.45);--tier-shine:rgba(242,247,255,.92);--tier-ring:linear-gradient(135deg,#adb7ca,#f5f8ff,#8c97ab);display:flex;flex-direction:column;align-items:center;gap:10px;padding:16px 12px 14px;border-radius:22px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03)}
+.avatar-wrap{position:relative;width:96px;height:96px;border-radius:50%;overflow:hidden;isolation:isolate;box-shadow:0 0 0 1px rgba(255,255,255,.12),0 0 18px var(--tier-glow)}
+.user-avatar{width:100%;height:100%;object-fit:cover;display:block;border-radius:50%}
+.avatar-wrap::before{content:'';position:absolute;inset:0;border-radius:50%;padding:2px;background:var(--tier-ring);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;z-index:2}
+.avatar-wrap::after{content:'';position:absolute;top:-120%;left:-70%;width:56%;height:300%;transform:rotate(24deg) translateX(-170%);background:linear-gradient(90deg,rgba(255,255,255,0) 0%,var(--tier-shine) 48%,rgba(255,255,255,0) 100%);mix-blend-mode:screen;filter:blur(1px);opacity:.95;animation:tierShine 2.9s ease-in-out infinite;z-index:3;pointer-events:none}
+@keyframes tierShine{0%{transform:rotate(24deg) translateX(-170%);opacity:0}12%{opacity:.95}56%{transform:rotate(24deg) translateX(240%);opacity:.92}72%{opacity:0}100%{transform:rotate(24deg) translateX(240%);opacity:0}}
+.user-tier{font-size:.9rem;line-height:1.1;font-weight:800;letter-spacing:.05em;text-transform:uppercase;text-align:center;background:linear-gradient(135deg,var(--tier-a),var(--tier-b),var(--tier-c));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 0 8px color-mix(in srgb,var(--tier-glow) 45%,transparent),0 0 22px color-mix(in srgb,var(--tier-glow) 20%,transparent)}
+
+/* Standart (silver) */
+.user-standart{--tier-a:#dbe3ef;--tier-b:#fafdff;--tier-c:#95a1b6;--tier-glow:rgba(194,208,234,.5);--tier-shine:rgba(245,250,255,.95);--tier-ring:linear-gradient(135deg,#a8b4c8,#f4f8ff,#8996ab)}
+
+/* VIP (gold) */
+.user-vip{--tier-a:#ffe9a0;--tier-b:#ffd268;--tier-c:#b56f1b;--tier-glow:rgba(255,201,85,.55);--tier-shine:rgba(255,231,146,.98);--tier-ring:linear-gradient(135deg,#fff2b6,#ffc752,#af6718)}
+.user-vip .avatar-wrap::after{animation-duration:2.55s}
+
+/* Premium (diamond) */
+.user-premium{--tier-a:#f0fdff;--tier-b:#97ecff;--tier-c:#ffffff;--tier-glow:rgba(106,228,255,.72);--tier-shine:#fff;--tier-ring:conic-gradient(from 18deg,#c8f5ff,#8be9ff,#ffffff,#74ddff,#ffffff,#c8f5ff)}
+.user-premium .avatar-wrap{box-shadow:0 0 0 1px rgba(255,255,255,.2),0 0 26px var(--tier-glow)}
+.user-premium .avatar-wrap::after{background:linear-gradient(90deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.98) 34%,rgba(160,244,255,.95) 52%,rgba(255,255,255,.98) 68%,rgba(255,255,255,0) 100%);filter:blur(1px) saturate(1.15);animation-duration:2.1s}
+
 .reviews-shell{display:grid;grid-template-columns:1fr .85fr;gap:20px;align-items:stretch}
 .review-stage{padding:28px;border-radius:28px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);min-height:260px;display:flex;flex-direction:column;justify-content:space-between}
 .review-stage .stars{font-size:18px;color:var(--accent);margin-bottom:12px}
@@ -140,7 +163,8 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .toast{position:fixed;right:18px;bottom:18px;z-index:1200;min-width:240px;max-width:320px;padding:14px 16px;border-radius:18px;background:rgba(23,24,27,.96);border:1px solid rgba(255,255,255,.14);box-shadow:var(--shadow);transform:translateY(16px);opacity:0;pointer-events:none;transition:.28s}
 .toast.show{opacity:1;transform:translateY(0)}
 @media(max-width:980px){.hero-wrap,.calc-wrap,.reviews-shell,.cta-box{grid-template-columns:1fr}.value-grid,.process-grid,.pricing-grid{grid-template-columns:1fr 1fr}.hero-kpis{grid-template-columns:1fr 1fr}.nav-links,.nav-cta{display:none}.menu-btn{display:block}}
-@media(max-width:640px){.value-grid,.process-grid,.pricing-grid,.hero-kpis,.result-grid{grid-template-columns:1fr}.hero{padding-top:150px}.demo-bar{flex-direction:column;align-items:flex-start}.nav{top:74px}.nav.scrolled{top:10px}.nav-inner{height:64px;border-radius:20px}.review-text{font-size:18px}}
+@media(max-width:640px){.value-grid,.process-grid,.pricing-grid,.hero-kpis,.result-grid{grid-template-columns:1fr}.hero{padding-top:150px}.demo-bar{flex-direction:column;align-items:flex-start}.nav{top:74px}.nav.scrolled{top:10px}.nav-inner{height:64px;border-radius:20px}.review-text{font-size:18px}.tier-users-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.user-block{padding:12px 8px 10px;border-radius:16px}.avatar-wrap{width:74px;height:74px}.user-tier{font-size:.75rem;letter-spacing:.04em}}
+@media(max-width:420px){.tier-users-grid{grid-template-columns:1fr 1fr}.avatar-wrap{width:66px;height:66px}}
 </style>
 </head>
 <body>
@@ -287,6 +311,16 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       </div>
     </div>
   </section>
+  <section class="section" id="tiers">
+    <div class="section-wrap">
+      <div class="section-head reveal">
+        <span>Статус пользователей</span>
+        <h2>Аватарки с визуальным выделением текущего тарифа</h2>
+        <p>Карточки ниже рендерятся динамически: класс блока определяется по полю тарифа, поэтому внешний вид меняется автоматически.</p>
+      </div>
+      <div class="tier-users-grid reveal" id="tierUsersGrid" data-worker="https://hidden-term-8bcb.amirprosairex.workers.dev/users/tiers"></div>
+    </div>
+  </section>
   <section class="section">
     <div class="section-wrap">
       <div class="section-head reveal"><span>Отзывы</span><h2>Живой блок с отзывами вместо статичной стены текста</h2></div>
@@ -348,6 +382,52 @@ reviews.forEach((_,index)=>{const dot=document.createElement('button');dot.type=
 function restartReviews(){clearInterval(reviewTimer);if(prefersReducedMotion)return;reviewTimer=setInterval(()=>{renderReview((reviewIndex+1)%reviews.length);},4200);}
 renderReview(0);
 restartReviews();
+
+// Tariff avatars: render cards from Worker response.
+const DEFAULT_TIER_USERS=[
+  {name:'Алексей',tier:'Standart',avatarUrl:'img/avatar-default.png'},
+  {name:'Мария',tier:'vip',avatarUrl:'img/avatar-default.png'},
+  {name:'Илья',tier:'Premium',avatarUrl:'img/avatar-default.png'}
+];
+const FALLBACK_AVATAR='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="%231d2431"/><stop offset="100%" stop-color="%23354052"/></linearGradient></defs><rect width="160" height="160" fill="url(%23g)"/><circle cx="80" cy="65" r="30" fill="%23d8dfeb"/><rect x="35" y="104" width="90" height="42" rx="21" fill="%23d8dfeb"/></svg>';
+function escapeHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');}
+function normalizeTier(tier){
+  const raw=String(tier||'').trim().toLowerCase();
+  if(raw==='vip')return 'vip';
+  if(raw==='premium')return 'premium';
+  if(raw==='standard'||raw==='standart')return 'standart';
+  return 'standart';
+}
+function createUserCard(user){
+  const tierSlug=normalizeTier(user.tier);
+  const tierLabel=tierSlug==='vip'?'vip':(tierSlug==='premium'?'Premium':'Standart');
+  const tierClass='user-'+tierSlug;
+  const avatar=user.avatarUrl||FALLBACK_AVATAR;
+  const alt='Аватар пользователя '+(user.name?String(user.name):tierLabel);
+  return `<article class="user-block ${tierClass}"><div class="avatar-wrap"><img src="${escapeHtml(avatar)}" alt="${escapeHtml(alt)}" class="user-avatar" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='${FALLBACK_AVATAR}'"></div><span class="user-tier">${escapeHtml(tierLabel)}</span></article>`;
+}
+function renderTierUsers(users){
+  const grid=document.getElementById('tierUsersGrid');
+  if(!grid)return;
+  grid.innerHTML=users.map(createUserCard).join('');
+}
+async function loadTierUsers(){
+  const grid=document.getElementById('tierUsersGrid');
+  if(!grid)return;
+  try{
+    const endpoint=grid.dataset.worker;
+    const r=await fetch(endpoint,{headers:{'Accept':'application/json'}});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    const d=await r.json();
+    const users=Array.isArray(d.users)?d.users:[];
+    if(!users.length)throw new Error('empty users list');
+    renderTierUsers(users);
+  }catch(_){
+    renderTierUsers(DEFAULT_TIER_USERS);
+  }
+}
+loadTierUsers();
+
 document.querySelectorAll('.faq-item').forEach(item=>{const btn=item.querySelector('.faq-btn');const content=item.querySelector('.faq-content');const syncHeight=()=>{content.style.maxHeight=item.classList.contains('open')?content.scrollHeight+'px':'0px';};btn.addEventListener('click',()=>{document.querySelectorAll('.faq-item').forEach(other=>{if(other!==item){other.classList.remove('open');other.querySelector('.faq-content').style.maxHeight='0px';}});item.classList.toggle('open');syncHeight();});syncHeight();});
 const toast=document.getElementById('toast');
 let toastTimer;
