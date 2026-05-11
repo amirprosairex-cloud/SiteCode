@@ -1,0 +1,362 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Business Landing 2.0 — SiteCode Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0b0b0c;--bg-soft:#151517;--panel:#17181b;--panel-2:#202126;--line:#31333a;--text:#f5f5f6;--muted:#a8abb3;--accent:#ffffff;--accent-2:#8e939c;--accent-soft:#ffffff;--ok:#d7d7d9;--shadow:0 24px 80px rgba(0,0,0,.32);--grad:linear-gradient(135deg,var(--accent),var(--accent-2))}
+html{scroll-behavior:smooth}
+body{font-family:'Space Grotesk',sans-serif;background:radial-gradient(circle at top left,#1c1d20 0%,#111214 34%,#0b0b0c 70%);color:var(--text);overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+button,input,textarea{font-family:inherit}
+.demo-bar{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:10px 18px;background:rgba(11,11,12,.92);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.12);font-size:13px;font-weight:700}
+.demo-actions{display:flex;gap:10px;flex-wrap:wrap}
+.mini-btn{padding:8px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.16);color:var(--accent-soft);background:rgba(255,255,255,.05);font-size:12px;font-weight:700}
+.nav{position:fixed;top:48px;left:0;right:0;z-index:999;transition:all .3s ease}
+.nav.scrolled{top:12px}
+.nav-inner{max-width:1180px;margin:0 auto;padding:0 20px;height:72px;display:flex;align-items:center;justify-content:space-between;background:rgba(21,29,40,.76);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.06);border-radius:24px;box-shadow:var(--shadow)}
+.brand{font-size:22px;font-weight:900;letter-spacing:-.03em;color:var(--accent-soft)}
+.brand span{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:22px;list-style:none;align-items:center}
+.nav-links a{font-size:14px;color:var(--muted);font-weight:600;transition:color .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--accent-soft)}
+.nav-cta{padding:12px 18px;border-radius:14px;background:var(--grad);color:#24170f;font-weight:800;box-shadow:0 10px 30px rgba(255,122,69,.25)}
+.menu-btn{display:none;border:none;background:none;color:var(--accent-soft);font-size:26px;cursor:pointer}
+.mobile-menu{display:none;position:absolute;top:86px;left:20px;right:20px;background:rgba(27,36,49,.98);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:14px;box-shadow:var(--shadow)}
+.mobile-menu.open{display:block}
+.mobile-menu a{display:block;padding:12px 14px;border-radius:12px;color:var(--muted);font-weight:600}
+.mobile-menu a:hover{background:rgba(255,255,255,.06);color:var(--accent-soft)}
+.hero{padding:170px 20px 90px;position:relative}
+.hero-wrap{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1.15fr .95fr;gap:34px;align-items:center}
+.eyebrow{display:inline-flex;gap:8px;align-items:center;padding:9px 14px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);color:var(--accent);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;margin-bottom:18px}
+.hero h1{font-size:clamp(40px,6vw,74px);line-height:.95;font-weight:900;letter-spacing:-.05em;max-width:720px;margin-bottom:18px}
+.hero h1 .grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:18px;line-height:1.72;color:var(--muted);max-width:620px;margin-bottom:28px}
+.hero-row{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:24px}
+.btn-main,.btn-ghost{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:16px 24px;border-radius:16px;font-weight:800;font-size:15px;transition:transform .2s,opacity .2s,background .2s;border:none;cursor:pointer}
+.btn-main{background:var(--grad);color:#0e0e10;box-shadow:0 18px 40px rgba(255,255,255,.1)}
+.btn-main:hover,.btn-ghost:hover{transform:translateY(-2px)}
+.btn-ghost{border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.02);color:var(--accent-soft)}
+.hero-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:18px}
+.kpi{padding:18px;border-radius:18px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07)}
+.kpi b{display:block;font-size:28px;font-weight:900;color:var(--accent-soft);margin-bottom:6px}
+.kpi span{font-size:12px;line-height:1.5;color:var(--muted)}
+.hero-panel{background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.08);border-radius:30px;padding:20px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.hero-panel::before{content:'';position:absolute;inset:auto -80px -120px auto;width:260px;height:260px;background:radial-gradient(circle,rgba(255,255,255,.14),transparent 70%);pointer-events:none}
+.panel-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.panel-top small{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.status{padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);color:var(--ok);font-size:12px;font-weight:800}
+.metric-board{display:grid;grid-template-columns:1.1fr .9fr;gap:14px;margin-bottom:14px}
+.metric-box,.lead-box{background:var(--panel);border:1px solid rgba(255,255,255,.05);border-radius:22px;padding:18px}
+.big-value{font-size:40px;line-height:1;font-weight:900;color:var(--accent-soft);margin-bottom:8px}
+.muted{color:var(--muted)}
+.funnel{display:grid;gap:10px;margin-top:16px}
+.funnel-line{background:#283242;border-radius:999px;height:12px;overflow:hidden}
+.funnel-line span{display:block;height:100%;background:var(--grad);border-radius:999px}
+.mini-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
+.mini-card{padding:14px;border-radius:18px;background:var(--panel-2);border:1px solid rgba(255,255,255,.05)}
+.mini-card b{display:block;font-size:20px;font-weight:900;margin-bottom:4px}
+.stack-list{display:grid;gap:10px;margin-top:8px}
+.stack-row{display:flex;justify-content:space-between;align-items:center;padding:11px 12px;border-radius:14px;background:var(--panel-2);font-size:13px;color:var(--muted)}
+.stack-row strong{color:var(--accent-soft)}
+.section{padding:90px 20px}
+.section-wrap{max-width:1180px;margin:0 auto}
+.section-head{max-width:720px;margin-bottom:34px}
+.section-head span{display:inline-block;margin-bottom:10px;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.section-head h2{font-size:clamp(28px,4vw,48px);line-height:1.02;font-weight:900;letter-spacing:-.04em;margin-bottom:12px}
+.section-head p{font-size:16px;line-height:1.7;color:var(--muted)}
+.value-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.value-card{padding:26px;border-radius:24px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);transition:transform .25s,border-color .25s,box-shadow .25s}
+.value-card:hover{transform:translateY(-4px);border-color:rgba(255,255,255,.16);box-shadow:0 16px 40px rgba(0,0,0,.18)}
+.value-card .icon{width:54px;height:54px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);display:grid;place-items:center;font-size:24px;margin-bottom:16px}
+.value-card h3{font-size:20px;font-weight:800;margin-bottom:10px}
+.value-card p{font-size:14px;line-height:1.7;color:var(--muted)}
+.calc-wrap{display:grid;grid-template-columns:1fr .95fr;gap:22px}
+.calc-panel,.calc-result{padding:24px;border-radius:28px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07)}
+.calc-group{margin-bottom:20px}
+.calc-group label{display:flex;justify-content:space-between;gap:12px;margin-bottom:10px;font-size:14px;font-weight:700;color:var(--accent-soft)}
+.calc-group label span{color:var(--muted);font-weight:600}
+input[type=range]{width:100%;appearance:none;height:10px;border-radius:999px;background:#2a3443;outline:none}
+input[type=range]::-webkit-slider-thumb{appearance:none;width:22px;height:22px;border-radius:50%;background:var(--grad);border:none;box-shadow:0 8px 18px rgba(255,122,69,.28)}
+input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--accent-2);border:none}
+.calc-result h3{font-size:22px;font-weight:900;margin-bottom:16px}
+.result-total{font-size:52px;font-weight:900;line-height:1;color:var(--accent-soft);margin-bottom:10px}
+.result-sub{font-size:15px;line-height:1.7;color:var(--muted);margin-bottom:18px}
+.result-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
+.result-item{padding:14px;border-radius:18px;background:var(--panel);border:1px solid rgba(255,255,255,.05)}
+.result-item strong{display:block;font-size:21px;font-weight:900;margin-bottom:4px}
+.result-item span{font-size:12px;color:var(--muted)}
+.calc-note{padding:14px 16px;border-radius:18px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);font-size:13px;line-height:1.7;color:var(--accent-soft)}
+.process-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.process-card{padding:24px;border-radius:24px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07)}
+.process-card b{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:12px;background:var(--grad);color:#111214;font-weight:900;margin-bottom:14px}
+.process-card h4{font-size:18px;font-weight:800;margin-bottom:10px}
+.process-card p{font-size:14px;line-height:1.7;color:var(--muted)}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.price-card{padding:28px;border-radius:26px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);position:relative}
+.price-card.featured{background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.04));border-color:rgba(255,255,255,.18);box-shadow:0 18px 50px rgba(255,255,255,.06)}
+.price-badge{position:absolute;top:-11px;left:24px;padding:6px 12px;border-radius:999px;background:var(--grad);color:#101113;font-size:12px;font-weight:900}
+.price-card h4{font-size:14px;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;font-weight:800;margin-bottom:10px}
+.price{font-size:42px;font-weight:900;letter-spacing:-.04em;margin-bottom:8px}
+.price span{font-size:16px;color:var(--muted)}
+.price-card p{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:18px}
+.price-card ul{list-style:none;display:grid;gap:10px}
+.price-card li{font-size:14px;line-height:1.6;color:var(--accent-soft)}
+.price-card li::before{content:'✓ ';color:var(--accent)}
+.reviews-shell{display:grid;grid-template-columns:1fr .85fr;gap:20px;align-items:stretch}
+.review-stage{padding:28px;border-radius:28px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);min-height:260px;display:flex;flex-direction:column;justify-content:space-between}
+.review-stage .stars{font-size:18px;color:var(--accent);margin-bottom:12px}
+.review-text{font-size:22px;line-height:1.5;font-weight:700;letter-spacing:-.02em;margin-bottom:18px}
+.review-author{font-size:14px;color:var(--muted)}
+.review-dots{display:flex;gap:10px;margin-top:14px}
+.review-dots button{width:12px;height:12px;border:none;border-radius:50%;background:#394658;cursor:pointer}
+.review-dots button.active{background:var(--accent)}
+.reviews-meta{display:grid;gap:14px}
+.meta-card{padding:20px;border-radius:24px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07)}
+.meta-card strong{display:block;font-size:28px;font-weight:900;margin-bottom:6px;color:var(--accent-soft)}
+.meta-card span{font-size:13px;line-height:1.6;color:var(--muted)}
+.faq-grid{display:grid;gap:12px}
+.faq-item{padding:0;border-radius:22px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);overflow:hidden}
+.faq-btn{width:100%;padding:20px 22px;background:none;border:none;color:var(--accent-soft);display:flex;justify-content:space-between;align-items:center;font-size:16px;font-weight:700;text-align:left;cursor:pointer}
+.faq-btn span:last-child{font-size:22px;color:var(--accent);transition:transform .25s}
+.faq-item.open .faq-btn span:last-child{transform:rotate(45deg)}
+.faq-content{max-height:0;overflow:hidden;transition:max-height .3s ease;padding:0 22px}
+.faq-content p{padding-bottom:20px;font-size:14px;line-height:1.75;color:var(--muted)}
+.cta-box{padding:34px;border-radius:32px;background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.14);display:grid;grid-template-columns:1.1fr .9fr;gap:24px;align-items:center}
+.cta-box h3{font-size:clamp(30px,4vw,48px);line-height:1.02;font-weight:900;letter-spacing:-.04em;margin-bottom:12px}
+.cta-box p{font-size:16px;line-height:1.7;color:var(--muted)}
+.lead-form{display:grid;gap:12px}
+.lead-form input,.lead-form textarea{padding:15px 16px;border-radius:16px;border:1px solid rgba(255,255,255,.08);background:rgba(16,21,29,.52);color:var(--text);outline:none}
+.lead-form textarea{min-height:110px;resize:vertical}
+.footer{padding:42px 20px 60px}
+.footer-wrap{max-width:1180px;margin:0 auto;padding-top:24px;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;color:var(--muted);font-size:13px}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .55s ease,transform .55s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.toast{position:fixed;right:18px;bottom:18px;z-index:1200;min-width:240px;max-width:320px;padding:14px 16px;border-radius:18px;background:rgba(23,24,27,.96);border:1px solid rgba(255,255,255,.14);box-shadow:var(--shadow);transform:translateY(16px);opacity:0;pointer-events:none;transition:.28s}
+.toast.show{opacity:1;transform:translateY(0)}
+@media(max-width:980px){.hero-wrap,.calc-wrap,.reviews-shell,.cta-box{grid-template-columns:1fr}.value-grid,.process-grid,.pricing-grid{grid-template-columns:1fr 1fr}.hero-kpis{grid-template-columns:1fr 1fr}.nav-links,.nav-cta{display:none}.menu-btn{display:block}}
+@media(max-width:640px){.value-grid,.process-grid,.pricing-grid,.hero-kpis,.result-grid{grid-template-columns:1fr}.hero{padding-top:150px}.demo-bar{flex-direction:column;align-items:flex-start}.nav{top:74px}.nav.scrolled{top:10px}.nav-inner{height:64px;border-radius:20px}.review-text{font-size:18px}}
+</style>
+</head>
+<body>
+<div class="demo-bar">
+  <div>Демо шаблона: <strong>Business Landing 2.0</strong> — более сильный продающий лендинг</div>
+  <div class="demo-actions">
+    <a class="mini-btn" href="catalog.html">← Каталог</a>
+    <a class="mini-btn" href="index.html#contact">Заказать</a>
+  </div>
+</div>
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="brand" href="#top">Business <span>Launch</span></a>
+    <ul class="nav-links">
+      <li><a href="#value">Почему это работает</a></li>
+      <li><a href="#calc">Калькулятор</a></li>
+      <li><a href="#pricing">Тарифы</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <a class="nav-cta" href="#lead">Получить смету</a>
+    <button class="menu-btn" id="menuBtn">☰</button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#value">Почему это работает</a>
+    <a href="#calc">Калькулятор</a>
+    <a href="#pricing">Тарифы</a>
+    <a href="#faq">FAQ</a>
+    <a href="#lead">Получить смету</a>
+  </div>
+</header>
+<main>
+  <section class="hero" id="top">
+    <div class="hero-wrap">
+      <div>
+        <div class="eyebrow">Лендинг нового формата</div>
+        <h1>Не просто красиво, а <span class="grad">понятно, быстро и выгодно</span> для бизнеса</h1>
+        <p class="hero-sub">Этот вариант Business Landing построен как рабочий коммерческий инструмент: сильный оффер, короткие смысловые блоки, понятные CTA и живая аналитика прямо в шаблоне.</p>
+        <div class="hero-row">
+          <a class="btn-main" href="#lead">Запустить проект</a>
+          <a class="btn-ghost" href="#calc">Посчитать прибыль</a>
+        </div>
+        <div class="hero-kpis reveal">
+          <div class="kpi"><b data-count="4.9">0</b><span>средняя оценка по запускам</span></div>
+          <div class="kpi"><b data-count="27">0</b><span>дней до запуска в среднем</span></div>
+          <div class="kpi"><b data-count="38">0</b><span>% рост заявок на сильных офферах</span></div>
+          <div class="kpi"><b data-count="92">0</b><span>PageSpeed на мобильных</span></div>
+        </div>
+      </div>
+      <div class="hero-panel reveal">
+        <div class="panel-top">
+          <small>Панель результата</small>
+          <div class="status">Live demo</div>
+        </div>
+        <div class="metric-board">
+          <div class="metric-box">
+            <div class="muted">Заявок в месяц</div>
+            <div class="big-value" id="heroLeads">146</div>
+            <div class="muted">после переработки структуры лендинга</div>
+            <div class="funnel">
+              <div class="funnel-line"><span style="width:88%"></span></div>
+              <div class="funnel-line"><span style="width:63%"></span></div>
+              <div class="funnel-line"><span style="width:41%"></span></div>
+            </div>
+            <div class="mini-grid">
+              <div class="mini-card"><b>8.2%</b><span>конверсия</span></div>
+              <div class="mini-card"><b>1.4 c</b><span>время загрузки</span></div>
+            </div>
+          </div>
+          <div class="lead-box">
+            <div class="muted" style="margin-bottom:10px">Структура блока</div>
+            <div class="stack-list">
+              <div class="stack-row"><span>Оффер</span><strong>Чёткий</strong></div>
+              <div class="stack-row"><span>Соцдоказательства</span><strong>На экране 1</strong></div>
+              <div class="stack-row"><span>CTA</span><strong>3 уровня</strong></div>
+              <div class="stack-row"><span>Форма</span><strong>2 поля</strong></div>
+              <div class="stack-row"><span>UX</span><strong>Mobile-first</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="section" id="value">
+    <div class="section-wrap">
+      <div class="section-head reveal">
+        <span>Почему шаблон стал лучше</span>
+        <h2>Новая цветовая схема и более сильное расположение текста</h2>
+        <p>Я увёл шаблон от стандартного холодного cyan-стиля в более строгую бело-чёрную палитру и пересобрал блоки так, чтобы ключевой текст читался быстрее: сначала выгода, потом доказательства, потом действие.</p>
+      </div>
+      <div class="value-grid">
+        <article class="value-card reveal"><div class="icon">✦</div><h3>Оффер в первом экране</h3><p>Заголовок стал короче и жёстче, а подзаголовок сразу отвечает на вопрос «почему этот лендинг выгоден бизнесу».</p></article>
+        <article class="value-card reveal"><div class="icon">⚙</div><h3>Меньше визуального шума</h3><p>Вместо декоративных перегрузок используется один сильный акцент, ясные карточки и ровный ритм отступов. Это удобнее на мобильных.</p></article>
+        <article class="value-card reveal"><div class="icon">📈</div><h3>JS не ради эффекта</h3><p>Интерактив добавлен только там, где он помогает: калькулятор, отзывы, счётчики, мобильное меню и FAQ без лишней тяжести.</p></article>
+      </div>
+    </div>
+  </section>
+  <section class="section" id="calc" style="background:rgba(255,255,255,.02)">
+    <div class="section-wrap">
+      <div class="section-head reveal">
+        <span>JS-калькулятор</span>
+        <h2>Быстрая оценка, сколько может дать лендинг</h2>
+        <p>Меняйте трафик, конверсию и средний чек. Блок мгновенно пересчитывает заявки, выручку и потенциальный рост. Это удобнее, чем сухой прайс.</p>
+      </div>
+      <div class="calc-wrap">
+        <div class="calc-panel reveal">
+          <div class="calc-group"><label for="trafficRange">Трафик в месяц <span id="trafficValue">12 000 посетителей</span></label><input id="trafficRange" type="range" min="3000" max="50000" step="500" value="12000"></div>
+          <div class="calc-group"><label for="convRange">Конверсия сайта <span id="convValue">3.2%</span></label><input id="convRange" type="range" min="1" max="12" step="0.1" value="3.2"></div>
+          <div class="calc-group"><label for="checkRange">Средний чек <span id="checkValue">18 000 ₸</span></label><input id="checkRange" type="range" min="3000" max="80000" step="1000" value="18000"></div>
+          <div class="calc-note">Подход: лендинг должен показывать бизнес-эффект, а не только «стоить столько-то». Поэтому шаблон сразу объясняет деньги, не только дизайн.</div>
+        </div>
+        <div class="calc-result reveal">
+          <h3>Прогноз по шаблону</h3>
+          <div class="result-total" id="resultRevenue">6 912 000 ₸</div>
+          <div class="result-sub" id="resultSub">При 12 000 посетителях и конверсии 3.2% вы можете получить 384 заявки в месяц.</div>
+          <div class="result-grid">
+            <div class="result-item"><strong id="resultLeads">384</strong><span>заявок / мес.</span></div>
+            <div class="result-item"><strong id="resultDeals">96</strong><span>потенциальных продаж</span></div>
+            <div class="result-item"><strong id="resultGrowth">+27%</strong><span>потенциал роста</span></div>
+            <div class="result-item"><strong id="resultCpl">406 ₸</strong><span>условная цена заявки</span></div>
+          </div>
+          <a class="btn-main" href="#lead">Получить такой лендинг</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="section-wrap">
+      <div class="section-head reveal"><span>Процесс</span><h2>4 понятных этапа без лишней студийной бюрократии</h2></div>
+      <div class="process-grid">
+        <article class="process-card reveal"><b>1</b><h4>Смысловая структура</h4><p>Сначала собирается логика страницы: оффер, боль, решение, доказательства, CTA.</p></article>
+        <article class="process-card reveal"><b>2</b><h4>Дизайн под конверсию</h4><p>Графика и цвет не спорят с текстом, а усиливают его. Приоритет на читабельность и действие.</p></article>
+        <article class="process-card reveal"><b>3</b><h4>JS-функции</h4><p>Добавляются только полезные сценарии: калькулятор, FAQ, слайдер отзывов, лёгкая анимация входа.</p></article>
+        <article class="process-card reveal"><b>4</b><h4>Запуск и аналитика</h4><p>После публикации настраиваются цели, формы, события и контроль качества по метрикам.</p></article>
+      </div>
+    </div>
+  </section>
+  <section class="section" id="pricing" style="background:rgba(255,255,255,.02)">
+    <div class="section-wrap">
+      <div class="section-head reveal"><span>Тарифы</span><h2>Business Landing можно масштабировать под бюджет</h2></div>
+      <div class="pricing-grid">
+        <article class="price-card reveal"><h4>Start</h4><div class="price">15 000 <span>₸</span></div><p>Быстрый запуск для рекламы и теста ниши.</p><ul><li>До 7 блоков</li><li>Форма в 2 поля</li><li>Базовая SEO-подготовка</li><li>Адаптив под мобильные</li></ul></article>
+        <article class="price-card featured reveal"><div class="price-badge">Лучший выбор</div><h4>Business</h4><div class="price">28 000 <span>₸</span></div><p>Полноценный продающий шаблон с интерактивом и подготовкой под запуск трафика.</p><ul><li>Калькулятор / квиз</li><li>Отзывы с динамикой</li><li>Расширенный блок преимуществ</li><li>События и аналитика</li></ul></article>
+        <article class="price-card reveal"><h4>Scale</h4><div class="price">49 000 <span>₸</span></div><p>Для агрессивного роста, тестов гипотез и интеграций.</p><ul><li>A/B-подход к офферу</li><li>CRM-интеграция</li><li>Персональные сценарии CTA</li><li>Поддержка после запуска</li></ul></article>
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="section-wrap">
+      <div class="section-head reveal"><span>Отзывы</span><h2>Живой блок с отзывами вместо статичной стены текста</h2></div>
+      <div class="reviews-shell">
+        <div class="review-stage reveal"><div><div class="stars">★★★★★</div><div class="review-text" id="reviewText">После замены шаблона и оффера заявок стало ощутимо больше уже в первую неделю запуска рекламы.</div></div><div><div class="review-author" id="reviewAuthor">Александр Громов, founder FinSoft</div><div class="review-dots" id="reviewDots"></div></div></div>
+        <div class="reviews-meta reveal"><div class="meta-card"><strong>38%</strong><span>средний рост конверсии на шаблонах, где оффер и CTA пересобраны под бизнес-задачу</span></div><div class="meta-card"><strong>1.4 c</strong><span>целевая загрузка первого экрана при оптимизированной графике и сжатом CSS/JS</span></div><div class="meta-card"><strong>4 блока</strong><span>достаточно для первого касания: оффер, выгода, доверие, действие</span></div></div>
+      </div>
+    </div>
+  </section>
+  <section class="section" id="faq" style="background:rgba(255,255,255,.02)">
+    <div class="section-wrap">
+      <div class="section-head reveal"><span>FAQ</span><h2>Частые вопросы по этому шаблону</h2></div>
+      <div class="faq-grid">
+        <div class="faq-item reveal open"><button class="faq-btn"><span>Почему этот вариант лучше старого Business Landing?</span><span>+</span></button><div class="faq-content"><p>У него более сильная композиция: сначала выгода, потом метрики, потом расчёт, потом доказательства. Плюс новый цветовой язык выглядит дороже и меньше похож на шаблон.</p></div></div>
+        <div class="faq-item reveal"><button class="faq-btn"><span>Зачем здесь JavaScript, если это лендинг?</span><span>+</span></button><div class="faq-content"><p>Чтобы повысить удобство и вовлечённость: мгновенный расчёт эффекта, динамические отзывы, FAQ, счётчики и мобильная навигация. Без тяжёлых библиотек и без лишней нагрузки.</p></div></div>
+        <div class="faq-item reveal"><button class="faq-btn"><span>Этот шаблон можно кастомизировать под любую нишу?</span><span>+</span></button><div class="faq-content"><p>Да. Меняются оффер, блоки доверия, акценты, кейсы, CTA и калькулятор. Основа остаётся, а смысл и дизайн перестраиваются под конкретный бизнес.</p></div></div>
+      </div>
+    </div>
+  </section>
+  <section class="section" id="lead">
+    <div class="section-wrap">
+      <div class="cta-box reveal">
+        <div><h3>Хочешь, я так же обновлю остальные шаблоны?</h3><p>Business Landing уже переделан в более дорогой и удобный формат. Следом можно таким же способом пересобрать Corporate, Shop и остальные превью.</p></div>
+        <form class="lead-form" id="leadForm"><input type="text" id="leadName" placeholder="Ваше имя" required><input type="tel" id="leadPhone" placeholder="Телефон или Telegram" required><textarea id="leadTask" placeholder="Коротко: какая ниша и что вы хотите продавать"></textarea><button class="btn-main" type="submit">Получить предложение</button></form>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="footer-wrap"><span>© 2026 SiteCode Demo. Business Landing 2.0.</span><span>Оптимизированный HTML/CSS/JS без тяжёлых зависимостей.</span></div></footer>
+<div class="toast" id="toast"></div>
+<script>
+const nav=document.getElementById('nav');
+const menuBtn=document.getElementById('menuBtn');
+const mobileMenu=document.getElementById('mobileMenu');
+const prefersReducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+window.addEventListener('scroll',()=>{nav.classList.toggle('scrolled',window.scrollY>70);},{passive:true});
+menuBtn.addEventListener('click',()=>{mobileMenu.classList.toggle('open');});
+mobileMenu.querySelectorAll('a').forEach(link=>{link.addEventListener('click',()=>mobileMenu.classList.remove('open'));});
+const revealObserver=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(!entry.isIntersecting)return;entry.target.classList.add('visible');revealObserver.unobserve(entry.target);});},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>revealObserver.observe(el));
+function animateCounter(el){const target=parseFloat(el.dataset.count||'0');const duration=prefersReducedMotion?0:1200;if(!duration){el.textContent=Number.isInteger(target)?target:target.toFixed(1);return;}const start=performance.now();function frame(now){const progress=Math.min((now-start)/duration,1);const eased=1-Math.pow(1-progress,3);const value=target*eased;el.textContent=Number.isInteger(target)?Math.round(value):value.toFixed(1);if(progress<1)requestAnimationFrame(frame);}requestAnimationFrame(frame);}
+const kpiObserver=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(!entry.isIntersecting)return;entry.target.querySelectorAll('[data-count]').forEach(animateCounter);kpiObserver.unobserve(entry.target);});},{threshold:.35});
+document.querySelectorAll('.hero-kpis').forEach(el=>kpiObserver.observe(el));
+const trafficRange=document.getElementById('trafficRange');
+const convRange=document.getElementById('convRange');
+const checkRange=document.getElementById('checkRange');
+function formatMoney(value){return new Intl.NumberFormat('ru-RU').format(Math.round(value))+' ₸';}
+function updateCalculator(){const traffic=Number(trafficRange.value);const conversion=Number(convRange.value);const avgCheck=Number(checkRange.value);const leads=Math.round(traffic*(conversion/100));const deals=Math.round(leads*.25);const revenue=deals*avgCheck;const growth=Math.min(65,Math.max(12,Math.round(conversion*8.4)));const cpl=Math.max(180,Math.round(avgCheck/Math.max(conversion,1)/11));document.getElementById('trafficValue').textContent=new Intl.NumberFormat('ru-RU').format(traffic)+' посетителей';document.getElementById('convValue').textContent=conversion.toFixed(1)+'%';document.getElementById('checkValue').textContent=formatMoney(avgCheck);document.getElementById('resultLeads').textContent=new Intl.NumberFormat('ru-RU').format(leads);document.getElementById('resultDeals').textContent=new Intl.NumberFormat('ru-RU').format(deals);document.getElementById('resultRevenue').textContent=formatMoney(revenue);document.getElementById('resultGrowth').textContent='+'+growth+'%';document.getElementById('resultCpl').textContent=formatMoney(cpl);document.getElementById('resultSub').textContent=`При ${new Intl.NumberFormat('ru-RU').format(traffic)} посетителях и конверсии ${conversion.toFixed(1)}% вы можете получить ${new Intl.NumberFormat('ru-RU').format(leads)} заявок в месяц.`;document.getElementById('heroLeads').textContent=new Intl.NumberFormat('ru-RU').format(Math.round(leads*.38));}
+[trafficRange,convRange,checkRange].forEach(el=>el.addEventListener('input',updateCalculator));
+updateCalculator();
+const reviews=[{text:'После замены шаблона и оффера заявок стало ощутимо больше уже в первую неделю запуска рекламы.',author:'Александр Громов, founder FinSoft'},{text:'Страница стала выглядеть дороже, а людям стало проще читать и оставлять заявку. Это видно по метрике.',author:'Марина Волкова, co-owner Dermalab'},{text:'Наконец-то лендинг перестал быть просто красивой картинкой. Сейчас он реально объясняет продукт и ведёт к действию.',author:'Игорь Мельник, руководитель Apex Build'}];
+const reviewText=document.getElementById('reviewText');
+const reviewAuthor=document.getElementById('reviewAuthor');
+const reviewDots=document.getElementById('reviewDots');
+let reviewIndex=0;
+let reviewTimer;
+function renderReview(index){reviewIndex=index;reviewText.textContent=reviews[index].text;reviewAuthor.textContent=reviews[index].author;[...reviewDots.children].forEach((dot,dotIndex)=>{dot.classList.toggle('active',dotIndex===index);});}
+reviews.forEach((_,index)=>{const dot=document.createElement('button');dot.type='button';dot.addEventListener('click',()=>{renderReview(index);restartReviews();});reviewDots.appendChild(dot);});
+function restartReviews(){clearInterval(reviewTimer);if(prefersReducedMotion)return;reviewTimer=setInterval(()=>{renderReview((reviewIndex+1)%reviews.length);},4200);}
+renderReview(0);
+restartReviews();
+document.querySelectorAll('.faq-item').forEach(item=>{const btn=item.querySelector('.faq-btn');const content=item.querySelector('.faq-content');const syncHeight=()=>{content.style.maxHeight=item.classList.contains('open')?content.scrollHeight+'px':'0px';};btn.addEventListener('click',()=>{document.querySelectorAll('.faq-item').forEach(other=>{if(other!==item){other.classList.remove('open');other.querySelector('.faq-content').style.maxHeight='0px';}});item.classList.toggle('open');syncHeight();});syncHeight();});
+const toast=document.getElementById('toast');
+let toastTimer;
+function showToast(text){toast.textContent=text;toast.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove('show'),3200);}
+document.getElementById('leadForm').addEventListener('submit',event=>{event.preventDefault();const payload={name:document.getElementById('leadName').value.trim(),phone:document.getElementById('leadPhone').value.trim(),task:document.getElementById('leadTask').value.trim(),source:'Business Landing 2.0 demo',createdAt:new Date().toISOString()};console.log('Lead payload:',payload);showToast('Заявка принята. Этот шаблон можно доработать под вашу нишу.');event.target.reset();});
+const sectionLinks=[...document.querySelectorAll('.nav-links a')];
+const sections=sectionLinks.map(link=>document.querySelector(link.getAttribute('href'))).filter(Boolean);
+const activeObserver=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(!entry.isIntersecting)return;sectionLinks.forEach(link=>{link.classList.toggle('active',link.getAttribute('href')==='#'+entry.target.id);});});},{threshold:.45});
+sections.forEach(section=>activeObserver.observe(section));
+</script>
+</body>
+</html>
